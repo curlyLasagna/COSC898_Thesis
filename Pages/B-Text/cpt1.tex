@@ -1,0 +1,34 @@
+\chapter{How To Use This Template}\label{chap:intro}
+
+Read the inline comments in the latex project for notes and explanations.
+
+\section{Required Pages}
+
+Preliminary and supplementary pages are labeled in the order they should appear. Optional pages are marked as optional in the comments. List of Tables and List of Figures are required only when 2 or more tables/figures appear in the document.
+
+\section{Paragraph Styles}
+
+In latex/overleaf, use \textbackslash chapter for chapter headings, use \textbackslash section for level 2 headings, use \textbackslash subsection for level 3 headings, use \textbackslash subsubsection for level 4 headings. Read the inline comments for detailed commands. Do not use other commands for headings!
+
+% here are the commands
+% \chapter{}        ----chapter headings
+% \section{}        ------level 2 headings
+% \subsection{}     --------level 3 headings
+% \subsubsection{}  ----------level 4 headings
+% note that sometimes you may want to use the heading's format but not count it in the table of contents(TOC), use a * mark
+% e.g., \section*{} but be careful, unless you know what will happen, do not use this.
+% the commands without a * mark should be enough for your thesis/dissertation
+
+\section{Table of Contents, List of Tables, and List of Figures}
+
+A Table of Contents, List of Tables, and List of Figures are set up already. See Dissertation.tex and the inline comments for details!
+
+\section{How to use references}
+
+In latex/overleaf, use \textbackslash cite\{\} for reference usage and put your bib text in the reference folder. Here is an example~\cite{EI-CPS-Book}.
+
+% the command to cite the references, here ~ is used for a space's placeholder
+% ~\cite{}
+% put your paper's bibtext in References/mine.bib and others work in References/ref.bib
+
+And you can also use \textbackslash ref\{\} to refer to a chapter/section/subsection/subsubsection or figures/tables with the label. Here is an example: this is Chapter~\ref{chap:intro}.

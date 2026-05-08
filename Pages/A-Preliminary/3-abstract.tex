@@ -1,0 +1,26 @@
+\prefacesection{Abstract}
+\begin{center}
+    \setstretch{2}
+    \MakeUppercase\ThesisTitle
+\end{center}
+\doublespacing
+\begin{center}
+    \setstretch{2}
+    \AuthorName
+\end{center}
+\setstretch{2}
+% do not change anything above
+\setlength{\parindent}{0in}
+% the first paragraph of your abstract begins follows with 0 inch indent
+% set the indent for the rest paragraphs to 0.5 inch
+% \setlength{\parindent}{0.5in}
+
+For many students, configuring their machines for each course can act as a significant blocker to actual learning. An entire lecture period is often sacrificed to the manual and imperative installation of software and dependencies. Personal devices introduce unknown variables such as their operating systems, configuration, or hardware, resulting in an unnecessary research time sink.
+
+
+% the first paragraph of your abstract ends here
+% set the indent for the rest paragraphs to 0.5 inch
+\setlength{\parindent}{0.5in}
+% the rest paragraphs should begin as follows
+
+I propose a solution that leverages LLMs to synthesize a nix environment. We first provide an instructor’s natural language description, then the LLM queries an mcp-nixos server to discover valid package names and configuration options from live data. The output is validated via nix evaluation commands, where the functional nature of nix provides a deterministic success or failure signal. In the event of a failure, the LLM uses the error trace as context to correct itself until a valid, reproducible environment is produced.

@@ -1,0 +1,110 @@
+%%% -----------------------------------------------------------------------
+% Dissertation.tex 2025/11/17 version V1.2
+%%% -----------------------------------------------------------------------
+% This is the official ieee style template for graduate thesis/dissertation at Towson University
+% Modified and refined by Yixin Chen, November, 2025
+% Any issues or questions contact Yixin Chen via ychen6@students.towson.edu
+% Compile this with pdflatex
+% Check latest update via this read only link https://www.overleaf.com/read/gbxnfhvxdthj#202aff
+%%% -----------------------------------------------------------------------
+%% Importance Notice and Tips:
+% This template has already make sure the line spacing, margins and most of the format settings are correct.
+% But the student will have to make sure the followings
+% 
+% ``At least two sentences in each paragraph.''
+% 
+% Also, try to better arrange your figures/tables. LaTeX does not guarantee this.
+% whenever you include a figure/table
+% makesure you are adding [htbp] as \begin{figure/table}[htbp]
+% this will help with the figures/tables and arrange them at the place in text as precisely as possible
+% but you still need to slightly adjust the place where you need to include the figure/table
+% make sure your figures/tables do not interrupt the paragraphs
+% 
+% for the chapter headings and figure/table captions, always capitalize the first character to make sure the format of SmallCap can be applied correctly
+% 
+% when you need to write quotation marks in LaTeX, use `` as the beginning and '' as the ending. e.g., ``example quotation''
+% 
+% This is a rare case. If there is a single number or character at the end of a paragraph, use a ~ mark to connect them. e.g., ``xxxxxxxx and here is the last objective~i.''
+% in this way, ~ will be rendered as a space and make sure the last character ``i'' will not be isolated in a new line.
+%%% -----------------------------------------------------------------------
+\documentclass{TUgrad}
+%%% -----------------------------------------------------------------------
+%% replace with your title, no need to type in capital, the template will make capital automatically
+% use \\ to break the lines and make the title inverse pyramid looking
+\thesistitle{
+Agentic Environment Synthesis: Evaluating the Efficacy of Model Context Protocol (MCP) in Reducing Hallucinations of Declarative System Configuration.
+}
+%% replace with your name
+\authorname{(Luis Dale Gascon)}
+%% Master's and Audiology students: Change to "thesis",
+% Others use "dissertation"
+\submissiontype{dissertation} 
+%% Change to reflect your degree: 
+% Master of Arts 
+% Master of Science 
+% Master of Education
+% Doctor of Audiology
+% Doctor of Philosophy
+\degreename{Doctor of Philosophy} 
+\departmentname{Department of Computer and Information Sciences}
+%% Make sure to delete parentheses and comma. Example: May 2025
+% Graduation month must be May, August, or December
+\graduationdate{(Month Year of Graduation)}
+%%% -----------------------------------------------------------------------
+%% optional acknowledgments page
+% uncomment \useack to activate, or comment to deactivate
+\useack
+%% optional abbrevations page
+% uncomment \useabbr to activate, or comment to deactivate
+\useabbr
+%% default without numbering headings
+% uncomment \usenumbering to activate, or comment to deactivate
+\usenumbering
+%% default without highlight for references and links
+% uncomment \hypersetup{hidelinks} to activate, or comment for proofreading
+% final submission requires no highlight! make sure you have \hypersetup{hidelinks} activated!
+\hypersetup{hidelinks}
+%%% -----------------------------------------------------------------------
+%% main document begins here, do not change this part
+\begin{document}
+\beforepreface
+\afterpreface
+%%% -----------------------------------------------------------------------
+%%% -----------------------------------------------------------------------
+%%% -----------------------------------------------------------------------
+%% your work begins as follows, feel free to add or change the chapters
+% -------------------------------------------------------------------------
+%% Part 1 - Introduction
+\input{Pages/B-Text/cpt1}
+% -------------------------------------------------------------------------
+%% Part 2 - Literature Review
+\input{Pages/B-Text/cpt2}
+% -------------------------------------------------------------------------
+%% Part 3 - Main Works
+% -----Main work 1
+\input{Pages/B-Text/cpt3-1}
+% -----Main work 2
+\input{Pages/B-Text/cpt3-2}
+% -----Main work 3
+\input{Pages/B-Text/cpt3-3}
+% -------------------------------------------------------------------------
+% Part 4 - Conclusion
+\input{Pages/B-Text/cpt4}
+% -------------------------------------------------------------------------
+% Examples of some special cases and how to handle with them
+% please delete/comment the next input line before final submission
+\input{Pages/B-Text/examples}
+%%% -----------------------------------------------------------------------
+%% Appendix, if no need, comment all this part
+\appendix
+\input{Pages/C-Supplemental/Appendix-A}
+\input{Pages/C-Supplemental/Appendix-B}
+%%% -----------------------------------------------------------------------
+% References
+\bibliographystyle{IEEEtran}
+\bibliography{References/ref, References/mine}
+%%% -----------------------------------------------------------------------
+%% blank page at last, do not change
+\clearpage\thispagestyle{empty}\mbox{}\setcounter{page}{0}\clearpage
+\end{document}
+%%% -----------------------------------------------------------------------
