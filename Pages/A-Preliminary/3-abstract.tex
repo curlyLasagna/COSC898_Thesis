@@ -1,12 +1,12 @@
 \prefacesection{Abstract}
 \begin{center}
-    \setstretch{2}
-    \MakeUppercase\ThesisTitle
+	\setstretch{2}
+	\MakeUppercase\ThesisTitle
 \end{center}
 \doublespacing
 \begin{center}
-    \setstretch{2}
-    \AuthorName
+	\setstretch{2}
+	\AuthorName
 \end{center}
 \setstretch{2}
 % do not change anything above
@@ -15,12 +15,14 @@
 % set the indent for the rest paragraphs to 0.5 inch
 % \setlength{\parindent}{0.5in}
 
-For many students, configuring their machines for each course can act as a significant blocker to actual learning. An entire lecture period is often sacrificed to the manual and imperative installation of software and dependencies. Personal devices introduce unknown variables such as their operating systems, configuration, or hardware, resulting in an unnecessary research time sink.
+Inconsistent development environment can slow down software developers and their team. A new hire spends days configuring their systems. Engineers are tasked in resolving environment issues instead of pushing features.
 
+In an educational environment, having students configure their machines for each course can act as a significant blocker to actual learning. An entire lecture period is often sacrificed to the manual and imperative installation of software and dependencies. Personal devices introduce unknown variables such as their operating systems, configuration, or hardware, resulting in students having to be troubleshoot problems specific to their devices that an instructor may not have experience with.
 
+This problem is as old as
 % the first paragraph of your abstract ends here
 % set the indent for the rest paragraphs to 0.5 inch
 \setlength{\parindent}{0.5in}
 % the rest paragraphs should begin as follows
 
-I propose a solution that leverages LLMs to synthesize a nix environment. We first provide an instructor’s natural language description, then the LLM queries an mcp-nixos server to discover valid package names and configuration options from live data. The output is validated via nix evaluation commands, where the functional nature of nix provides a deterministic success or failure signal. In the event of a failure, the LLM uses the error trace as context to correct itself until a valid, reproducible environment is produced.
+I propose a solution that leverages agentic LLMs to synthesize a nix environment via nix flakes. We first provide an instructor’s natural language description, then the agent queries an mcp-nixos server to discover valid package names and configuration options from real time data. The output is validated via nix evaluation commands, where the functional nature of nix provides a deterministic success or failure signal. In the event of a failure, the LLM uses the error trace as context to correct itself until a valid, reproducible environment is produced.
