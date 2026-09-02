@@ -21,9 +21,14 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{EI-CPS-Book}
-W.~Y. (Editor and Co-Authors), \emph{Edge Intelligence in Cyber-Physical
-  Systems: Foundations and Applications}.\hskip 1em plus 0.5em minus
-  0.4em\relax Academic Pressr, June 1, 2025.
+\bibitem{valstarUsingDevContainersStandardize2020}
+\BIBentryALTinterwordspacing
+S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to
+  {{Standardize Student Development Environments}}: {{An Experience Report}},''
+  in \emph{Proceedings of the 2020 {{ACM Conference}} on {{Innovation}} and
+  {{Technology}} in {{Computer Science Education}}}.\hskip 1em plus 0.5em minus
+  0.4em\relax ACM, pp. 377--383. [Online]. Available:
+  \url{https://dl.acm.org/doi/10.1145/3341525.3387424}
+\BIBentrySTDinterwordspacing
 
 \end{thebibliography}

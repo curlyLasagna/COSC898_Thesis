@@ -1,7 +1,305 @@
-@book{EI-CPS-Book,
-  author    = {Wei Yu (Editor and Co-Authors)},
-  title     = {Edge Intelligence in Cyber-Physical Systems: Foundations and Applications},
-  publisher = {Academic Pressr},
-  year      = {June 1, 2025},
-  isbn      = {9780443265723}
+@online{5BuildingReproducible,
+  title = {(5) {{Building Reproducible}}, {{Interactive C}}++ {{Learning Environments}} with {{Nix Flakes}} and {{Pixi}} | {{LinkedIn}}},
+  url = {https://www.linkedin.com/pulse/building-reproducible-interactive-c-learning-nix-flakes-hasanovi%C4%87-tol9e/},
+  urldate = {2026-03-12},
+  file = {/Users/luis/Zotero/storage/EUGKPE23/building-reproducible-interactive-c-learning-nix-flakes-hasanović-tol9e.html}
+}
+
+@thesis{bandtAssessmentReproducibilityNix2025,
+  title = {Assessment of {{Reproducibility}} in {{Nix}}},
+  author = {Bandt},
+  date = {2025-10-16},
+  doi = {10.5281/zenodo.17372811},
+  url = {https://zenodo.org/records/17372811},
+  urldate = {2026-02-22},
+  abstract = {Masters Thesis about reproducible builds in nixpkgs and how to detect non-reproducible derivations in a practical way.},
+  langid = {english},
+  keywords = {nix,reproducible-builds,supply-chain},
+  file = {/Users/luis/Zotero/storage/Q3BJ3X4V/Bandt - 2025 - Assessment of Reproducibility in Nix.pdf}
+}
+
+@article{borkLanguageServerProtocol2023,
+  title = {Language {{Server Protocol}}: {{An Introduction}} to the {{Protocol}}, Its {{Use}}, and {{Adoption}} for {{Web Modeling Tools}}},
+  shorttitle = {Language {{Server Protocol}}},
+  author = {Bork, Dominik and Langer, Philip},
+  date = {2023-09-22},
+  journaltitle = {Enterprise Modelling and Information Systems Architectures (EMISAJ) - International Journal of Conceptual Modeling},
+  volume = {18},
+  pages = {9:1-16},
+  issn = {1866-3621},
+  doi = {10.18417/emisa.18.9},
+  url = {https://emisa-journal.org/emisa/article/view/320},
+  urldate = {2026-03-19},
+  abstract = {With the introduction of the Language Server Protocol (LSP), a fundamental shift has been observed in the development of language editing support for Integrated Development Environments (IDEs), such as VS Code, the traditional Eclipse IDE, or Eclipse Theia. LSP establishes a uniform protocol that standardizes the communication between a language client (e. g., an IDE like Eclipse) and a language server (e. g., for a programming language like Java). The language client only needs to be able to interpret and understand the protocol instead of the specific programming language. Likewise, the language server can focus on language support and does not need to consider the specifics of a respective IDE. This reduces the complexity of realizing language support on different editors and IDEs and enables smooth transitions from one IDE to another. LSP is an open and community-driven protocol that has been developed within the realm of the VS Code community, initiated and driven by Microsoft. The generic concept and architecturalpattern of LSP enables widespread applications that go far beyond the realization of editing support for programming languages. This paper provides an introduction to LSP, describes its evolution and core characteristics, and delineates its potential for revolutionizing not only the IDE market but also other software systems, such as modeling tools.},
+  langid = {english},
+  keywords = {Conceptual Modeling,Integrated Development Environment,Language Server Protocol,Modeling tools,Software Engineering},
+  file = {/Users/luis/Zotero/storage/SZVC2T4G/Bork and Langer - 2023 - Language Server Protocol An Introduction to the Protocol, its Use, and Adoption for Web Modeling To.pdf}
+}
+
+@online{ConstructionAnalysisBuild,
+  title = {Construction and Analysis of the Build and Runtime Dependency Graph of Nixpkgs},
+  url = {https://tweag.io/blog/2022-09-13-nixpkgs-graph/},
+  urldate = {2026-01-26},
+  abstract = {A nixpkgs content database with graph building!},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/L648UZXM/2022-09-13-nixpkgs-graph.html}
+}
+
+@article{dolstraNixOSPurelyFunctional2010,
+  title = {{{NixOS}}: {{A}} Purely Functional {{Linux}} Distribution},
+  shorttitle = {{{NixOS}}},
+  author = {Dolstra, Eelco and Löh, Andres and Pierron, Nicolas},
+  date = {2010-11},
+  journaltitle = {Journal of Functional Programming},
+  shortjournal = {J. Funct. Prog.},
+  volume = {20},
+  number = {5--6},
+  pages = {577--615},
+  issn = {0956-7968, 1469-7653},
+  doi = {10.1017/S0956796810000195},
+  url = {https://www.cambridge.org/core/product/identifier/S0956796810000195/type/journal_article},
+  urldate = {2026-01-25},
+  abstract = {Existing package and system configuration management tools suffer from an imperative model, where system administration actions such as package upgrades or changes to system configuration files are stateful: they destructively update the state of the system. This leads to many problems, such as the inability to roll back changes easily, to deploy multiple versions of a package side-by-side, to reproduce a configuration deterministically on another machine, or to reliably upgrade a system. In this paper we show that we can overcome these problems by moving to a purely functional system configuration model. This means that all static parts of a system (such as software packages, configuration files and system startup scripts) are built by pure functions and are immutable, stored in a way analogous to a heap in a purely functional language. We have implemented this model in NixOS, a non-trivial Linux distribution that uses the Nix package manager to build the entire system configuration from a modular, purely functional specification.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/T9YWKR94/Dolstra et al. - 2010 - NixOS A purely functional Linux distribution.pdf}
+}
+
+@article{dolstraNixSafePolicyFree,
+  title = {Nix: {{A Safe}} and {{Policy-Free System}} for {{Software Deployment}}},
+  author = {Dolstra, Eelco and family=Jonge, given=Merijn, prefix=de, useprefix=true and Visser, Eelco},
+  abstract = {Existing systems for software deployment are neither safe nor sufficiently flexible. Primary safety issues are the inability to enforce reliable specification of component dependencies, and the lack of support for multiple versions or variants of a component. This renders deployment operations such as upgrading or deleting components dangerous and unpredictable. A deployment system must also be flexible (i.e., policy-free) enough to support both centralised and local package management, and to allow a variety of mechanisms for transferring components. In this paper we present Nix, a deployment system that addresses these issues through a simple technique of using cryptographic hashes to compute unique paths for component instances.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/LIU2DDNY/Dolstra et al. - Nix A Safe and Policy-Free System for Software Deployment.pdf}
+}
+
+@article{dolstraPurelyFunctionalSystema,
+  title = {Purely {{Functional System Conﬁguration Management}}},
+  author = {Dolstra, Eelco and Hemel, Armijn},
+  abstract = {System configuration management is difficult because systems evolve in an undisciplined way: packages are upgraded, configuration files are edited, and so on. The management of existing operating systems is strongly imperative in nature, since software packages and configuration data (e.g., /bin and /etc in Unix) can be seen as imperative data structures: they are updated in-place by system administration actions. In this paper we present an alternative approach to system configuration management: a purely functional method, analogous to languages like Haskell. In this approach, the static parts of a configuration — software packages, configuration files, control scripts — are built from pure functions, i.e., the results depend solely on the specified inputs of the function and are immutable. As a result, realising a system configuration becomes deterministic and reproducible. Upgrading to a new configuration is mostly atomic and doesn’t overwrite anything of the old configuration, thus enabling rollbacks. We have implemented the purely functional model in a small but realistic Linuxbased operating system distribution called NixOS.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/RH643B6X/Dolstra and Hemel - Purely Functional System Conﬁguration Management.pdf}
+}
+
+@book{functionalSoftware,
+  title = {The Purely Functional Software Deployment Model},
+  author = {Dolstra, Eelco},
+  date = {2006},
+  publisher = {s.n.},
+  location = {S.l.},
+  isbn = {978-90-393-4130-8},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/7HY2XZMP/Dolstra - 2006 - The purely functional software deployment model.pdf}
+}
+
+@article{hauschImprovingReproducibilityScientific2025,
+  title = {Improving Reproducibility of Scientific Software Using {{Nix}}/{{NixOS}}: {{A}} Case Study on the {{preCICE}} Ecosystem},
+  shorttitle = {Improving Reproducibility of Scientific Software Using {{Nix}}/{{NixOS}}},
+  author = {Hausch, Max and Hauser, Simon and Uekermann, Benjamin},
+  date = {2025-02-21},
+  journaltitle = {Electronic Communications of the EASST},
+  volume = {83},
+  publisher = {Electronic Communications of the EASST},
+  doi = {10.14279/ECEASST.V83.2613},
+  url = {http://eceasst.org/index.php/eceasst/article/view/2613},
+  urldate = {2026-01-25},
+  abstract = {Ensuring reproducibility of scientific software is crucial for the advancement of research and the validation of scientific findings. However, achieving reproducibility in software-intensive scientific projects is often challenging due to dependencies, system configurations, and software environments. In this paper, we present a possible solution for these challenges by utilizing Nix and NixOS. Nix is a package manager and functional language, which guarantees that a package and all its dependencies can be built reproducibly. NixOS is a purely functional Linux distribution, built on top of Nix, which enables the build of reproducible systems including configuration files, packages, and their dependencies. We study the potential of Nix and NixOS by a case study on the reproducibility of the preCICE ecosystem. preCICE is a coupling library for partitioned multiphysics simulations. The ecosystem includes diverse legacy solvers, adapters, and language bindings besides the coupling library itself making it a challenging and representative testcase. We demonstrate how to create a reproducible and self-contained environment for this ecosystem and discuss the benefits and limitations of using Nix and NixOS.},
+  issue = {Electronic Communications of the EASST, Vol. 83 (2025): deRSE24 - Selected Contributions of the 4th Conference for Research Software Engineering in Germany},
+  langid = {english},
+  keywords = {EasyBuild,HPC,Nix,NixOS,preCICE,Reproducibility,Spack},
+  file = {/Users/luis/Zotero/storage/FW5M9XIS/Hausch et al. - 2025 - Improving reproducibility of scientific software using NixNixOS A case study on the preCICE ecosys.pdf}
+}
+
+@inproceedings{hollandResearchIssuesNoFutz2001,
+  title = {Research Issues in {{No-Futz}} Computing},
+  booktitle = {Proceedings {{Eighth Workshop}} on {{Hot Topics}} in {{Operating Systems}}},
+  author = {Holland, D.A. and Josephson, W. and Magoutis, K. and Seltzer, M. and Stein, C.A. and Lim, A.},
+  date = {2001-05},
+  pages = {106--110},
+  doi = {10.1109/HOTOS.2001.990069},
+  url = {https://ieeexplore.ieee.org/document/990069/},
+  urldate = {2026-08-28},
+  abstract = {At the 1999 Workshop on Hot Topics in Operating Systems (HotOS VII), the attendees reached consensus that the most important issue facing the OS research community was "No-Futz" computing; eliminating the ongoing "futzing" that characterizes most systems today. To date, little research has been accomplished in this area. Our goal in this paper is to focus the research community on the challenges we face if we are to design systems that are truly futz-free, or even low-futz.},
+  eventtitle = {Eighth {{Workshop}} on {{Hot Topics}} in {{Operating Systems}}},
+  keywords = {Costs,Displays,Monitoring,Operating systems,Printers,Remuneration,Silver,TCPIP,User interfaces,Writing},
+  file = {/Users/luis/Zotero/storage/RLCD77DP/Holland et al. - 2001 - Research issues in No-Futz computing.pdf}
+}
+
+@online{ImportingPhantomsMeasuring,
+  title = {Importing {{Phantoms}}: {{Measuring LLM Package Hallucination Vulnerabilities}}},
+  url = {https://arxiv.org/html/2501.19012v1},
+  urldate = {2026-03-04},
+  file = {/Users/luis/Zotero/storage/AVB7MYEL/2501.html}
+}
+
+@article{kateGenerativeAIInfrastructure,
+  title = {Generative {{AI}} for {{Infrastructure}} as {{Code}} ({{IaC}}): {{Automating DevOps Configuration}}, {{Scripting}}, and {{Workflow Management}} with {{LLMs}}},
+  author = {Kate, Austin},
+  abstract = {This paper examines the application of generative AI in Infrastructure as Code (IaC), focusing on automating DevOps configuration, scripting, and workflow management using large language models (LLMs). As organizations embrace IaC to streamline infrastructure management, the complexity of configuration scripts often poses challenges. Generative AI can simplify and enhance these processes by automatically generating code snippets, optimizing configurations, and managing workflows. This study outlines the framework for integrating generative AI into IaC practices, highlighting its potential to improve efficiency, reduce errors, and accelerate deployment cycles. The findings suggest that leveraging LLMs in IaC significantly enhances productivity and fosters more resilient infrastructure management.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/ESSQLYT7/Kate - Generative AI for Infrastructure as Code (IaC) Automating DevOps Configuration, Scripting, and Work.pdf}
+}
+
+@article{konIaCEvalCodeGeneration,
+  title = {{{IaC-Eval}}: {{A Code Generation Benchmark}} for {{Cloud Infrastructure-as-Code Programs}}},
+  author = {Kon, Patrick Tser Jern and Liu, Jiachen and Qiu, Yiming and Fan, Weijun and He, Ting and Lin, Lei and Zhang, Haoran and Park, Owen M and Elengikal, George S and Kang, Yuxin and Chen, Ang and Chowdhury, Mosharaf and Lee, Myungjin and Wang, Xinyu},
+  abstract = {Infrastructure-as-Code (IaC), an important component of cloud computing, allows the definition of cloud infrastructure in high-level programs. However, developing IaC programs is challenging, complicated by factors that include the burgeoning complexity of the cloud ecosystem (e.g., diversity of cloud services and workloads), and the relative scarcity of IaC-specific code examples and public repositories. While large language models (LLMs) have shown promise in general code generation and could potentially aid in IaC development, no benchmarks currently exist for evaluating their ability to generate IaC code. We present IaC-Eval, a first step in this research direction. IaC-Eval’s dataset includes 458 human-curated scenarios covering a wide range of popular AWS services, at varying difficulty levels. Each scenario mainly comprises a natural language IaC problem description and an infrastructure intent specification. The former is fed as user input to the LLM, while the latter is a general notion used to verify if the generated IaC program conforms to the user’s intent; by making explicit the problem’s requirements that can encompass various cloud services, resources and internal infrastructure details. Our in-depth evaluation shows that contemporary LLMs perform poorly on IaC-Eval, with the top-performing model, GPT-4, obtaining a pass@1 accuracy of 19.36\%. In contrast, it scores 86.6\% on EvalPlus, a popular Python code generation benchmark, highlighting a need for advancements in this domain. We open-source the IaC-Eval dataset and evaluation framework at https://github.com/autoiac-project/iac-eval to enable future research on LLM-based IaC code generation.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/HB4ICWRL/Kon et al. - IaC-Eval A Code Generation Benchmark for Cloud Infrastructure-as-Code Programs.pdf}
+}
+
+@inproceedings{malkaDoesFunctionalPackage2025,
+  title = {Does {{Functional Package Management Enable Reproducible Builds}} at {{Scale}}? {{Yes}}.},
+  shorttitle = {Does {{Functional Package Management Enable Reproducible Builds}} at {{Scale}}?},
+  booktitle = {2025 {{IEEE}}/{{ACM}} 22nd {{International Conference}} on {{Mining Software Repositories}} ({{MSR}})},
+  author = {Malka, Julien and Zacchiroli, Stefano and Zimmermann, Théo},
+  date = {2025-04-28},
+  pages = {775--787},
+  publisher = {IEEE},
+  location = {Ottawa, ON, Canada},
+  doi = {10.1109/MSR66628.2025.00115},
+  url = {https://ieeexplore.ieee.org/document/11025777/},
+  urldate = {2026-01-25},
+  abstract = {Reproducible Builds (R-B) guarantee that rebuilding a software package from source leads to bitwise identical artifacts. R-B is a promising approach to increase the integrity of the software supply chain, when installing open source software built by third parties. Unfortunately, despite success stories like high build reproducibility levels in Debian packages, uncertainty remains among field experts on the scalability of R-B to very large package repositories.},
+  eventtitle = {2025 {{IEEE}}/{{ACM}} 22nd {{International Conference}} on {{Mining Software Repositories}} ({{MSR}})},
+  isbn = {979-8-3315-0183-9},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/BU2EA9BG/Malka et al. - 2025 - Does Functional Package Management Enable Reproducible Builds at Scale Yes..pdf}
+}
+
+@inproceedings{malkaReproducibilityBuildEnvironments2024,
+  title = {Reproducibility of {{Build Environments}} through {{Space}} and {{Time}}},
+  booktitle = {Proceedings of the 2024 {{ACM}}/{{IEEE}} 44th {{International Conference}} on {{Software Engineering}}: {{New Ideas}} and {{Emerging Results}}},
+  author = {Malka, Julien and Zacchiroli, Stefano and Zimmermann, Théo},
+  date = {2024-04-14},
+  pages = {97--101},
+  publisher = {ACM},
+  location = {Lisbon Portugal},
+  doi = {10.1145/3639476.3639767},
+  url = {https://dl.acm.org/doi/10.1145/3639476.3639767},
+  urldate = {2026-01-25},
+  abstract = {Modern software engineering builds up on the composability of software components, that rely on more and more direct and transitive dependencies to build their functionalities. This principle of reusability however makes it harder to reproduce projects’ build environments, even though reproducibility of build environments is essential for collaboration, maintenance and component lifetime. In this work, we argue that functional package managers provide the tooling to make build environments reproducible in space and time, and we produce a preliminary evaluation to justify this claim. Using historical data, we show that we are able to reproduce build environments of about 7 million Nix packages, and to rebuild 99.94\% of the 14 thousand packages from a 6-year-old Nixpkgs revision.},
+  eventtitle = {{{ICSE-NIER}}'24: 2024 {{ACM}}/{{IEEE}} 44th {{International Conference}} on {{Software Engineering}}: {{New Ideas}} and {{Emerging Results}}},
+  isbn = {979-8-4007-0500-7},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/N68334UI/Malka et al. - 2024 - Reproducibility of Build Environments through Space and Time.pdf}
+}
+
+@online{MCPLandscape,
+  title = {Model {{Context Protocol}} ({{MCP}}): {{Landscape}}, {{Security Threats}}, and {{Future Research Directions}}},
+  shorttitle = {Model {{Context Protocol}} ({{MCP}})},
+  author = {Hou, Xinyi and Zhao, Yanjie and Wang, Shenao and Wang, Haoyu},
+  date = {2025-10-07},
+  eprint = {2503.23278},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.2503.23278},
+  url = {http://arxiv.org/abs/2503.23278},
+  urldate = {2026-02-19},
+  abstract = {XINYI HOU, Huazhong University of Science and Technology, China YANJIE ZHAO, Huazhong University of Science and Technology, China SHENAO WANG, Huazhong University of Science and Technology, China HAOYU WANG∗, Huazhong University of Science and Technology, China The Model Context Protocol (MCP) is an emerging open standard that defines a unified, bi-directional communication and dynamic discovery protocol between AI models and external tools or resources, aiming to enhance interoperability and reduce fragmentation across diverse systems. This paper presents a systematic study of MCP from both architectural and security perspectives. We first define the full lifecycle of an MCP server, comprising four phases (creation, deployment, operation, and maintenance), further decomposed into 16 key activities that capture its functional evolution. Building on this lifecycle analysis, we construct a comprehensive threat taxonomy that categorizes security and privacy risks across four major attacker types: malicious developers, external attackers, malicious users, and security flaws, encompassing 16 distinct threat scenarios. To validate these risks, we develop and analyze real-world case studies that demonstrate concrete attack surfaces and vulnerability manifestations within MCP implementations. Based on these findings, the paper proposes a set of fine-grained, actionable security safeguards tailored to each lifecycle phase and threat category, offering practical guidance for secure MCP adoption. We also analyze the current MCP landscape, covering industry adoption, integration patterns, and supporting tools, to identify its technological strengths as well as existing limitations that constrain broader deployment. Finally, we outline future research and development directions aimed at strengthening MCP’s standardization, trust boundaries, and sustainable growth within the evolving ecosystem of tool-augmented AI systems. All collected data and implementation examples are publicly available at https://github.com/security-pride/MCP\_Landscape. CCS Concepts: • General and reference → Surveys and overviews; • Security and privacy → Software and application security; • Computing methodologies → Artificial intelligence.},
+  langid = {english},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Cryptography and Security},
+  file = {/Users/luis/Zotero/storage/XGB95Z4C/Hou et al. - 2025 - Model Context Protocol (MCP) Landscape, Security Threats, and Future Research Directions.pdf}
+}
+
+@online{ModularityLazyEvaluation,
+  title = {Modularity and {{Lazy Evaluation}} in {{Nixos}}: {{A Functional Approach}} to {{Operating System Configuration}}},
+  shorttitle = {Modularity and {{Lazy Evaluation}} in {{Nixos}}},
+  url = {https://ieeexplore.ieee.org/abstract/document/10991248?casa_token=SRx031-v1FkAAAAA:nqGmgm6Rbw4Um5tOoherapYaYndJ8JH5xvF-M0wRX4RuwscLFky9oG5f5RfFGh5UmHQfOPx633eWlQ},
+  urldate = {2026-03-02},
+  abstract = {In contrast to traditional imperative models the Linux distribution known as NixOS takes a purely functional declarative approach to system configuration. Two important facets of NixOS that are essential to its distinctive design are examined in this work: modularity and lazy evaluation. Users can create reusable and adaptable modules by utilizing NixOS's modularity which enables a clear division of responsibilities in system configuration. A defining characteristic of functional programming is lazy evaluation which guarantees that only essential components are assessed resulting in effective resource management. These features provide substantial advantages in practical situations especially with regard to the systems repeatability dependability and maintainability. NixOS offers a deterministic and atomic method of software deployment for sectors that depend on massive dispersed systems like cloud infrastructure and continuous integration sectors. Reproducibility across environments is ensured allowing for reliable rollback procedures and downtime-free upgrades. This work also shows via real-world experience how the NixOS module system abstracts complicated configuration sets facilitating quick setups and streamlining the administration of complex systems. NixOS is very configurable for both development and production environments because configurations are arranged into readily accessible modules that allow users to quickly adapt to a variety of environments without requiring manual intervention. Through real-world use cases this work explores the architectural ideas underlying NixOS's modular and lazy configuration model. It also looks at how current industry issues like scalable infrastructure management continuous deployment pipelines and repeatable builds can be addressed by NixOS's functional design.},
+  langid = {american}
+}
+
+@online{NixBetterDocker2024,
+  title = {Nix Is a Better {{Docker}} Image Builder than {{Docker}}'s Image Builder},
+  date = {2024-03-15},
+  url = {https://xeiaso.net/talks/2024/nix-docker-build/},
+  urldate = {2026-01-26},
+  abstract = {Xe Iaso's personal website.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/ZBNGT4L5/nix-docker-build.html}
+}
+
+@online{NixFasterDocker,
+  title = {Nix Is Faster than {{Docker}} Build},
+  url = {https://memo.d.foundation/topics/devbox/research/nix-is-faster-than-docker-build},
+  urldate = {2026-01-26},
+  abstract = {An exploration of how Nix outperforms Docker in building images, leveraging its deep understanding of package dependencies and content-addressable storage},
+  langid = {english},
+  organization = {Dwarves Memo},
+  file = {/Users/luis/Zotero/storage/GIAZWY9Q/nix-is-faster-than-docker-build.html}
+}
+
+@online{OSCodeMy2024,
+  title = {{{OS}} as {{Code}} - {{My Experience}} of {{NixOS}}},
+  date = {2024-02-21T16:26:21+08:00},
+  url = {https://thiscute.world/en/posts/my-experience-of-nixos/},
+  urldate = {2026-05-21},
+  abstract = {It’s February 2024, exactly 10 months since I started using NixOS. The beginner notes I wrote initially have received a lot of positive feedback and some sponsorships, becoming one of the most popular entry-level tutorials in the entire community. Since I created a dedicated GitHub repository and a separate documentation site for it in June 2023, it has garnered 1189 stars, and besides me, 37 other readers have submitted PRs:},
+  langid = {english},
+  organization = {This Cute World},
+  keywords = {blog},
+  file = {/Users/luis/Zotero/storage/HF6UDBJD/my-experience-of-nixos.html}
+}
+
+@article{srivatsaSurveyUsingLarge,
+  title = {A {{Survey}} of Using {{Large Language Models}} for {{Generating Infrastructure}} as {{Code}}},
+  author = {Srivatsa, Kalahasti Ganesh and Mukhopadhyay, Sabyasachi and Katrapati, Ganesh and Shrivastava, Manish},
+  abstract = {Infrastructure as Code (IaC) is a revolutionary approach which has gained significant prominence in the Industry. IaC manages and provisions IT infrastructure using machinereadable code by enabling automation, consistency across the environments, reproducibility, version control, error reduction and enhancement in scalability. However, IaC orchestration is often a painstaking effort which requires specialised skills as well as a lot of manual effort. Automation of IaC is a necessity in the present conditions of the Industry and in this survey, we study the feasibility of applying Large Language Models (LLM) to address this problem. LLMs are large neural network-based models which have demonstrated significant language processing abilities and shown to be capable of following a range of instructions within a broad scope. Recently, they have also been adapted for code understanding and generation tasks successfully, which makes them a promising choice for the automatic generation of IaC configurations. In this survey, we delve into the details of IaC, usage of IaC in different platforms, their challenges, LLMs in terms of code-generation aspects and the importance of LLMs in IaC along with our own experiments. Finally, we conclude by presenting the challenges in this area and highlighting the scope for future research.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/6F9ML5LJ/Srivatsa et al. - A Survey of using Large Language Models for Generating Infrastructure as Code.pdf}
+}
+
+@inproceedings{stokerUsingVirtualMachines2013,
+  title = {Using Virtual Machines to Improve Learning and Save Resources in an Introductory {{IT}} Course},
+  author = {Stoker, Geoff and Arnold, Todd and Maxwell, Paul},
+  date = {2013-10-02},
+  pages = {91--96},
+  doi = {10.1145/2512276.2512287},
+  abstract = {Information technology courses often require the use of software and hardware to support classroom learning. These systems can assist in achieving the learning objectives for a course through classroom problems and laboratory exercises. The procurement and maintenance of these systems can be a challenge even for well resourced organizations. In this paper we discuss how virtual machines can relieve organizations of some of their resource burdens while effectively achieving course learning objectives and provide examples of how that is currently done at the United States Military Academy.},
+  file = {/Users/luis/Zotero/storage/QD26FMQA/Stoker et al. - 2013 - Using virtual machines to improve learning and save resources in an introductory IT course.pdf}
+}
+
+@article{suAutoBashImprovingConfiguration,
+  title = {{{AutoBash}}: {{Improving}} Configuration Management with Operating System Causality Analysis},
+  author = {Su, Ya-Yunn and Attariyan, Mona and Flinn, Jason},
+  abstract = {AutoBash is a set of interactive tools that helps users and system administrators manage configurations. AutoBash leverages causal tracking support implemented within our modified Linux kernel to understand the inputs (causal dependencies) and outputs (causal effects) of configuration actions. It uses OS-level speculative execution to try possible actions, examine their effects, and roll them back when necessary. AutoBash automates many of the tedious parts of trying to fix a misconfiguration, including searching through possible solutions, testing whether a particular solution fixes a problem, and undoing changes to persistent and transient state when a solution fails. Our results show that AutoBash correctly identifies the solution to several CVS, gcc crosscompiler, and Apache configuration errors. We also show that causal analysis reduces AutoBash’s search time by an average of 35\% and solution verification time by an average of 70\%.},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/Z2LPBDJW/Su et al. - AutoBash Improving conﬁguration management with operating system causality analysis.pdf}
+}
+
+@inproceedings{valstarUsingDevContainersStandardize2020,
+  title = {Using {{DevContainers}} to {{Standardize Student Development Environments}}: {{An Experience Report}}},
+  shorttitle = {Using {{DevContainers}} to {{Standardize Student Development Environments}}},
+  booktitle = {Proceedings of the 2020 {{ACM Conference}} on {{Innovation}} and {{Technology}} in {{Computer Science Education}}},
+  author = {Valstar, Sander and Griswold, William G. and Porter, Leo},
+  date = {2020-06-15},
+  pages = {377--383},
+  publisher = {ACM},
+  location = {Trondheim Norway},
+  doi = {10.1145/3341525.3387424},
+  url = {https://dl.acm.org/doi/10.1145/3341525.3387424},
+  urldate = {2026-01-25},
+  abstract = {In computer science classes it can be a challenge to ensure every student has a functioning development environment. Running preconfigured servers that provide students with remote access can help mitigate most of these setup issues, however they can also introduce new limitations of their own. We propose using DevContainers to overcome the local machine setup difficulties for the students. DevContainers allow the instructional staff to provision a development environment (a Docker image) with all the correct software versions pre-configured. This development environment can be used on any major OS through Docker. Moreover, through this DevContainer configuration, Microsoft Visual Studio Code can integrate seamlessly with the Docker container to provide an experience for the user that is practically the same as working on the native OS. This work examines the value of employing a DevContainer setup in an Advanced Data Structures course and provides details for those interested in using DevContainers in their courses.},
+  eventtitle = {{{ITiCSE}} '20: {{Innovation}} and {{Technology}} in {{Computer Science Education}}},
+  isbn = {978-1-4503-6874-2},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/P8ACGCQN/Valstar et al. - 2020 - Using DevContainers to Standardize Student Development Environments An Experience Report.pdf}
+}
+
+@online{zhangDeployabilityCentricInfrastructureasCodeGeneration2025,
+  title = {Deployability-{{Centric Infrastructure-as-Code Generation}}: {{Fail}}, {{Learn}}, {{Refine}}, and {{Succeed}} through {{LLM-Empowered DevOps Simulation}}},
+  shorttitle = {Deployability-{{Centric Infrastructure-as-Code Generation}}},
+  author = {Zhang, Tianyi and Pan, Shidong and Zhang, Zejun and Xing, Zhenchang and Sun, Xiaoyu},
+  date = {2025},
+  doi = {10.48550/ARXIV.2506.05623},
+  url = {https://arxiv.org/abs/2506.05623},
+  urldate = {2026-01-25},
+  abstract = {Infrastructure-as-Code (IaC) generation holds significant promise for automating cloud infrastructure provisioning. Recent advances in Large Language Models (LLMs) present a promising opportunity to democratize IaC development by generating deployable infrastructure templates from natural language descriptions. However, current evaluation focuses on syntactic correctness while ignoring deployability, the critical measure of the utility of IaC configuration files. Six state-of-the-art LLMs performed poorly on deployability, achieving only 20.8\$\textbackslash sim\$30.2\% deployment success rate on the first attempt. In this paper, we construct DPIaC-Eval, the first deployability-centric IaC template benchmark consisting of 153 real-world scenarios cross 58 unique services. Also, we propose an LLM-based deployability-centric framework, dubbed IaCGen, that uses iterative feedback mechanism encompassing format verification, syntax checking, and live deployment stages, thereby closely mirroring the real DevOps workflows. Results show that IaCGen can make 54.6\$\textbackslash sim\$91.6\% generated IaC templates from all evaluated models deployable in the first 10 iterations. Additionally, human-in-the-loop feedback that provide direct guidance for the deployability errors, can further boost the performance to over 90\% passItr@25 on all evaluated LLMs. Furthermore, we explore the trustworthiness of the generated IaC templates on user intent alignment and security compliance. The poor performance (25.2\% user requirement coverage and 8.4\% security compliance rate) indicates a critical need for continued research in this domain.},
+  langid = {english},
+  pubstate = {prepublished},
+  version = {3},
+  keywords = {Artificial Intelligence (cs.AI),Computation and Language (cs.CL),FOS: Computer and information sciences,Software Engineering (cs.SE)},
+  file = {/Users/luis/Zotero/storage/K5WEA69G/Zhang et al. - 2025 - Deployability-Centric Infrastructure-as-Code Generation Fail, Learn, Refine, and Succeed through LL.pdf}
 }

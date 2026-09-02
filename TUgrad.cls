@@ -285,11 +285,14 @@
     \clearpage
     \setstretch{2}
     \setlength{\parindent}{0.5in}
-	\include{Pages/A-Preliminary/1-approval}
+	\input{Pages/A-Preliminary/1-approval}
+    \clearpage
     \ifackpage
-	\include{Pages/A-Preliminary/2-acknowledgments}\fi
+	\input{Pages/A-Preliminary/2-acknowledgments}
+    \clearpage\fi
     \setlength{\parindent}{0in}
-	\include{Pages/A-Preliminary/3-abstract}
+	\input{Pages/A-Preliminary/3-abstract}
+    \clearpage
 % -------------------------------------------------------------------------
 	\tableofcontents
     \newpage
@@ -303,7 +306,7 @@
     \phantomsection
     \addcontentsline{toc}{chapter}{Keys to Symbols, Abbreviations, or Nomenclature}
     \setlength{\parindent}{0in}
-    \include{Pages/A-Preliminary/4-abbreviations}
+    \input{Pages/A-Preliminary/4-abbreviations}
     \newpage\fi
     \setlength{\parindent}{0.5in}}
 %%% -----------------------------------------------------------------------
