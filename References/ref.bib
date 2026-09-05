@@ -80,6 +80,38 @@
   file = {/Users/luis/Zotero/storage/RH643B6X/Dolstra and Hemel - Purely Functional System Conﬁguration Management.pdf}
 }
 
+@online{duNixRescueReproducible2026,
+  title = {Nix to the {{Rescue}} for a {{Reproducible HPC-AI Software Stack}}},
+  author = {Du, Wenke and Gratien, Jean-Marc and Gayno, Raphael and Raffin, Bruno},
+  date = {2026-07-29},
+  eprint = {2607.26688},
+  eprinttype = {arXiv},
+  eprintclass = {cs.DC},
+  doi = {10.48550/arXiv.2607.26688},
+  url = {http://arxiv.org/abs/2607.26688},
+  urldate = {2026-09-02},
+  abstract = {Reproducibility in HPC remains difficult under the constraints of production supercomputers: no root access, limited internet, and software stacks that increasingly span C/C++, Fortran, Python, MPI, and GPU runtimes. Traditional approaches based on environment modules and Conda require manual intervention to locate dependencies, leak system libraries into builds, and fail to compose across projects. Containers help with deployment but do not by themselves guarantee reproducibility. We report on our experience building a hybrid HPC/AI software stack with Nix, covering local development on a workstation without root and remote deployment as an Apptainer image on a production cluster. Nix's consistent package layout, full environment isolation, and flake-based composition resolve the dependency discovery, leakage, and composition problems we encountered, while unifying C/C++ and Python management under a single declarative specification that also generates the deployment container. We discuss trade-offs against Spack and Guix, the development-versus-production split addressed via CMake presets, and current gaps in ML package coverage in Nixpkgs.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Distributed Parallel and Cluster Computing},
+  file = {/Users/luis/Zotero/storage/B2JHMKCP/Du et al. - 2026 - Nix to the Rescue for a Reproducible HPC-AI Software Stack.pdf;/Users/luis/Zotero/storage/X8RSM5BQ/2607.html}
+}
+
+@online{duNixRescueReproducible2026a,
+  title = {Nix to the {{Rescue}} for a {{Reproducible HPC-AI Software Stack}}},
+  author = {Du, Wenke and Gratien, Jean-Marc and Gayno, Raphael and Raffin, Bruno},
+  date = {2026-07-29},
+  eprint = {2607.26688},
+  eprinttype = {arXiv},
+  eprintclass = {cs.DC},
+  doi = {10.48550/arXiv.2607.26688},
+  url = {http://arxiv.org/abs/2607.26688},
+  urldate = {2026-09-02},
+  abstract = {Reproducibility in HPC remains difficult under the constraints of production supercomputers: no root access, limited internet, and software stacks that increasingly span C/C++, Fortran, Python, MPI, and GPU runtimes. Traditional approaches based on environment modules and Conda require manual intervention to locate dependencies, leak system libraries into builds, and fail to compose across projects. Containers help with deployment but do not by themselves guarantee reproducibility. We report on our experience building a hybrid HPC/AI software stack with Nix, covering local development on a workstation without root and remote deployment as an Apptainer image on a production cluster. Nix's consistent package layout, full environment isolation, and flake-based composition resolve the dependency discovery, leakage, and composition problems we encountered, while unifying C/C++ and Python management under a single declarative specification that also generates the deployment container. We discuss trade-offs against Spack and Guix, the development-versus-production split addressed via CMake presets, and current gaps in ML package coverage in Nixpkgs.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Distributed Parallel and Cluster Computing},
+  file = {/Users/luis/Zotero/storage/2W827DV7/Du et al. - 2026 - Nix to the Rescue for a Reproducible HPC-AI Software Stack.pdf;/Users/luis/Zotero/storage/98HJH3VR/2607.html}
+}
+
 @book{functionalSoftware,
   title = {The Purely Functional Software Deployment Model},
   author = {Dolstra, Eelco},
@@ -145,6 +177,21 @@
   abstract = {Infrastructure-as-Code (IaC), an important component of cloud computing, allows the definition of cloud infrastructure in high-level programs. However, developing IaC programs is challenging, complicated by factors that include the burgeoning complexity of the cloud ecosystem (e.g., diversity of cloud services and workloads), and the relative scarcity of IaC-specific code examples and public repositories. While large language models (LLMs) have shown promise in general code generation and could potentially aid in IaC development, no benchmarks currently exist for evaluating their ability to generate IaC code. We present IaC-Eval, a first step in this research direction. IaC-Eval’s dataset includes 458 human-curated scenarios covering a wide range of popular AWS services, at varying difficulty levels. Each scenario mainly comprises a natural language IaC problem description and an infrastructure intent specification. The former is fed as user input to the LLM, while the latter is a general notion used to verify if the generated IaC program conforms to the user’s intent; by making explicit the problem’s requirements that can encompass various cloud services, resources and internal infrastructure details. Our in-depth evaluation shows that contemporary LLMs perform poorly on IaC-Eval, with the top-performing model, GPT-4, obtaining a pass@1 accuracy of 19.36\%. In contrast, it scores 86.6\% on EvalPlus, a popular Python code generation benchmark, highlighting a need for advancements in this domain. We open-source the IaC-Eval dataset and evaluation framework at https://github.com/autoiac-project/iac-eval to enable future research on LLM-based IaC code generation.},
   langid = {english},
   file = {/Users/luis/Zotero/storage/HB4ICWRL/Kon et al. - IaC-Eval A Code Generation Benchmark for Cloud Infrastructure-as-Code Programs.pdf}
+}
+
+@online{lingAgentSkillsDataDriven2026,
+  title = {Agent {{Skills}}: {{A Data-Driven Analysis}} of {{Claude Skills}} for {{Extending Large Language Model Functionality}}},
+  shorttitle = {Agent {{Skills}}},
+  author = {Ling, George and Zhong, Shanshan and Huang, Richard},
+  date = {2026},
+  doi = {10.48550/ARXIV.2602.08004},
+  url = {https://arxiv.org/abs/2602.08004},
+  urldate = {2026-09-05},
+  abstract = {Agent skills extend large language model (LLM) agents with reusable, program-like modules that define triggering conditions, procedural logic, and tool interactions. As these skills proliferate in public marketplaces, it is unclear what types are available, how users adopt them, and what risks they pose. To answer these questions, we conduct a largescale, data-driven analysis of 40,285 publicly listed skills from a major marketplace. Our results show that skill publication tends to occur in short bursts that track shifts in community attention. We also find that skill content is highly concentrated in software engineering workflows, while information retrieval and content creation account for a substantial share of adoption. Beyond content trends, we uncover a pronounced supply-demand imbalance across categories, and we show that most skills remain within typical prompt budgets despite a heavy-tailed length distribution. Finally, we observe strong ecosystem homogeneity, with widespread intent-level redundancy, and we identify non-trivial safety risks, including skills that enable state-changing or system-level actions. Overall, our findings provide a quantitative snapshot of agent skills as an emerging infrastructure layer for agents and inform future work on skill reuse, standardization, and safety-aware design.},
+  pubstate = {prepublished},
+  version = {1},
+  keywords = {FOS: Computer and information sciences,Social and Information Networks (cs.SI),Software Engineering (cs.SE)},
+  file = {/Users/luis/Zotero/storage/VJCWY63Y/Ling et al. - 2026 - Agent Skills A Data-Driven Analysis of Claude Skills for Extending Large Language Model Functionali.pdf}
 }
 
 @inproceedings{malkaDoesFunctionalPackage2025,

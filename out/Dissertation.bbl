@@ -21,6 +21,13 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{duNixRescueReproducible2026}
+\BIBentryALTinterwordspacing
+W.~Du, J.-M. Gratien, R.~Gayno, and B.~Raffin. Nix to the {{Rescue}} for a
+  {{Reproducible HPC-AI Software Stack}}. [Online]. Available:
+  \url{http://arxiv.org/abs/2607.26688}
+\BIBentrySTDinterwordspacing
+
 \bibitem{valstarUsingDevContainersStandardize2020}
 \BIBentryALTinterwordspacing
 S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to
@@ -30,5 +37,10 @@ S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to
   0.4em\relax ACM, pp. 377--383. [Online]. Available:
   \url{https://dl.acm.org/doi/10.1145/3341525.3387424}
 \BIBentrySTDinterwordspacing
+
+\bibitem{srivatsaSurveyUsingLarge}
+K.~G. Srivatsa, S.~Mukhopadhyay, G.~Katrapati, and M.~Shrivastava, ``A
+  {{Survey}} of using {{Large Language Models}} for {{Generating
+  Infrastructure}} as {{Code}}.''
 
 \end{thebibliography}
