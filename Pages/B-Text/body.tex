@@ -26,13 +26,17 @@ OpenCode has the ability to communicate with an LSP server. The LSP server used 
 
 \subsection{Agent Skill}
 
-An agent skill is
+An agent skill is a reusable. It allows a general purpose AI agent into a specialist. It loads on demand, based on a skills description
+
+A skill is a markdown file that has these yaml frontmatter attributes
 
 for recurrent behaviors as it improves behavioral consistency. In the case of generating a flake
 
-We generated a skill for this purpose, with the assistance of a  \href{https://github.com/mgechev/skills-best-practices}{skill} on best practice for creating agent skill with Gemini 3.7 Flash, reasoning set to high. According to \cite{lingAgentSkillsDataDriven2026}
+We generated a skill for this purpose, with the assistance of a  \href{https://github.com/mgechev/skills-best-practices}{skill} on best practice for creating agent skill with Gemini 3.7 Flash, reasoning set to high.
 
-With agy, we had to manually refer to the skill. The agent attempted to install the dependencies from the input data imperatively via brew
+According to \cite{lingAgentSkillsDataDriven2026}, 
+
+With agy, we had to manually refer to the skill via \verbatim{/course_flake_generator}. The agent attempted to install the dependencies from the input data imperatively via brew, as the OS I conducted this test is with a MacBook
 
 
 
