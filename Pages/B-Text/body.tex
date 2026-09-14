@@ -63,9 +63,11 @@ We generated a skill for this purpose, with the assistance of a  \href{https://g
 
 According to \cite{lingAgentSkillsDataDriven2026},
 
-With agy, we had to manually refer to the skill via \verb|/course_flake_generator|. The agent attempted to install the dependencies from the input data imperatively via brew, as the OS I conducted this test is with a MacBook.
+With agy, we had to manually refer to the skill via \verb|/course_flake_generator|.
 
-This is a limitation with skills. Modifying the prompt to specify
+For our initial test, the agent attempted to install the dependencies from the input data imperatively via brew, as the OS I conducted this test is with a MacBook.
+
+This is a limitation with skills
 
 On prompts focusing on data science tracks, those inputs resulted in a lot of fails, despite specifying the custom skill, the agent opted to install dependencies via brew, resulting in no flake.nix file being generated. Skills aren't guaranteed to be deterministic
 
