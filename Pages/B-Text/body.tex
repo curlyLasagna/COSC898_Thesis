@@ -55,7 +55,11 @@ A skill may be loaded automatically by an agent based on the skill's description
 
 An agent skill may be also manually loaded by the user. In Antigravity CLI, a skill may be invoked by
 
-A skill is a markdown file that contains the following yaml front matter:
+A skill is a markdown file that contains the following yaml front matter metadata:
+\begin{itemize}
+  \item name: Name of the skill
+  \item description: The keywords that agents matches against a user's prompt to determine whether to trigger the skill. 
+\end{itemize}
 
 
 
@@ -106,6 +110,8 @@ On prompts focusing on data science tracks, those inputs resulted in a lot of fa
 \section{Comparison between Nix and DevContainer hardware resource usage}
 
 \chapter{Testing Results}
+
+Perform a group by for tool_calls to track the most common tool calls throughout the tests
 
 \section{Security Considerations with flakes}
 
