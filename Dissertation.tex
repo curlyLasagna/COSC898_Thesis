@@ -30,7 +30,21 @@
 %%% -----------------------------------------------------------------------
 \documentclass{TUgrad}
 \usepackage{pdfpages}
+\usepackage{fontspec}
+\newfontfamily\zedmono{ZedMono Nerd Font}[Scale=MatchLowercase]
 \usepackage{listings}
+\makeatletter
+% Ensure newlines are emitted at start of line before any multibyte Unicode characters
+\lst@AddToHook{InitVarsBOL}{\lst@TrackNewLines}
+\makeatother
+\lstset{
+  basicstyle=\zedmono\small\linespread{1}\selectfont,
+  columns=fullflexible,
+  keepspaces=true,
+  lineskip=0pt,
+  breaklines=true,
+  % breakatwhitespace=false,
+}
 %%% -----------------------------------------------------------------------
 %% replace with your title, no need to type in capital, the template will make capital automatically
 % use \\ to break the lines and make the title inverse pyramid looking
