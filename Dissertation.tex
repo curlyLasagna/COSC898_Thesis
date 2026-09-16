@@ -34,8 +34,9 @@
 \newfontfamily\zedmono{ZedMono Nerd Font}[Scale=MatchLowercase]
 \usepackage{listings}
 \makeatletter
-% Ensure newlines are emitted at start of line before any multibyte Unicode characters
-\lst@AddToHook{InitVarsBOL}{\lst@TrackNewLines}
+% Ensure newlines are emitted at start of line before any multibyte Unicode characters,
+% and allow listings to wrap lines (TUgrad.cls sets \exhyphenpenalty=10000 which prevents wrapping)
+\lst@AddToHook{InitVarsBOL}{\lst@TrackNewLines\exhyphenpenalty=50\hyphenpenalty=50}
 \makeatother
 \lstset{
   basicstyle=\zedmono\small\linespread{1}\selectfont,
@@ -43,7 +44,7 @@
   keepspaces=true,
   lineskip=0pt,
   breaklines=true,
-  % breakatwhitespace=false,
+  breakatwhitespace=false,
 }
 %%% -----------------------------------------------------------------------
 %% replace with your title, no need to type in capital, the template will make capital automatically

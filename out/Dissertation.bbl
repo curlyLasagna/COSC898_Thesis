@@ -28,6 +28,14 @@ W.~Du, J.-M. Gratien, R.~Gayno, and B.~Raffin. Nix to the {{Rescue}} for a
   \url{http://arxiv.org/abs/2607.26688}
 \BIBentrySTDinterwordspacing
 
+\bibitem{mengAgentHarnessLarge2026}
+\BIBentryALTinterwordspacing
+Q.~Meng, Y.~Wang, L.~Chen, Y.~Li, W.~Wu, W.~Jiang, Q.~Wang, C.~Lu, Y.~Gao,
+  Y.~Wu, and Y.~Hu. Agent {{Harness}} for {{Large Language Model Agents}}: {{A
+  Survey}}. [Online]. Available:
+  \url{https://www.preprints.org/manuscript/202604.0428}
+\BIBentrySTDinterwordspacing
+
 \bibitem{valstarUsingDevContainersStandardize2020}
 \BIBentryALTinterwordspacing
 S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to
@@ -42,5 +50,33 @@ S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to
 K.~G. Srivatsa, S.~Mukhopadhyay, G.~Katrapati, and M.~Shrivastava, ``A
   {{Survey}} of using {{Large Language Models}} for {{Generating
   Infrastructure}} as {{Code}}.''
+
+\bibitem{guptaCTFArchiveCapture2025}
+\BIBentryALTinterwordspacing
+P.~Gupta, A.~Gabani, C.~Nelson, and Y.~Shoshitaishvili. {{CTF Archive}}:
+  {{Capture}}, {{Curate}}, {{Learn Forever}}. [Online]. Available:
+  \url{http://arxiv.org/abs/2512.01233}
+\BIBentrySTDinterwordspacing
+
+\bibitem{5BuildingReproducible}
+\BIBentryALTinterwordspacing
+(5) {{Building Reproducible}}, {{Interactive C}}++ {{Learning Environments}}
+  with {{Nix Flakes}} and {{Pixi}} | {{LinkedIn}}. [Online]. Available:
+  \url{https://www.linkedin.com/pulse/building-reproducible-interactive-c-learning-nix-flakes-hasanovi%C4%87-tol9e/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{ImportingPhantomsMeasuring}
+\BIBentryALTinterwordspacing
+Importing {{Phantoms}}: {{Measuring LLM Package Hallucination
+  Vulnerabilities}}. [Online]. Available:
+  \url{https://arxiv.org/html/2501.19012v1}
+\BIBentrySTDinterwordspacing
+
+\bibitem{lingAgentSkillsDataDriven2026}
+\BIBentryALTinterwordspacing
+G.~Ling, S.~Zhong, and R.~Huang. Agent {{Skills}}: {{A Data-Driven Analysis}}
+  of {{Claude Skills}} for {{Extending Large Language Model Functionality}}.
+  [Online]. Available: \url{https://arxiv.org/abs/2602.08004}
+\BIBentrySTDinterwordspacing
 
 \end{thebibliography}
