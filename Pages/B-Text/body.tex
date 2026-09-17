@@ -129,15 +129,15 @@ By aggregating and analyzing the frequency distribution of agent tool invocation
 
 % Local open-source models, specifically Qwen~2.5 Coder 14B running via Ollama, demonstrated competent syntax generation on standard templates. However, smaller parameter weights resulted in higher susceptibility to attribute hallucination when encountering non-trivial nested attribute sets, emphasizing the indispensable role of the deterministic compiler feedback loop.
 
-\section{Hardware Resource Utilization Results}
+\section{Hardware Resource Utilization Results - TODO}
 
 The comparative benchmarking between Nix Flakes, OCI DevContainers, and bare-metal native execution demonstrated compelling computational advantages for declarative Nix environments, directly answering RQ2:
 
-\begin{itemize}
-	\item \textbf{Memory Overhead (RAM):} On macOS test hardware, OCI DevContainers required a background Linux hypervisor VM allocating a minimum baseline overhead of 1.8~GB to 2.4~GB of idle RAM. In contrast, Nix Flake development shells execute natively on the host kernel via environment variable manipulation (\texttt{PATH}, \texttt{LD\_LIBRARY\_PATH}), incurring negligible runtime memory overhead (less than 15~MB above the executed compiler processes).
-	\item \textbf{Disk Storage and Deduplication:} Across an academic curriculum suite spanning five distinct programming courses, standard Docker container images accumulated over 18.5~GB of disk storage due to redundant OS base layers and duplicate runtime libraries. Nix Flakes utilized the unified, content-addressed Nix store (\texttt{/nix/store}), where identical package builds are hardlinked and shared across environments, reducing total multi-course disk consumption to under 4.2~GB.
-	\item \textbf{Cold-Start Latency:} Activating a cached Nix development shell (\texttt{nix develop}) completed in an average of 0.85~seconds. In contrast, spinning up a dormant containerized development environment via Docker required an average of 7.4~seconds, representing an eight-fold improvement in cold-start responsiveness.
-\end{itemize}
+% \begin{itemize}
+% 	\item \textbf{Memory Overhead (RAM):} On macOS test hardware, OCI DevContainers required a background Linux hypervisor VM allocating a minimum baseline overhead of 1.8~GB to 2.4~GB of idle RAM. In contrast, Nix Flake development shells execute natively on the host kernel via environment variable manipulation (\texttt{PATH}, \texttt{LD\_LIBRARY\_PATH}), incurring negligible runtime memory overhead (less than 15~MB above the executed compiler processes).
+% 	\item \textbf{Disk Storage and Deduplication:} Across an academic curriculum suite spanning five distinct programming courses, standard Docker container images accumulated over 18.5~GB of disk storage due to redundant OS base layers and duplicate runtime libraries. Nix Flakes utilized the unified, content-addressed Nix store (\texttt{/nix/store}), where identical package builds are hardlinked and shared across environments, reducing total multi-course disk consumption to under 4.2~GB.
+% 	\item \textbf{Cold-Start Latency:} Activating a cached Nix development shell (\texttt{nix develop}) completed in an average of 0.85~seconds. In contrast, spinning up a dormant containerized development environment via Docker required an average of 7.4~seconds, representing an eight-fold improvement in cold-start responsiveness.
+% \end{itemize}
 
 \chapter{Security Considerations and Practical Adoption}\label{chap:discussion}
 
