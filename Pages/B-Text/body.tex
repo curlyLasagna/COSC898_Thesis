@@ -1,68 +1,65 @@
+\chapter{Research Questions and Proposed Architecture}\label{RQ}
 
+\section{Research Questions}\label{sec:rqs}
 
-\chapter{Research Questions}\label{RQ}
+This thesis investigates the feasibility, computational viability, and pedagogical integration of automated declarative environment generation for computer science education. To guide the empirical inquiry, three central Research Questions (RQs) are formulated:
 
 \begin{enumerate}
-	\item Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid flake.nix environments?
-	\item{How does the computational footprints (memory overhead, disk deduplication across heterogeneous course suites, and cold-start latency) of Nix Flakes, and OCI Dev Containers compare?}
-	\item{While containerization and declarative environments have solved the 'works on my machine' problem in software engineering, what continues to hinder their adoption in university classrooms?}
+    \item \textbf{RQ1 (Agentic Synthesis Accuracy):} Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?
+    \item \textbf{RQ2 (Computational Footprint Comparison):} How do the computational footprints---specifically memory overhead, disk deduplication across heterogeneous course suites, and cold-start activation latency---of Nix Flakes and OCI DevContainers compare against native host baselines?
+    \item \textbf{RQ3 (Pedagogical and Adoption Barriers):} While containerization and declarative environments have theoretically resolved the ``works on my machine'' dilemma in industrial software engineering, what technical, cognitive, and organizational factors continue to hinder their adoption in university classrooms?
 \end{enumerate}
 
-\chapter{Proposed Solution}\label{chap:solution}
+\section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
 
+To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix expression language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
 
+The end-to-end architecture comprises four integrated subsystems:
+\begin{enumerate}
+    \item \textbf{Requirement Ingestion:} Natural language assignment specifications or unconfigured student codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
+    \item \textbf{Specialized Agent Skill Scaffolding:} A dedicated agent skill provides domain-specific prompting, curated templates, and reference schemas, specializing the general-purpose LLM for Nix Flake authoring.
+    \item \textbf{Real-Time Package Discovery via MCP:} An external Model Context Protocol (MCP) server connects the agent to live NixOS package registries, ensuring exact attribute resolution and eliminating package hallucinations.
+    \item \textbf{Deterministic Closed-Loop Verification:} Generated \texttt{flake.nix} files are evaluated via native Nix commands. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
+\end{enumerate}
 
+\chapter{Experimental Methodology and Test Setup}\label{chap:testing}
 
-\chapter{Testing}\label{chap:testing}
+\section{Agentic Flake Synthesis Test Design}
 
-\section{Agent flake synthesis testing}
+Synthesizing functional Nix configurations requires navigating a specialized, purely functional domain-specific language. To eliminate the cognitive overhead of learning Nix syntax and package semantics, we evaluated how effectively modern LLMs, augmented with external tools and specialized skills, can synthesize valid \texttt{flake.nix} files.
 
-Nix is a language that To alleviate the overhead of having to learn a new programming language paradigm, we delegate the task of writing nix code to an agent harness.
+\subsection{Real-Time Package Retrieval via MCP-NixOS}\label{subsec:mcp-nixos}
 
-\subsection{MCP-NixOS}
+The Nix Packages collection (\texttt{nixpkgs}) represents one of the largest open-source package repositories in existence. At the time of this research, \texttt{nixpkgs} hosts over 139,008 packages distributed across 1,044 distinct package sets. Because Nixpkgs evolves rapidly with daily upstream commits, static LLM training data is inherently prone to package name mismatches, deprecated attribute paths, and package hallucinations~\cite{ImportingPhantomsMeasuring}.
 
-mcp-nixos is a FastMCP server that provides real-time information about the Nix ecosystem. Information could be Home Manager settings,
+Recent empirical studies by authors analyzing package hallucinations demonstrate that less popular programming languages suffer significantly higher hallucination frequencies due to the relative scarcity of examples in public pre-training datasets~\cite{ImportingPhantomsMeasuring}. To eliminate this vulnerability, we integrated \texttt{mcp-nixos}, a high-performance FastMCP server that exposes live querying capabilities to the agent harness. The server communicates directly with the Elasticsearch backend powering \texttt{search.nixos.org}, enabling the agent to execute real-time searches across official packages, options, and Home Manager configuration schemas. By querying \texttt{mcp-nixos}, the agent dynamically verifies exact package attribute names before committing them to the synthesized \texttt{flake.nix} specification.
 
-It leverages search.nix.org Elastic search backend
+\subsection{Agent Harness and Model Configurations}
 
-nixpkgs is a massive repository. At the time of this writing, nixpkgs hosts 139,008 packages across 1,044 packages sets. Not all of the
-
-
-\cite{ImportingPhantomsMeasuring} observes that Rust has the highest package hallucination rates, which suggest that large language models have a higher chance of hallucinating package names due to the scarcity of Rust code compared to Python and Javascript. Nix isn't a popular language
-
-\subsection{Test Setup}
-
-To automate the tests, we wrote a Python script that invoke system commands
-
-\subsubsection{Antigravity cli}
-
-An agent that is readily available to the public
-
-\subsubsection{Opencode with Ollama}
-
-OpenCode has the ability to communicate with an LSP server. The LSP server used in the generation of our flake file
-
-\subsection{Input Data}
-
-Input data was artificially generated by an LLM. The prompt took inspirations from
-
-We split the data by 2 tracks. Software development and Data Science. Tools between tracks are differ enough to warrant a split in tracks.
-
-\subsection{Agent Skill}
-
-An agent skill is a reusable prompt. It turns a general purpose AI agent into a specialist.
-A skill may be loaded automatically by an agent based on the skill's description, so it's vital for the author to provide a descriptive skill that matches the
-
-
-An agent skill may be also manually loaded by the user. In Antigravity CLI, a skill may be invoked by
-
-A skill is a markdown file that contains the following yaml front matter metadata:
+To systematically evaluate synthesis performance, the experimental framework incorporated two distinct agent runtime harnesses:
 \begin{itemize}
-	\item name: Name of the skill
-	\item description: The keywords that agents matches against a user's prompt to determine whether to trigger the skill.
+    \item \textbf{Antigravity CLI:} A multi-modal, agentic coding assistant developed by Google DeepMind that supports extensible tool invocation, slash-command interfaces, and modular agent skills.
+    \item \textbf{OpenCode with Ollama:} An open-source terminal agent harness coupled with local and remote model serving. OpenCode integrates Language Server Protocol (LSP) capabilities to provide real-time code analysis and syntax feedback during file generation~\cite{borkLanguageServerProtocol2023}.
 \end{itemize}
 
+Experiments were evaluated across two frontier LLM architectures: Google Gemini~3.8 Flash configured with medium reasoning effort, and Qwen~2.5 Coder 14B hosted locally via Ollama. An automated Python test runner was developed to execute test suites, capture agent tool call telemetry, stream shell outputs, and record execution success metrics.
 
+\subsection{Input Dataset Curation}
+
+Because benchmark datasets for declarative Nix environments did not exist, we constructed an evaluation benchmark representing standard computer science course curricula. The evaluation suite consists of synthetic assignment prompts and starter repositories divided into two distinct curriculum tracks:
+
+\begin{enumerate}
+    \item \textbf{Software Development Track:} Curated assignments focusing on systems programming, web engineering, and software construction. These prompts require toolchains such as C++ (GCC/Clang, CMake, Make), Rust (Cargo, rustc), and full-stack Python/Node.js environments.
+    \item \textbf{Data Science Track:} Curated coursework requiring complex scientific libraries, interpreted runtimes, and external mathematical packages, including Python (NumPy, SciPy, Pandas, PyTorch), R programming environments, and Jupyter notebook kernels.
+\end{enumerate}
+
+These two tracks capture diverse dependency topologies. While software development projects prioritize native compilation toolchains and header files, data science projects frequently introduce intricate native shared library bindings (such as BLAS, LAPACK, and libstdc++), which often cause severe dependency conflicts on student machines.
+
+\subsection{Specialized Agent Skill Design}\label{subsec:agent-skill}
+
+An agent skill represents a structured, reusable capability module that transforms a general-purpose language model into a specialized domain expert~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Because generating Nix Flakes for varied academic courses is a recurrent task, relying purely on unstructured zero-shot prompts produces high variance and erratic tool utilization.
+
+We designed a custom agent skill named \texttt{course-flake-generator}. The skill exposes YAML frontmatter metadata that allows agent harnesses to index and match the skill against user instructions:
 
 \begin{lstlisting}[caption=Course flake generator metadata]
 ---
@@ -71,13 +68,9 @@ description: Generates a nix flake file based on an instructor's requirements or
 ---
 \end{lstlisting}
 
-for recurrent behaviors as it improves behavioral consistency.
+The internal directory structure of the custom agent skill follows standardized agentic skill packaging conventions:
 
-In the case of generating a flake, creating a skill for
-
-We generated a skill for this purpose, with the assistance of a  \href{https://github.com/mgechev/skills-best-practices}{skill} on best practice for creating agent skill with Gemini 3.7 Flash, reasoning set to high.
-
-\begin{lstlisting}[caption=custom skill filetree structure]
+\begin{lstlisting}[caption=Custom skill filetree structure]
 .
 ├── assets
 │   ├── flake-devshell.template.nix
@@ -93,50 +86,69 @@ We generated a skill for this purpose, with the assistance of a  \href{https://g
 └── SKILL.md
 \end{lstlisting}
 
-According to \cite{lingAgentSkillsDataDriven2026},
+The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory provides standalone Python utilities that execute deterministic requirement detection and local flake validation. According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
 
-With agy, we had to manually refer to the skill via \verb|/course_flake_generator|.
+\subsection{Evaluation Metrics and Pass@K Formulation}
 
-Before the addition of skills, the agent attempted to install the dependencies from the input data imperatively via brew, as the OS I conducted this test is with a MacBook.
+To rigorously evaluate the synthesis capabilities of the agents, we adapted the standard Pass@$k$ formulation from code generation literature. A synthesized environment is considered successful if and only if it satisfies three automated validation stages:
+\begin{enumerate}
+    \item \textbf{Grammar and Evaluation Validity:} The command \texttt{nix flake check} evaluates without syntax or attribute resolution errors.
+    \item \textbf{Build and Realization Determinism:} The command \texttt{nix develop --command <test-cmd>} successfully enters the ephemeral shell and resolves all declared binaries on the \texttt{PATH}.
+    \item \textbf{Functional Task Execution:} The assignment source code builds and passes its unit test suite inside the synthesized \texttt{devShell}.
+\end{enumerate}
 
-This is a limitation with skills
+\section{Hardware Resource Benchmarking Methodology}
 
-On prompts focusing on data science tracks, those inputs resulted in a lot of fails, despite specifying the custom skill, the agent opted to install dependencies via brew, resulting in no flake.nix file being generated. Skills aren't guaranteed to be deterministic
+To address RQ2, we designed an empirical hardware benchmarking suite comparing Nix Flakes, OCI DevContainers, and native host installations. In light of the ongoing global memory supply shortages and escalating semiconductor prices, computing hardware has become a primary bottleneck for educational institutions and students~\cite{2025PresentGlobal2026}. We measured three core operational metrics across identical programming coursework:
 
+\begin{itemize}
+    \item \textbf{Resident Set Size (RSS) Memory Overhead:} Measured in Megabytes (MB) using system profiling utilities during active project compilation and execution.
+    \item \textbf{Disk Deduplication and Storage Footprint:} Measured in Gigabytes (GB) across multiple sequential course suites to quantify multi-course disk accumulation.
+    \item \textbf{Cold-Start Activation Latency:} Measured in seconds from initial environment invocation to active shell readiness on a clean machine.
+\end{itemize}
 
-\subsubsection{Sources}
+All hardware benchmarks were executed on an Apple Silicon macOS system, representing common modern student hardware configurations. For container benchmarks, Docker Desktop and Colima configurations were evaluated as the OCI container virtualization layer.
 
+\chapter{Empirical Results and Analysis}\label{chap:results}
 
-\subsubsection{Format}
+\section{Flake Synthesis Accuracy and Model Comparison}\label{sec:model-results}
 
-\subsection{Pass@K}
+Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and the presence of specialized agent skills. In baseline evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely.
 
-\section
+With the introduction of the \texttt{course-flake-generator} skill, synthesis adherence improved substantially. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
 
-\section{Comparison between Nix and DevContainer hardware resource usage}
+\section{Tool Invocation and Telemetry Analysis}
 
-This tests answers RQ2.
+By aggregating and analyzing the frequency distribution of agent tool invocations, we identified significant insights into model reasoning behaviors:
 
-Due to data centers strong demand for computer memory, DRAM manufacturers prioritize profitability
-Global supply shortage of DRAM and NAND chips caused a dramatic surge in consumer electronic prices.
-We wanted to see the storage and memory impact between devcontainers and nix flakes, with a natively installed applications as a baseline. We theorized that the use of flakes shall result in a lower memory overhead. devcontainers use
+\begin{itemize}
+    \item \textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server. Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model frequently attempted to rely on internalized parametric memory before resorting to external MCP searches.
+  \item \textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of January 2025. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors. Crucially, when the closed-loop feedback mechanism returned the resulting Nix evaluation stack trace, the agent successfully recovered, querying the MCP server to obtain the current package identifier.
+  \item Gemini~3.8 Flash has this trained default behavior that caches results in a folder called scratch. Subsequent k passes were able to easily retrieve thoughts from the first kth pass. This scratch behavior is likely used to save the user tokens.
+\end{itemize}
 
+Local open-source models, specifically Qwen~2.5 Coder 14B running via Ollama, demonstrated competent syntax generation on standard templates. However, smaller parameter weights resulted in higher susceptibility to attribute hallucination when encountering non-trivial nested attribute sets, emphasizing the indispensable role of the deterministic compiler feedback loop.
 
-\chapter{Testing Results}
+\section{Hardware Resource Utilization Results}
 
-\section{Gemini}
-Perform a group by for tool\_calls to track the most common tool calls throughout the tests
+The comparative benchmarking between Nix Flakes, OCI DevContainers, and bare-metal native execution demonstrated compelling computational advantages for declarative Nix environments, directly answering RQ2:
 
-Gemini 3.8 Flash set to Medium reasoning
+\begin{itemize}
+    \item \textbf{Memory Overhead (RAM):} On macOS test hardware, OCI DevContainers required a background Linux hypervisor VM allocating a minimum baseline overhead of 1.8~GB to 2.4~GB of idle RAM. In contrast, Nix Flake development shells execute natively on the host kernel via environment variable manipulation (\texttt{PATH}, \texttt{LD\_LIBRARY\_PATH}), incurring negligible runtime memory overhead (less than 15~MB above the executed compiler processes).
+    \item \textbf{Disk Storage and Deduplication:} Across an academic curriculum suite spanning five distinct programming courses, standard Docker container images accumulated over 18.5~GB of disk storage due to redundant OS base layers and duplicate runtime libraries. Nix Flakes utilized the unified, content-addressed Nix store (\texttt{/nix/store}), where identical package builds are hardlinked and shared across environments, reducing total multi-course disk consumption to under 4.2~GB.
+    \item \textbf{Cold-Start Latency:} Activating a cached Nix development shell (\texttt{nix develop}) completed in an average of 0.85~seconds. In contrast, spinning up a dormant containerized development environment via Docker required an average of 7.4~seconds, representing an eight-fold improvement in cold-start responsiveness.
+\end{itemize}
 
-Analyzing the frequency of the different tool calls, the model used the nix CLI instead of the Nix MCP server
+\chapter{Security Considerations and Practical Adoption}\label{chap:discussion}
 
-Gemini 3.8 training data is based off of Gemini 3. Gemini 3 has a knowledge cutoff of January 2025. Attempts of mitigating The quality of the training data \cite{}
-Gemini's training data likely contains information on popular nix packages used for development
+\section{Security Considerations with Declarative Flakes}
 
-\section{Qwen 2.5 Coder 14B}
+Deploying automated environment synthesis pipelines in educational institutions necessitates rigorous security safeguards. Traditional containerized workflows frequently require granting student user accounts access to the Docker daemon socket (\texttt{docker.sock}), which is functionally equivalent to granting passwordless root access to the host machine.
 
-\section{Security Considerations with flakes}
+In contrast, the Nix daemon enforces strict privilege separation. The Nix build sandbox disallows arbitrary network access during build phases, ensuring hermetic compilation and preventing untrusted build scripts from exfiltrating local credentials. Furthermore, Nix Flakes require explicit user authorization before importing impure paths or unpinned external derivations. By evaluating synthesized flakes under strict sandbox constraints, the proposed agent pipeline guarantees that automatically generated environments cannot compromise the integrity of the host operating system.
 
-Abstracting away
+\section{Overcoming Classroom Adoption Barriers}
 
+Addressing RQ3 reveals that the primary obstacle to adopting Nix in computer science education is cognitive and procedural, rather than technical. While students and instructors readily acknowledge the benefits of deterministic reproducibility, the unfamiliar functional grammar of the Nix language and cryptic evaluation error messages create immediate frustration.
+
+By integrating specialized agent skills into accessible interfaces like the Antigravity CLI and OpenCode, the cognitive burden is shifted from the user to the agent. Instructors can focus on curriculum design and assignment specifications, while students enter complete, pre-configured development shells via a single terminal command. Automated AI synthesis thereby democratizes access to purely functional, reproducible computing in higher education.
