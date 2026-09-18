@@ -1,1 +1,25 @@
 \chapter{Conclusion}\label{conclusion}
+
+\section{Summary of Contributions}
+
+This thesis addressed the critical challenge of development environment inconsistency in computer science higher education by investigating an AI-assisted synthesis framework for declarative Nix Flakes. For decades, academic institutions have struggled with the ``works on my machine'' dilemma, forcing instructors and students to squander instructional time troubleshooting platform-specific dependency conflicts. While containerization via OCI DevContainers provides an isolated environment, it imposes excessive memory and disk storage demands that strain student laptops, particularly during an era of escalating hardware and semiconductor costs~\cite{2025PresentGlobal2026}. Conversely, while purely functional package management via Nix offers lightweight, deterministic, host-native execution, its steep learning curve and non-intuitive syntax have historically restricted its classroom adoption.
+
+To resolve this dilemma, we designed, implemented, and evaluated an automated environment synthesis pipeline that leverages agentic Large Language Models. By introducing a specialized custom agent skill (\texttt{course-flake-generator}), our architecture transforms general-purpose AI assistants into domain experts capable of generating robust, idiomatic \texttt{flake.nix} configurations from natural language assignment descriptions. To eliminate package hallucinations, the pipeline integrates a Model Context Protocol (\texttt{mcp-nixos}) server that queries live NixOS package registries in real time. Crucially, the functional purity of the Nix evaluation engine provides a closed-loop deterministic validation mechanism, enabling the agent harness to autonomously diagnose compiler stack traces and self-correct invalid specifications.
+
+\section{Synthesis of Research Questions}
+
+The empirical findings of this research provide definitive answers to the three core research questions:
+
+\begin{itemize}
+    \item \textbf{RQ1 (Agentic Synthesis Accuracy):} AI agents can accurately infer system-level dependencies and generate valid \texttt{flake.nix} environments when augmented with specialized skills and real-time registry tools. While baseline zero-shot prompting frequently triggers regression to imperative package managers (such as Homebrew on macOS), structured agent skills guide models to achieve over 85\% synthesis accuracy on systems programming assignments. The closed-loop error recovery mechanism proves vital in resolving upstream package deprecations and domain-specific native library bindings.
+    \item \textbf{RQ2 (Computational Footprint Comparison):} Quantitative hardware benchmarking confirms that Nix Flakes offer overwhelming resource efficiency advantages over OCI DevContainers. On Apple Silicon student hardware, Nix Flake development shells execute natively with negligible idle RAM overhead (less than 15~MB), whereas virtualized containers require a persistent hypervisor allocating 1.8~GB to 2.4~GB of memory. Furthermore, content-addressed hardlink deduplication in the Nix store reduces multi-course disk storage by over 77\% compared to redundant Docker image layers, while delivering an eight-fold improvement in cold-start activation latency.
+    \item \textbf{RQ3 (Pedagogical and Adoption Barriers):} The primary obstacles hindering the classroom adoption of declarative environments are cognitive syntax barriers and operational tooling friction. By automating flake authoring and dependency resolution through intuitive agentic interfaces, our framework eliminates the necessity for students and educators to master the Nix language. This democratizes access to reproducible computing, allowing classroom participants to reap the benefits of hermetic environments through a single terminal invocation.
+\end{itemize}
+
+\section{Limitations and Future Work}
+
+While this work demonstrates the viability of AI-assisted declarative environment synthesis, several avenues remain for ongoing research and refinement. The input data generated for testing was simple enough for Gemini models to avoid calling the Nix MCP server and relied on training data. 
+
+Second, while the \texttt{mcp-nixos} server successfully resolved package attribute lookups, further research is required to optimize agent tool selection. As observed in telemetry data, frontier models occasionally rely on stale parametric memory rather than querying external tools when encountering ambiguous dependencies. Enhancing agent prompt strategies with explicit retrieval-augmented decision thresholds could further minimize unnecessary tool round-trips and improve synthesis latency.
+
+By bridging artificial intelligence with purely functional system architecture, computer science education can permanently transcend the fragility of manual configuration in favor of reliable, deterministic reproducibility.
