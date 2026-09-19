@@ -32,17 +32,17 @@ This thesis addresses the fundamental tension between computational efficiency a
 
 To formalize this investigation, this research pursues three primary Research Questions:
 \begin{enumerate}
-    \item \textbf{RQ1 (Agentic Synthesis Accuracy):} Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?
-    \item \textbf{RQ2 (Computational Footprint Comparison):} How do the computational footprints---specifically memory overhead, disk deduplication across heterogeneous course suites, and cold-start activation latency---of Nix Flakes and OCI DevContainers compare against native host baselines?
-    \item \textbf{RQ3 (Pedagogical and Adoption Barriers):} While containerization and declarative environments have theoretically resolved the ``works on my machine'' dilemma in industrial software engineering, what technical, cognitive, and organizational factors continue to hinder their adoption in university classrooms?
+	\item \textbf{RQ1 (Agentic Synthesis Accuracy):} Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?
+	\item \textbf{RQ2 (Computational Footprint Comparison):} How do the computational footprints---specifically memory overhead, disk deduplication across heterogeneous course suites, and cold-start activation latency---of Nix Flakes and OCI DevContainers compare against native host baselines?
+	\item \textbf{RQ3 (Pedagogical and Adoption Barriers):} While containerization and declarative environments have theoretically resolved the ``works on my machine'' dilemma in industrial software engineering, what technical, cognitive, and organizational factors continue to hinder their adoption in university classrooms?
 \end{enumerate}
 
 In answering these questions, this thesis makes the following concrete contributions:
 \begin{enumerate}
-    \item We present an end-to-end automated synthesis pipeline that translates natural language course assignment descriptions and unconfigured codebases into hermetic, multi-architecture \texttt{flake.nix} specifications.
-    \item We design and implement a custom agent skill and an \texttt{mcp-nixos} retrieval server that queries official Nixpkgs search indices in real time, virtually eliminating package hallucinations in generated environment files.
-    \item We construct a closed-loop deterministic validation mechanism that leverages compiler stack traces from native Nix evaluation commands to enable autonomous agent error diagnosis and self-correction.
-    \item We provide a comprehensive empirical benchmark on consumer laptop hardware comparing Nix Flakes, OCI DevContainers, and native host baselines across resident memory consumption, multi-course disk deduplication, and cold-start activation latency.
+	\item We present an end-to-end automated synthesis pipeline that translates natural language course assignment descriptions and unconfigured codebases into hermetic, multi-architecture \texttt{flake.nix} specifications.
+	\item We design and implement a custom agent skill and an \texttt{mcp-nixos} retrieval server that queries official Nixpkgs search indices in real time, virtually eliminating package hallucinations in generated environment files.
+	\item We construct a closed-loop deterministic validation mechanism that leverages compiler stack traces from native Nix evaluation commands to enable autonomous agent error diagnosis and self-correction.
+	\item We provide a comprehensive empirical benchmark on consumer laptop hardware comparing Nix Flakes, OCI DevContainers, and native host baselines across resident memory consumption, multi-course disk deduplication, and cold-start activation latency.
 \end{enumerate}
 
 \section{Organization of the Thesis}
