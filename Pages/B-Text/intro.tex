@@ -1,42 +1,53 @@
 \chapter{Introduction}\label{chap:intro}
 
-\section{Software Configuration Management}
+\section{Software Configuration Management and the Educational Setting}
 
-\section{Immutable Operating Systems}
+Software Configuration Management (SCM) has long been a foundational discipline in software engineering, establishing reproducibility and consistency across development, testing, and deployment cycles~\cite{OSCodeMy2024}. In professional enterprise environments, inconsistent developer machines frequently lead to the classic ``works on my machine'' syndrome, where subtle differences in underlying libraries, compiler versions, or environment variables introduce non-deterministic software failures. While modern software organizations mitigate these discrepancies through dedicated platform teams and automated continuous integration pipelines, educational environments face severe resource constraints and operational frictions~\cite{stokerUsingVirtualMachines2013}.
 
-A Linux operating system with a read-only root file system
+In university computer science curricula, students arrive with a heterogeneous array of personal devices spanning macOS, disparate Linux distributions, and Microsoft Windows~\cite{valstarUsingDevContainersStandardize2020}. Introductory and upper-level computer science courses routinely require specific toolchains, software development kits (SDKs), language runtimes, and specialized hardware libraries. Historically, instructional staff dedicate significant portions of early laboratory sessions to manual, imperative installation procedures. This practice frequently forces teaching assistants and professors to function as impromptu system administrators, diagnosing platform-specific dependency conflicts rather than focusing on core pedagogical concepts.
 
-The concept of read-only configuration
+\section{Evolution of Immutable and Declarative Systems}
 
-\section{Nix}
+Traditional Unix-like package managers, such as APT, Pacman, and macOS Homebrew, operate on an imperative, stateful paradigm. Under this model, packages mutate a shared global filesystem hierarchy (such as \texttt{/usr/bin} and \texttt{/usr/lib}) through in-place upgrades and package installations~\cite{dolstraNixSafePolicyFree}. This shared mutable state is fundamentally prone to dependency hell, where installing or upgrading a library required by one application breaks another application that relies on an incompatible version of the same dependency. Furthermore, rolling back a broken update is difficult or impossible, as package managers rarely maintain an atomic history of previous system states.
 
-\subsection{Nix Flakes}
+To eliminate the hazards of mutable system state, researchers proposed the concept of purely functional system configuration management~\cite{dolstraPurelyFunctionalSystema}. In an immutable operating system, the root filesystem and installed software artifacts are read-only and cryptographically verified. Systems built upon this philosophy decouple package definitions from host system state, ensuring that the installation of a software package is side-effect-free. Because packages are never overwritten in place, disparate versions of the same shared library can comfortably coexist without interference, establishing complete isolation and deterministic execution.
 
-Flakes is an experimental feature
+\section{The Nix Architecture and Nix Flakes}
 
-\cite{duNixRescueReproducible2026}
+The Nix package manager realizes this purely functional deployment paradigm by storing all built packages in a dedicated, read-only directory named the Nix store (\texttt{/nix/store})~\cite{dolstraNixOSPurelyFunctional2010}. Every store path incorporates an 85-base32 character cryptographic hash derived from the package's complete build inputs, including its source code, dependencies, build scripts, and compiler toolchains. If any build parameter or upstream dependency changes, the resulting hash changes, preventing collision and ensuring hermetic isolation.
 
-\section{Docker}
+Nix Flakes represent a modern evolution of the Nix ecosystem, providing a standardized, declarative interface for specifying software packages, development shells, and system configurations~\cite{duNixRescueReproducible2026}. A flake is governed by a \texttt{flake.nix} file that explicitly declares input repositories (such as specific commits of \texttt{nixpkgs}) and produces deterministic outputs, also called derivations. Accompanying this file is a lockfile (\texttt{flake.lock}), which pins all input dependencies to immutable commit revisions. For educational environments, Nix Flakes offer \texttt{devShells}, which enable students to enter a fully configured ephemeral development environment with a single command (\texttt{nix develop}) without altering their personal operating systems~\cite{bandtAssessmentReproducibilityNix2025}.
 
-\subsection{DevContainers}
+\section{Containerization and OCI DevContainers}
 
-\section{Agent Harness}
+Containerization, led by Docker and the Open Container Initiative (OCI), has emerged as the mainstream solution for environment reproducibility in both industry and academic labs~\cite{valstarUsingDevContainersStandardize2020}. By isolating processes using Linux kernel namespaces, control groups (cgroups), and layered copy-on-write filesystems, containers provide a self-contained execution environment bundled with all necessary dependencies. The development container (DevContainer) specification standardizes this workflow for Integrated Development Environments (IDEs), allowing developers and students to run their editing and debugging tools directly inside a containerized sandbox.
 
-An agent harness is a
+Despite their widespread adoption, container-based environments impose significant operational and computational costs in educational contexts. On non-Linux platforms, such as macOS and Windows, running containers requires a background Linux virtual machine (VM) hypervisor, which consumes substantial memory and CPU overhead~\cite{NixBetterDocker2024}. Moreover, the recent global volatility and surge in memory prices have constrained student laptop hardware upgrades, making heavyweight virtualized containers difficult to run alongside demanding modern IDEs and web browsers~\cite{2025PresentGlobal2026}. Additionally, container images duplicate common dependencies across distinct courses, resulting in severe disk bloat on student machines.
 
-\cite{mengAgentHarnessLarge2026}
+\section{Autonomous Agent Harnesses and Specialized Skills}
 
-\subsection{MCP Servers}
+Recent advances in Large Language Models (LLMs) have broadened artificial intelligence from passive code completion to autonomous problem solving~\cite{mengAgentHarnessLarge2026}. In an agent harness architecture, an LLM interacts with external tools, executes shell commands, and observes execution outputs to achieve complex, multi-step goals. These agentic workflows bridge the semantic gap between high-level human objectives and low-level system administration.
 
-% here are the commands
-% \chapter{}        ----chapter headings
-% \section{}        ------level 2 headings
-% \subsection{}     --------level 3 headings
-% \subsubsection{}  ----------level 4 headings
-% note that sometimes you may want to use the heading's format but not count it in the table of contents(TOC), use a * mark
+However, general-purpose LLMs struggle with domain-specific declarative configurations like Nix because Nix code constitutes a minute fraction of their training corpora compared to ubiquitous languages such as Python or JavaScript~\cite{ImportingPhantomsMeasuring}. To overcome this limitation, agent frameworks have introduced specialized agent skills~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. An agent skill encapsulates reusable prompts, reference schemas, workflow heuristics, and template scaffolding designed for a specific recurrent task. By loading a tailored skill, an agent is transformed into a specialized domain expert that exhibits greater behavioral consistency and follows best practices.
 
-\section{Table of Contents, List of Tables, and List of Figures}
+\section{The Model Context Protocol}
 
-% put your paper's bibtext in References/mine.bib and others work in References/ref.bib
+A critical challenge when utilizing LLMs for system administration is the risk of package hallucination, where models generate non-existent package names or deprecated configuration attributes~\cite{ImportingPhantomsMeasuring}. Because static model weights are inherently bound by knowledge cutoffs, agents require access to dynamic, up-to-date information regarding package registries.
 
-% And you can also use \ref\{\} to refer to a chapter/section/subsection/subsubsection or figures/tables with the label. Here is an example: this is Chapter~\ref{chap:intro}.
+The Model Context Protocol (MCP) establishes an open, standardized architecture for connecting AI assistants with real-time data sources and executable tool endpoints~\cite{borkLanguageServerProtocol2023}. Through MCP, an agent can communicate with domain-specific servers via structured JSON-RPC messages. In the context of Nix package management, an MCP server connected to official search indexes allows an agent to query package availability, inspect metadata, and retrieve valid configuration attributes in real time, eliminating guesswork and mitigating package hallucinations.
+
+\section{Thesis Objectives and Contributions}
+
+While Nix Flakes offer technical superiority over virtualized containers in terms of lightweight host-native execution, their steep learning curve, non-standard functional syntax, and cryptic error messages have severely hindered widespread adoption in higher education. This thesis addresses this barrier by designing and evaluating an AI-assisted environment synthesis framework that automates the generation, validation, and maintenance of Nix Flake environments.
+
+The primary contributions of this work are as follows:
+\begin{enumerate}
+    \item We design an automated agentic synthesis pipeline that converts instructors' natural language assignment prompts and existing source code repositories into valid, reproducible \texttt{flake.nix} configurations.
+    \item We implement a specialized custom agent skill and integrate a dedicated \texttt{mcp-nixos} server, providing real-time package verification against the 130,000+ packages in Nixpkgs to prevent hallucinated dependencies.
+    \item We construct a closed-loop deterministic evaluation mechanism that leverages the functional nature of Nix evaluation commands, enabling the agent to autonomously diagnose and self-correct syntax and dependency errors.
+    \item We conduct a rigorous comparative benchmark of computational resource consumption between Nix Flakes, OCI DevContainers, and native host installations across memory footprint, disk storage deduplication, and cold-start activation latency.
+\end{enumerate}
+
+\section{Organization of the Thesis}
+
+The remainder of this thesis is structured as follows. Chapter~\ref{chap:litreview} reviews related work in development containerization, infrastructure-as-code generation, and functional package management. Chapter~\ref{RQ} outlines the formal research questions investigated in this work. Chapter~\ref{chap:solution} presents the proposed AI-assisted synthesis architecture and custom agent skill design. Chapter~\ref{chap:testing} details the experimental evaluation methodology, test datasets, and hardware benchmarking configurations. Chapter~\ref{chap:results} presents the empirical results, model comparison, and tool utilization analysis. Chapter~\ref{chap:discussion} discusses security implications and classroom adoption trade-offs. Finally, Chapter~\ref{conclusion} concludes the thesis with a summary of findings and avenues for future research.
