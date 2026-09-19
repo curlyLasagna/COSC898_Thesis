@@ -42,10 +42,10 @@ While Nix Flakes offer technical superiority over virtualized containers in term
 
 The primary contributions of this work are as follows:
 \begin{enumerate}
-    \item We design an automated agentic synthesis pipeline that converts instructors' natural language assignment prompts and existing source code repositories into valid, reproducible \texttt{flake.nix} configurations.
-    \item We implement a specialized custom agent skill and integrate a dedicated \texttt{mcp-nixos} server, providing real-time package verification against the 130,000+ packages in Nixpkgs to prevent hallucinated dependencies.
-    \item We construct a closed-loop deterministic evaluation mechanism that leverages the functional nature of Nix evaluation commands, enabling the agent to autonomously diagnose and self-correct syntax and dependency errors.
-    \item We conduct a rigorous comparative benchmark of computational resource consumption between Nix Flakes, OCI DevContainers, and native host installations across memory footprint, disk storage deduplication, and cold-start activation latency.
+	\item We design an automated agentic synthesis pipeline that converts instructors' natural language assignment prompts and existing source code repositories into valid, reproducible \texttt{flake.nix} configurations.
+	\item We implement a specialized custom agent skill and integrate a dedicated \texttt{mcp-nixos} server, providing real-time package verification against the 130,000+ packages in Nixpkgs to prevent hallucinated dependencies.
+	\item We construct a closed-loop deterministic evaluation mechanism that leverages the functional nature of Nix evaluation commands, enabling the agent to autonomously diagnose and self-correct syntax and dependency errors.
+	\item We conduct a rigorous comparative benchmark of computational resource consumption between Nix Flakes, OCI DevContainers, and native host installations across memory footprint, disk storage deduplication, and cold-start activation latency.
 \end{enumerate}
 
 \section{Organization of the Thesis}
