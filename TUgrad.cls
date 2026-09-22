@@ -36,12 +36,12 @@
 \clubpenalty=10000
 %%% -----------------------------------------------------------------------
 \RequirePackage[
-  paperwidth=8.5in,
-  paperheight=11in,
-  left=1.5in,
-  right=1in,
-  top=1in,
-  bottom=1.1in
+	paperwidth=8.5in,
+	paperheight=11in,
+	left=1.5in,
+	right=1in,
+	top=1in,
+	bottom=1.1in
 ]{geometry}
 %%% -----------------------------------------------------------------------
 \RequirePackage{amsmath,amsthm}
@@ -62,28 +62,28 @@
 \titlespacing*{\subsubsection}{0.5in}{0em}{0em}
 \setlength{\parskip}{0pt}
 \titleformat{\chapter}[display]
-  {\normalfont\normalsize\centering}
-  {\scshape{Chapter} \thechapter.}
-  {0pt}
-  {\vspace{24pt}\normalsize\scshape}
+{\normalfont\normalsize\centering}
+{\scshape{Chapter} \thechapter.}
+{0pt}
+{\vspace{24pt}\normalsize\scshape}
 \titleformat{name=\chapter,numberless}
-  {\normalfont\normalsize\centering}
-  {}
-  {0pt}
-  {\normalsize\scshape}
+{\normalfont\normalsize\centering}
+{}
+{0pt}
+{\normalsize\scshape}
 \titleformat{\section}
-  {\normalfont\normalsize}
-  {\textit\thesection}{0.5em}{\textit}
+{\normalfont\normalsize}
+{\textit\thesection}{0.5em}{\textit}
 \titleformat{\subsection}[runin]
-  {\normalfont\normalsize}
-  {\textit\thesubsection}{0.5em}{\textit}[: \quad]
+{\normalfont\normalsize}
+{\textit\thesubsection}{0.5em}{\textit}[: \quad]
 \titleformat{\subsubsection}[runin]
-  {\normalfont\normalsize}
-  {\textit\thesubsubsection}{0.5em}{\textit}[: \quad]
+{\normalfont\normalsize}
+{\textit\thesubsubsection}{0.5em}{\textit}[: \quad]
 %%% -----------------------------------------------------------------------
 % Define the page heading to be page number only.
 \newcommand{\properpagestyle}{
-	   \pagestyle{myheadings}\markboth{}{}\markright{}}
+	\pagestyle{myheadings}\markboth{}{}\markright{}}
 %%% -----------------------------------------------------------------------
 % Disallow page breaks at hyphens
 \brokenpenalty=10000
@@ -96,13 +96,13 @@
 %%% -----------------------------------------------------------------------
 % Redefine the macro used for footnotes to use single spacing
 \long\def\@footnotetext#1{\insert\footins{\singlespacing\normalsize
-    \interlinepenalty\interfootnotelinepenalty
-    \splittopskip\footnotesep
-    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
-    \hsize\columnwidth \@parboxrestore
-   \edef\@currentlabel{\csname p@footnote\endcsname\@thefnmark}\@makefntext
-    {\rule{\z@}{\footnotesep}\ignorespaces
-      #1\strut}}}
+		\interlinepenalty\interfootnotelinepenalty
+		\splittopskip\footnotesep
+		\splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+		\hsize\columnwidth \@parboxrestore
+		\edef\@currentlabel{\csname p@footnote\endcsname\@thefnmark}\@makefntext
+		{\rule{\z@}{\footnotesep}\ignorespaces
+			#1\strut}}}
 %%% -----------------------------------------------------------------------
 % help showing original Latin characters with pdflatex
 \UseRawInputEncoding
@@ -134,16 +134,16 @@
 \RequirePackage[justification=centering,figurewithin=none,tablewithin=none]{caption}
 \RequirePackage{subcaption}
 \captionsetup[figure]{labelsep=period, name=Fig.,
-  justification=justified}
+	justification=justified}
 \captionsetup[subfigure]{labelformat=simple, labelsep=period}
 \captionsetup[table]{
-  justification=centering,
-  labelsep=newline,
-  singlelinecheck=false,
-  name=Table,
-  labelfont=sc,
-  textfont=sc,
-  skip=2pt}
+	justification=centering,
+	labelsep=newline,
+	singlelinecheck=false,
+	name=Table,
+	labelfont=sc,
+	textfont=sc,
+	skip=2pt}
 \renewcommand{\thetable}{\Roman{table}}
 \renewcommand{\thefigure}{\arabic{figure}}
 %%% -----------------------------------------------------------------------
@@ -225,10 +225,10 @@
 \newcommand{\degreename}[1]{\def\@degreename{#1}}
 \newcommand{\departmentname}[1]{\def\@departmentname{#1}}
 \newcommand{\graduationdate}[1]{\def\@graduationdate{#1}}
-\def\@thesistitle{    
-    TITLE OF THESIS/DISSERTATION TYPED IN CAPITAL LETTERS \\
-    (DOUBLE SPACED AND CENTERED) \\
-    (INVERSE PYRAMID)
+\def\@thesistitle{
+	TITLE OF THESIS/DISSERTATION TYPED IN CAPITAL LETTERS \\
+	(DOUBLE SPACED AND CENTERED) \\
+	(INVERSE PYRAMID)
 }
 \def\@authorname{(Student's Name Here)}
 \def\@submissiontype{dissertation}
@@ -242,99 +242,99 @@
 \newcommand{\DepartmentName}{\@departmentname}
 \newcommand{\GraduationDate}{\@graduationdate}
 \newcommand{\ifdissertation}[2]{%
-  \ifdefstring{\@submissiontype}{dissertation}{#1}{#2}}
+	\ifdefstring{\@submissiontype}{dissertation}{#1}{#2}}
 %%% -----------------------------------------------------------------------
 \RequirePackage[absolute,overlay]{textpos}
 \RequirePackage{setspace}
 \def\titlep{%
 	\thispagestyle{empty}%
-    \newpage\clearpage
-        \begin{center}
-            \singlespacing
-            \textbf{TOWSON UNIVERSITY} \\
-            \textbf{COLLEGE OF GRADUATE STUDIES}
-        \end{center}
-    \begin{textblock*}{\textwidth}(1.5in,1.86in)
-    	\begin{center}
-            \setstretch{2}
-            \textbf{\MakeUppercase\ThesisTitle}
-        \end{center}
-    \end{textblock*}
-    \begin{textblock*}{\textwidth}(1.5in,4in)
-        \begin{center}
-            \setstretch{2}
-            \vspace{1em}
-            \textbf{by} \\ \vspace{1.6em}
-            \textbf{\AuthorName} \\ 
-            \setstretch{1.42}
-            \textbf{A \SubmissionType} \\
-            \textbf{Presented to the faculty} \\
-            \textbf{of Towson University} \\
-            \textbf{in partial fulfillment} \\
-            \textbf{of the requirements for the degree} \\
-            \textbf{\DegreeName} \\
-            \textbf{\DepartmentName} \\ \vspace{1.78em}
-            \textbf{Towson University,}\\
-            \textbf{Towson, Maryland}\\
-            \textbf{21252} \\ \vspace{1.78em}
-            \textbf{\GraduationDate}
-        \end{center}
-    \end{textblock*}
-    \newpage}
+	\newpage\clearpage
+	\begin{center}
+		\singlespacing
+		\textbf{TOWSON UNIVERSITY} \\
+		\textbf{COLLEGE OF GRADUATE STUDIES}
+	\end{center}
+	\begin{textblock*}{\textwidth}(1.5in,1.86in)
+		\begin{center}
+			\setstretch{2}
+			\textbf{\MakeUppercase\ThesisTitle}
+		\end{center}
+	\end{textblock*}
+	\begin{textblock*}{\textwidth}(1.5in,4in)
+		\begin{center}
+			\setstretch{2}
+			\vspace{1em}
+			\textbf{by} \\ \vspace{1.6em}
+			\textbf{\AuthorName} \\
+			\setstretch{1.42}
+			\textbf{A \SubmissionType} \\
+			\textbf{Presented to the faculty} \\
+			\textbf{of Towson University} \\
+			\textbf{in partial fulfillment} \\
+			\textbf{of the requirements for the degree} \\
+			\textbf{\DegreeName} \\
+			\textbf{\DepartmentName} \\ \vspace{1.78em}
+			\textbf{Towson University,}\\
+			\textbf{Towson, Maryland}\\
+			\textbf{21252} \\ \vspace{1.78em}
+			\textbf{\GraduationDate}
+		\end{center}
+	\end{textblock*}
+	\newpage}
 %%% -----------------------------------------------------------------------
 \def\beforepreface{
-    \RaggedRight
+	\RaggedRight
 	\pagenumbering{roman}
 	\pagestyle{plain}
 	\titlep
-    \clearpage
-    \setstretch{2}
-    \setlength{\parindent}{0.5in}
+	\clearpage
+	\setstretch{2}
+	\setlength{\parindent}{0.5in}
 	\input{Pages/A-Preliminary/1-approval}
-    \clearpage
-    \ifackpage
-	\input{Pages/A-Preliminary/2-acknowledgments}
-    \clearpage\fi
-    \setlength{\parindent}{0in}
+	\clearpage
+	\ifackpage
+		\input{Pages/A-Preliminary/2-acknowledgments}
+		\clearpage\fi
+	\setlength{\parindent}{0in}
 	\input{Pages/A-Preliminary/3-abstract}
-    \clearpage
-% -------------------------------------------------------------------------
+	\clearpage
+	% -------------------------------------------------------------------------
 	\tableofcontents
-    \newpage
-    \phantomsection
-    \addcontentsline{toc}{chapter}{List of Tables}\listoftables
-    \newpage
-    \phantomsection
-    \addcontentsline{toc}{chapter}{List of Figures}\listoffigures
-    \newpage
-    \ifabbrspage
-    \phantomsection
-    \addcontentsline{toc}{chapter}{Keys to Symbols, Abbreviations, or Nomenclature}
-    \setlength{\parindent}{0in}
-    \input{Pages/A-Preliminary/4-abbreviations}
-    \newpage\fi
-    \setlength{\parindent}{0.5in}}
+	\newpage
+	\phantomsection
+	\addcontentsline{toc}{chapter}{List of Tables}\listoftables
+	\newpage
+	\phantomsection
+	\addcontentsline{toc}{chapter}{List of Figures}\listoffigures
+	\newpage
+	\ifabbrspage
+		\phantomsection
+		\addcontentsline{toc}{chapter}{Keys to Symbols, Abbreviations, or Nomenclature}
+		\setlength{\parindent}{0in}
+		\input{Pages/A-Preliminary/4-abbreviations}
+		\newpage\fi
+	\setlength{\parindent}{0.5in}}
 %%% -----------------------------------------------------------------------
 \def\prefacesection#1{%
-	 \chapter*{#1}}
+	\chapter*{#1}}
 %%% -----------------------------------------------------------------------
 \def\afterpreface{\newpage
-    \fancyhf{}
-    \renewcommand{\headrulewidth}{0pt}
-    \makeatletter
-    \let\ps@plain\ps@fancy
-    \makeatother
-    \rhead{\thepage}
-    \pagenumbering{arabic}
-    \properpagestyle
-    \setlength{\parindent}{0.5in}}
+	\fancyhf{}
+	\renewcommand{\headrulewidth}{0pt}
+	\makeatletter
+	\let\ps@plain\ps@fancy
+	\makeatother
+	\rhead{\thepage}
+	\pagenumbering{arabic}
+	\properpagestyle
+	\setlength{\parindent}{0.5in}}
 %%% -----------------------------------------------------------------------
 \let\@biblio\thebibliography
 \renewcommand{\thebibliography}[1]{%
 	\newpage
-    \renewcommand\cftchapafterpnum{\vskip0em}
-    \renewcommand\bibname{References}
-    \phantomsection
+	\renewcommand\cftchapafterpnum{\vskip0em}
+	\renewcommand\bibname{References}
+	\phantomsection
 	\addcontentsline{toc}{chapter}{References}
 	\@biblio{#1}}
 %%% -----------------------------------------------------------------------
@@ -342,20 +342,20 @@
 \renewcommand{\bibliography}[1]{\@ldbibliography{#1}}
 %%% -----------------------------------------------------------------------
 \def\@addcontentsline#1#2#3{\if@filesw \begingroup
-\let\label\@gobble \let\index\@gobble \let\glossary\@gobble
-\def\protect##1{\string\string\string##1\string\space
-   \space}\@temptokena{\thepage}%
-\edef\@tempa{\immediate\write
-\@auxout{\string\@writefile{#1}{\protect
-     \contentsline{#2}{#3}{\the\@temptokena}}}}\@tempa
-   \if@nobreak \ifvmode\nobreak\fi\fi\endgroup\fi}
+		\let\label\@gobble \let\index\@gobble \let\glossary\@gobble
+		\def\protect##1{\string\string\string##1\string\space
+			\space}\@temptokena{\thepage}%
+		\edef\@tempa{\immediate\write
+			\@auxout{\string\@writefile{#1}{\protect
+					\contentsline{#2}{#3}{\the\@temptokena}}}}\@tempa
+		\if@nobreak \ifvmode\nobreak\fi\fi\endgroup\fi}
 \def\tableofcontents{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
- \fi\chapter*{Table of Contents \@mkboth{CONTENTS}{CONTENTS}}
- \begingroup
- \setstretch{2}
-  \@starttoc{toc}
-  \endgroup
-  \relax}
+	\fi\chapter*{Table of Contents \@mkboth{CONTENTS}{CONTENTS}}
+	\begingroup
+	\setstretch{2}
+	\@starttoc{toc}
+	\endgroup
+	\relax}
 %%% -----------------------------------------------------------------------
 \renewcommand{\contentsname}{TABLE OF CONTENTS}
 \renewcommand{\cftdotsep}{1}
@@ -389,13 +389,13 @@
 %% default without numbering headings
 % uncomment \usenumbering to activate, or comment to deactivate
 \def\usenumbering{
-  \renewcommand{\thechapter}{\Roman{chapter}}
-  \renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
-  \renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}}
-  \renewcommand{\thesubsubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
-  \cftsetindents{section}{3.4em}{2em}
-  \cftsetindents{subsection}{6em}{3em}
-  \cftsetindents{subsubsection}{8.6em}{3.6em}}
+	\renewcommand{\thechapter}{\Roman{chapter}}
+	\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
+	\renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}}
+	\renewcommand{\thesubsubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+	\cftsetindents{section}{3.4em}{2em}
+	\cftsetindents{subsection}{6em}{3em}
+	\cftsetindents{subsubsection}{8.6em}{3.6em}}
 %%% -----------------------------------------------------------------------
 \renewcommand\cftchappresnum{Chapter~}
 \renewcommand\cftchapaftersnum{.}
@@ -406,25 +406,25 @@
 %%% -----------------------------------------------------------------------
 \let\oldappendix\appendix
 \renewcommand{\appendix}{%
-  \oldappendix
-  \setlength{\parindent}{0in}
-  \titleformat{\chapter}[display]
-      {\normalfont\normalsize\centering}
-      {\scshape{Appendix} \thechapter}
-      {0pt}
-      {\vspace{1.5em}\normalsize\scshape}
-  \addtocontents{toc} % Update \cftchappresnum within the .toc
-    {\protect\renewcommand{\protect\cftchappresnum}{Appendix }
-     \protect\renewcommand{\protect\cftchapaftersnum}{}}}
+	\oldappendix
+	\setlength{\parindent}{0in}
+	\titleformat{\chapter}[display]
+	{\normalfont\normalsize\centering}
+	{\scshape{Appendix} \thechapter}
+	{0pt}
+	{\vspace{1.5em}\normalsize\scshape}
+	\addtocontents{toc} % Update \cftchappresnum within the .toc
+	{\protect\renewcommand{\protect\cftchappresnum}{Appendix }
+		\protect\renewcommand{\protect\cftchapaftersnum}{}}}
 %%% -----------------------------------------------------------------------
 \RequirePackage{pdflscape}
 \newenvironment{landscapepage}{
-  \clearpage
-  \begin{landscape}
-  \thispagestyle{plain}
-}{
-  \end{landscape}
-  \clearpage }
+	\clearpage
+	\begin{landscape}
+		\thispagestyle{plain}
+		}{
+	\end{landscape}
+	\clearpage }
 %%% -----------------------------------------------------------------------
 \newcommand{\red}[1]{\textcolor{red}{\bf #1}}
 \newcommand{\blue}[1]{\textcolor{blue}{\bf #1}}
@@ -437,11 +437,11 @@
 %%% -----------------------------------------------------------------------
 \RequirePackage{enumitem}
 \setlist[itemize]{
-  topsep=0pt,
-  partopsep=0pt,
-  itemsep=0pt,
-  parsep=0pt,
-  labelindent=0.3in,
-  labelsep=0.2in,
-  leftmargin=0.5in
+	topsep=0pt,
+	partopsep=0pt,
+	itemsep=0pt,
+	parsep=0pt,
+	labelindent=0.3in,
+	labelsep=0.2in,
+	leftmargin=0.5in
 }
