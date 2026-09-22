@@ -121,6 +121,11 @@
 \RequirePackage{hyperref}
 \RequirePackage{cleveref}
 \RequirePackage{cite}
+\RequirePackage{fontspec}
+\RequirePackage{pdfpages}
+\RequirePackage{listings}
+\RequirePackage{svg}
+
 %%% -----------------------------------------------------------------------
 % algorithm needed packages
 \RequirePackage{algorithm,algpseudocode}
