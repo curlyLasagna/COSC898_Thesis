@@ -14,7 +14,7 @@ This thesis investigates the feasibility, computational viability, and pedagogic
 
 To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix expression language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
 
-The end-to-end architecture comprises four integrated subsystems:
+The end-to-end architecture comprises four integrated subsystems (illustrated in Figure~\ref{fig:flake-agent-pipeline}):
 \begin{enumerate}
 	\item \textbf{Requirement Ingestion:} Natural language assignment specifications or unconfigured student codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
 	\item \textbf{Specialized Agent Skill Scaffolding:} A dedicated agent skill provides domain-specific prompting, curated templates, and reference schemas, specializing the general-purpose LLM for Nix Flake authoring.
@@ -23,7 +23,12 @@ The end-to-end architecture comprises four integrated subsystems:
 \end{enumerate}
 
 \begin{landscapepage}
-
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{Figures/flake_generation_agent_horizontal.pdf}
+    \caption{Autonomous Agentic Pipeline for Synthesizing \texttt{flake.nix}}
+    \label{fig:flake-agent-pipeline}
+\end{figure}
 \end{landscapepage}
 
 \chapter{Experimental Methodology and Test Setup}\label{chap:testing}
