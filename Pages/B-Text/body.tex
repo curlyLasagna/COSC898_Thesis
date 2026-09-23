@@ -164,6 +164,8 @@ Deploying automated environment synthesis pipelines in educational institutions 
 
 In contrast, the Nix daemon enforces strict privilege separation. The Nix build sandbox disallows arbitrary network access during build phases, ensuring hermetic compilation and preventing untrusted build scripts from exfiltrating local credentials. Furthermore, Nix Flakes require explicit user authorization before importing impure paths or unpinned external derivations. By evaluating synthesized flakes under strict sandbox constraints, the proposed agent pipeline guarantees that automatically generated environments cannot compromise the integrity of the host operating system.
 
+The nixpkgs repository allows anyone to review incoming pull requests.
+
 \section{Overcoming Classroom Adoption Barriers}
 
 Addressing RQ3 reveals that the primary obstacle to adopting Nix in computer science education is cognitive and procedural, rather than technical. While students and instructors readily acknowledge the benefits of deterministic reproducibility, the unfamiliar functional grammar of the Nix language and cryptic evaluation error messages create immediate frustration.
@@ -176,7 +178,7 @@ The entirety of nixpkgs is stored in a GitHub repository. Unrelated packages res
 
 GitHub
 
-The nixpkgs repository allows anyone to review incoming pull requests.
+
 
 There are a lot of packages, and some have been abandoned due to a lack of maintainers to review the PRs sent by viewers
 
