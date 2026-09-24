@@ -70,7 +70,21 @@ Because benchmark datasets for declarative Nix environments did not exist, we co
 	\item \textbf{Data Science Track:} Curated coursework requiring complex scientific libraries, interpreted runtimes, and external mathematical packages, including Python (NumPy, SciPy, Pandas, PyTorch), R programming environments, and Jupyter notebook kernels.
 \end{enumerate}
 
-These two tracks capture diverse dependency topologies. While software development projects prioritize native compilation toolchains and header files, data science projects frequently introduce intricate native shared library bindings (such as BLAS, LAPACK, and libstdc++), which often cause severe dependency conflicts on student machines.
+These two tracks capture diverse dependencies. While software development projects prioritize native compilation toolchains, data science projects introduce intricate native shared library bindings (such as BLAS, LAPACK, and libstdc++), which often cause severe dependency conflicts on student machines.
+
+\subsection{Input Data Format}
+
+The input data is stored as a json file. Each input contains the following attributes:
+
+\begin{lstlisting}
+  {
+    "track": "...",
+    "instruction": "...",
+    "dependency": "...",
+  }
+\end{lstlisting}
+
+Where track is either computer science or data science. \texttt{Instruction} is the natural language that a user might provide, assuming that 
 
 \subsection{Specialized Agent Skill Design}\label{subsec:agent-skill}
 
