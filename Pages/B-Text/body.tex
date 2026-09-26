@@ -12,7 +12,7 @@ This thesis investigates the feasibility, computational viability, and pedagogic
 
 \end{enumerate}
 
-\section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
+\Section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
 
 To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix expression language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
 
@@ -181,11 +181,6 @@ Deploying automated environment synthesis pipelines in educational institutions 
 In contrast, the Nix daemon enforces strict privilege separation. The Nix build sandbox disallows arbitrary network access during build phases, ensuring hermetic compilation and preventing untrusted build scripts from exfiltrating local credentials. Furthermore, Nix Flakes require explicit user authorization before importing impure paths or unpinned external derivations. By evaluating synthesized flakes under strict sandbox constraints, the proposed agent pipeline guarantees that automatically generated environments cannot compromise the integrity of the host operating system.
 
 The nixpkgs repository allows anyone to review incoming pull requests.
-
-\section{Overcoming Classroom Adoption Barriers}
-
-Addressing RQ3 reveals that the primary obstacle to adopting Nix in computer science education is
-
 
 
 \section{Longevity Concerns with Nix}
