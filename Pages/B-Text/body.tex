@@ -7,31 +7,55 @@ This thesis investigates the feasibility, computational viability, and pedagogic
 \begin{enumerate}
 	\item \textbf{RQ1 (Agentic Synthesis Accuracy):} Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?
 	\item \textbf{RQ2 (Computational Footprint Comparison):} How do the computational footprints---specifically memory overhead, disk deduplication across heterogeneous course suites, and cold-start activation latency---of Nix Flakes and OCI DevContainers compare against native host baselines?
-	\item \textbf{RQ3 (Concerns with Reliance on Nix):} The nix package manager hosts all of the packages installed through Nix. Is the reliance of Nix a point of concern for in academia?
-
-
+	\item \textbf{RQ3 (Single-Ecosystem Dependency and Redundancy Risks):} What availability and operational risks arise from relying exclusively on a single package management ecosystem without secondary fallbacks, and how does the absence of redundant distribution channels impact the student experience when upstream disruptions prevent package installation?
 \end{enumerate}
 
-\Section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
+\section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
 
 To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix expression language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
 
-The end-to-end architecture comprises four integrated subsystems (illustrated in Figure~\ref{fig:flake-agent-pipeline}):
+The end-to-end architecture comprises four integrated subsystems (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
 \begin{enumerate}
-	\item \textbf{Requirement Ingestion:} Natural language assignment specifications or unconfigured student codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
-	\item \textbf{Specialized Agent Skill Scaffolding:} A dedicated agent skill provides domain-specific prompting, curated templates, and reference schemas, specializing the general-purpose LLM for Nix Flake authoring.
-	\item \textbf{Real-Time Package Discovery via MCP:} An external Model Context Protocol (MCP) server connects the agent to live NixOS package registries, ensuring exact attribute resolution and eliminating package hallucinations.
-	\item \textbf{Deterministic Closed-Loop Verification:} Generated \texttt{flake.nix} files are evaluated via native Nix commands. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
+	\item \textbf{Requirement Ingestion (Figure~\ref{fig:pipeline-ingestion}):} Natural language assignment specifications or unconfigured student codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
+	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval (Figure~\ref{fig:pipeline-agent-core}):} A dedicated agent skill provides domain-specific prompting, curated templates, and reference schemas, while a live Model Context Protocol (MCP) server connects the agent to official NixOS package registries.
+	\item \textbf{Deterministic Closed-Loop Verification (Figure~\ref{fig:pipeline-verification}):} Generated \texttt{flake.nix} files are evaluated via native Nix commands. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
+	\item \textbf{Output Artifacts and Runtime Deployment (Figure~\ref{fig:pipeline-artifacts}):} A production-ready, pure \texttt{flake.nix} file is finalized alongside a cryptographically pinned \texttt{flake.lock}, immediately activating a reproducible developer shell.
 \end{enumerate}
 
-\begin{landscapepage}
-	\begin{figure}[htbp]
-		\centering
-		\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{Figures/flake_generation_agent_horizontal.pdf}
-		\caption{Autonomous Agentic Pipeline for Synthesizing \texttt{flake.nix}}
-		\label{fig:flake-agent-pipeline}
-	\end{figure}
-\end{landscapepage}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth,height=0.38\textheight,keepaspectratio]{Figures/pipeline_overview.pdf}
+	\caption{High-Level End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis Pipeline}
+	\label{fig:pipeline-overview}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_1_ingestion.pdf}
+	\caption{Phase 1: Project Ingestion and Context Discovery Subsystem Across Greenfield and Brownfield Projects}
+	\label{fig:pipeline-ingestion}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.95\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_2_agent_core.pdf}
+	\caption{Phase 2: Agent Core Orchestration Engine with Domain Skill Scaffolding and FastMCP Package Discovery}
+	\label{fig:pipeline-agent-core}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_3_verification.pdf}
+	\caption{Phase 3: Deterministic Closed-Loop Verification Engine and Iterative Self-Correction Feedback Loop}
+	\label{fig:pipeline-verification}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_4_artifacts.pdf}
+	\caption{Phase 4: Synthesized \texttt{flake.nix} Artifacts and Reproducible Developer Shell Activation}
+	\label{fig:pipeline-artifacts}
+\end{figure}
 
 \chapter{Experimental Methodology and Test Setup}\label{chap:testing}
 
@@ -135,7 +159,7 @@ To rigorously evaluate the synthesis capabilities of the agents, we adapted the 
 To address RQ2, we designed an empirical hardware benchmarking suite comparing Nix Flakes, OCI DevContainers, and native host installations. In light of the ongoing global memory supply shortages and escalating semiconductor prices, computing hardware has become a primary bottleneck for educational institutions and students~\cite{2025PresentGlobal2026}. We measured three core operational metrics across identical programming coursework:
 
 \begin{itemize}
-	\item \textbf{Resident Set Size (RSS) Memory Overhead:} Measured in Megabytes (MB) using system profiling utilities during active project compilation and execution.
+	\item \textbf{Resident Set Size (RSS) Memory Overhead:} Measured in Megabytes (MB) using system profiling utilities when the user is using the .
 	\item \textbf{Disk Deduplication and Storage Footprint:} Measured in Gigabytes (GB) across multiple sequential course suites to quantify multi-course disk accumulation.
 	\item \textbf{Cold-Start Activation Latency:} Measured in seconds from initial environment invocation to active shell readiness on a clean machine.
 \end{itemize}
@@ -148,14 +172,17 @@ All hardware benchmarks were executed on an Apple Silicon macOS system, represen
 
 Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and the presence of specialized agent skills. In baseline evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely.
 
-With the introduction of the \texttt{course-flake-generator} skill, synthesis adherence improved substantially. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
+With the introduction of the \texttt{course-flake-generator} skill, synthesis adherence improved substantially. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in tfhe Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
 
 \section{Tool Invocation and Telemetry Analysis}
 
 By aggregating and analyzing the frequency distribution of agent tool invocations, we identified significant insights into model reasoning behaviors:
 
 \begin{itemize}
-	\item \textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server. Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model frequently attempted to rely on internalized parametric memory before resorting to external MCP searches.
+	\item \textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server.
+        Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model frequently attempted to rely on internalized parametric memory before resorting to external MCP searches.
+
+        The artificially 
 	\item \textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of January 2025. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors. Crucially, when the closed-loop feedback mechanism returned the resulting Nix evaluation stack trace, the agent successfully recovered, querying the MCP server to obtain the current package identifier.
 	\item Gemini~3.8 Flash has this trained default behavior that caches results in a folder called scratch. Subsequent k passes were able to easily retrieve thoughts from the first kth pass. This scratch behavior is likely used to save the user tokens.
 \end{itemize}
