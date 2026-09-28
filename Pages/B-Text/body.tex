@@ -180,9 +180,9 @@ By aggregating and analyzing the frequency distribution of agent tool invocation
 
 \begin{itemize}
 	\item \textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server.
-        Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model frequently attempted to rely on internalized parametric memory before resorting to external MCP searches.
+	      Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model frequently attempted to rely on internalized parametric memory before resorting to external MCP searches.
 
-        The artificially 
+	      The artificially
 	\item \textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of January 2025. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors. Crucially, when the closed-loop feedback mechanism returned the resulting Nix evaluation stack trace, the agent successfully recovered, querying the MCP server to obtain the current package identifier.
 	\item Gemini~3.8 Flash has this trained default behavior that caches results in a folder called scratch. Subsequent k passes were able to easily retrieve thoughts from the first kth pass. This scratch behavior is likely used to save the user tokens.
 \end{itemize}
