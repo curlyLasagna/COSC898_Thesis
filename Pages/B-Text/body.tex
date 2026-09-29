@@ -79,13 +79,11 @@ Recent studies by authors analyzing package hallucinations demonstrate that less
 
 \subsection{Agent Harness and Model Configurations}
 
-To systematically evaluate synthesis performance, the experimental framework incorporated two distinct agent runtime harnesses:
-\begin{itemize}
-	\item \textbf{Antigravity CLI:} A multi-modal, agent harness developed by Google DeepMind that supports extensible tool invocation, slash-command interfaces, and modular agent skills.
-	\item \textbf{OpenCode with Ollama:} An open-source terminal agent harness coupled with local and remote model serving. OpenCode integrates Language Server Protocol (LSP) capabilities to provide real-time code analysis and syntax feedback during file generation~\cite{borkLanguageServerProtocol2023}.
-\end{itemize}
+To systematically evaluate synthesis performance, the experimental framework will be tested with the Antigravity CLI agent harness with models  
 
-Experiments were evaluated across two frontier LLM architectures: Google Gemini~3.8 Flash configured with medium reasoning effort, and Qwen~2.5 Coder 14B hosted locally via Ollama. An automated Python test runner was developed to execute test suites, capture agent tool call telemetry, stream shell outputs, and record execution success metrics.
+Experiments were evaluated across two LLM architectures: Google Gemini~3.8 Flash configured with medium reasoning effort, and GPT-OSS 120B.
+
+An automated Python test runner was developed to execute test suites, capture agent tool call telemetry, stream shell outputs, and record execution success metrics.
 
 \subsection{Input Dataset Curation}
 
