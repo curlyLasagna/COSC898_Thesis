@@ -61,7 +61,7 @@ The end-to-end architecture comprises four integrated subsystems (illustrated at
 
 \section{Agentic Flake Synthesis Test Design}
 
-Synthesizing functional Nix configurations requires navigating a specialized, purely functional domain-specific language. To eliminate the cognitive overhead of learning Nix syntax and package semantics, we evaluated how effectively modern LLMs, augmented with external tools and specialized skills, can synthesize valid \texttt{flake.nix} files.
+Synthesizing flake.nix configuration files requires navigating a purely functional domain-specific language. To eliminate the cognitive overhead of learning Nix syntax and package semantics, we evaluated how effectively modern agents can synthesize valid \texttt{flake.nix} files.
 
 The criteria for passing is as follows:
 \begin{enumerate}
@@ -75,7 +75,7 @@ The criteria for passing is as follows:
 
 The Nix Packages collection (\texttt{nixpkgs}) represents one of the largest open-source package repositories in existence. At the time of this research, \texttt{nixpkgs} hosts over 139,008 packages distributed across 1,044 distinct package sets. Because Nixpkgs evolves rapidly with daily upstream commits, static LLM training data is inherently prone to package name mismatches, deprecated attribute paths, and package hallucinations~\cite{ImportingPhantomsMeasuring}.
 
-Recent empirical studies by authors analyzing package hallucinations demonstrate that less popular programming languages suffer significantly higher hallucination frequencies due to the relative scarcity of examples in public pre-training datasets~\cite{ImportingPhantomsMeasuring}. To eliminate this vulnerability, we integrated \texttt{mcp-nixos}, a high-performance FastMCP server that exposes live querying capabilities to the agent harness. The server communicates directly with the Elasticsearch backend powering \texttt{search.nixos.org}, enabling the agent to execute real-time searches across official packages, options, and Home Manager configuration schemas. By querying \texttt{mcp-nixos}, the agent dynamically verifies exact package attribute names before committing them to the synthesized \texttt{flake.nix} specification.
+Recent studies by authors analyzing package hallucinations demonstrate that less popular programming languages suffer significantly higher hallucination frequencies due to the relative scarcity of examples in public pre-training datasets~\cite{ImportingPhantomsMeasuring}. To eliminate this vulnerability, we integrated \texttt{mcp-nixos}, a high-performance FastMCP server that exposes live querying capabilities to the agent harness. The server communicates directly with the Elasticsearch backend powering \texttt{search.nixos.org}, enabling the agent to execute real-time searches across official packages, options, and configuration schemas. By querying \texttt{mcp-nixos}, the agent dynamically verifies exact package attribute names before committing them to the synthesized \texttt{flake.nix} specification.
 
 \subsection{Agent Harness and Model Configurations}
 
