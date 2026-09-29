@@ -199,7 +199,7 @@ The comparative benchmarking between Nix Flakes, OCI DevContainers, and bare-met
 
 \chapter{Security Considerations and Practical Adoption}\label{chap:discussion}
 
-\section{Security Considerations with Declarative Flakes}
+\section{Security Considerations}
 
 Deploying automated environment synthesis pipelines in educational institutions necessitates rigorous security safeguards. Traditional containerized workflows frequently require granting student user accounts access to the Docker daemon socket (\texttt{docker.sock}), which is functionally equivalent to granting passwordless root access to the host machine.
 
@@ -207,8 +207,7 @@ In contrast, the Nix daemon enforces strict privilege separation. The Nix build 
 
 The nixpkgs repository allows anyone to review incoming pull requests.
 
-
-\section{Longevity Concerns with Nix}
+\section{Practical Adoption of Nix}
 
 The entirety of all the packages in nixpkgs is hosted in GitHub.
 Unrelated packages result in unexpected merge conflicts.
