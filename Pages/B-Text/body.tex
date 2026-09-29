@@ -203,7 +203,7 @@ The comparative benchmarking between Nix Flakes, OCI DevContainers, and bare-met
 
 Deploying automated environment synthesis pipelines in educational institutions necessitates rigorous security safeguards. Traditional containerized workflows frequently require granting student user accounts access to the Docker daemon socket (\texttt{docker.sock}), which is functionally equivalent to granting passwordless root access to the host machine.
 
-In contrast, the Nix daemon enforces strict privilege separation. The Nix build sandbox disallows arbitrary network access during build phases, ensuring hermetic compilation and preventing untrusted build scripts from exfiltrating local credentials. Furthermore, Nix Flakes require explicit user authorization before importing impure paths or unpinned external derivations. By evaluating synthesized flakes under strict sandbox constraints, the proposed agent pipeline guarantees that automatically generated environments cannot compromise the integrity of the host operating 
+In contrast, the Nix daemon enforces strict privilege separation. The Nix build sandbox disallows arbitrary network access during build phases, ensuring hermetic compilation and preventing untrusted build scripts from exfiltrating local credentials. Furthermore, Nix Flakes require explicit user authorization before importing impure paths or unpinned external derivations. By evaluating synthesized flakes under strict sandbox constraints, the proposed agent pipeline guarantees that automatically generated environments cannot compromise the integrity of the host operating
 
 \section{Practical Adoption of Nix}
 
