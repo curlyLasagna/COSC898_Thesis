@@ -1,0 +1,135 @@
+vars: {
+  d2-config: {
+    theme-id: 4
+    pad: 30
+  }
+}
+
+classes: {
+  container_card: {
+    style: {
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      fill: "#F7FAFC"
+      border-radius: 12
+      shadow: true
+    }
+  }
+  green_sub: {
+    style: {
+      fill: "#F0FFF4"
+      stroke: "#2F855A"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  brown_sub: {
+    style: {
+      fill: "#FFFAF0"
+      stroke: "#C05621"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+}
+
+title: |md
+  ### Phase 1: Project Ingestion & Context Discovery
+| {
+  near: top-center
+  shape: text
+  style.font-size: 22
+}
+
+ingestion: Project Ingestion & Context Discovery {
+  class: container_card
+  direction: down
+
+  user_req: Developer / Instructor Prompt {
+    shape: person
+  }
+
+  classifier: Project Archetype Classifier {
+    shape: diamond
+    style.fill: "#EDF2F7"
+  }
+
+  user_req -> classifier: "Submit prompt & codebase"
+
+  pathways: {
+    direction: right
+    style.fill: "transparent"
+    style.stroke: "transparent"
+
+    greenfield: Greenfield Pathway (New Project) {
+      class: green_sub
+      direction: down
+
+      gf_spec: Requirements Extraction {
+        shape: document
+      }
+      gf_arch: Flake Archetype Selection {
+        shape: rectangle
+      }
+      gf_spec -> gf_arch: "Structure requirements"
+    }
+
+    brownfield {
+      class: brown_sub
+      direction: down
+
+      scanner: Workspace & File Scanner {
+        shape: rectangle
+      }
+      manifests: Build Manifest Analyzer {
+        shape: document
+      }
+      native_deps: Native Dependency Extractor {
+        shape: rectangle
+      }
+      scanner -> manifests: "Detect manifests"
+      manifests -> native_deps: "Infer system libraries"
+    }
+  }
+
+  classifier -> pathways.greenfield.gf_spec: "Clean Slate (New Project)" {
+    style: {
+      stroke: "#2F855A"
+      stroke-width: 3
+      bold: true
+    }
+  }
+
+  classifier -> pathways.brownfield.scanner: "Existing Codebase (Brownfield)" {
+    style: {
+      stroke: "#C05621"
+      stroke-width: 3
+      bold: true
+    }
+  }
+}
+
+# Output Interface
+output_port: Inferred Specifications & Dependencies {
+  shape: step
+  style: {
+    fill: "#EBF8FF"
+    stroke: "#2B6CB0"
+    stroke-width: 2
+    bold: true
+  }
+}
+
+ingestion.pathways.greenfield.gf_arch -> output_port {
+  style: {
+    stroke: "#2F855A"
+    stroke-width: 3
+  }
+}
+
+ingestion.pathways.brownfield.native_deps -> output_port {
+  style: {
+    stroke: "#C05621"
+    stroke-width: 3
+  }
+}

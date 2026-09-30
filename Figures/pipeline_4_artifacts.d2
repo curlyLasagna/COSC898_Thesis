@@ -1,0 +1,102 @@
+vars: {
+  d2-config: {
+    theme-id: 4
+    pad: 30
+  }
+}
+
+classes: {
+  container_card: {
+    style: {
+      stroke: "#234E52"
+      stroke-width: 2
+      fill: "#E6FFFA"
+      border-radius: 12
+      shadow: true
+    }
+  }
+}
+
+title: |md
+  ### Phase 4: Generated Output Artifacts & Environment Deployment
+| {
+  near: top-center
+  shape: text
+  style.font-size: 22
+}
+
+# Input Port
+input_port: Verified & Pure Flake Expression {
+  shape: step
+  style: {
+    fill: "#E6FFFA"
+    stroke: "#234E52"
+    stroke-width: 2
+    bold: true
+  }
+}
+
+artifacts_container: Output Artifacts & Runtime Deployment {
+  class: container_card
+  direction: down
+
+  flake_code: |nix
+    {
+      description = "Hermetic Dev Environment";
+
+      inputs = {
+        nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+        flake-utils.url = "github:numtide/flake-utils";
+      };
+
+      outputs = { self, nixpkgs, flake-utils }:
+        flake-utils.lib.eachDefaultSystem (system:
+          let
+            pkgs = import nixpkgs { inherit system; };
+          in {
+            devShells.default = pkgs.mkShell {
+              nativeBuildInputs = with pkgs; [ pkg-config ];
+              buildInputs = with pkgs; [ openssl ];
+              packages = with pkgs; [ rustc cargo git ];
+              shellHook = ''
+                echo "🚀 Reproducible environment active!"
+              '';
+            };
+          });
+    }
+  | {
+    shape: code
+  }
+
+  flake_lock: flake.lock {
+    shape: document
+  }
+
+  active_shell: Active Hermetic Developer Shell {
+    shape: cloud
+  }
+
+  flake_code -> flake_lock: "nix flake check pins inputs" {
+    style: {
+      stroke: "#234E52"
+      stroke-width: 3
+      bold: true
+    }
+  }
+
+  flake_lock -> active_shell: "nix develop launches environment" {
+    style: {
+      stroke: "#234E52"
+      stroke-width: 3
+      bold: true
+    }
+  }
+}
+
+input_port -> artifacts_container.flake_code: "Commit to Repository" {
+  style: {
+    stroke: "#234E52"
+    stroke-width: 3
+    bold: true
+  }
+}

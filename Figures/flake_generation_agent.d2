@@ -1,0 +1,364 @@
+vars: {
+  d2-config: {
+    theme-id: 4
+    pad: 40
+    layout-engine: elk
+  }
+}
+
+classes: {
+  stage_container: {
+    style: {
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      fill: "#F7FAFC"
+      border-radius: 12
+      shadow: true
+    }
+  }
+  greenfield_style: {
+    style: {
+      fill: "#F0FFF4"
+      stroke: "#2F855A"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  brownfield_style: {
+    style: {
+      fill: "#FFFAF0"
+      stroke: "#C05621"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  agent_style: {
+    style: {
+      fill: "#EBF8FF"
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  skill_style: {
+    style: {
+      fill: "#FEFCBF"
+      stroke: "#B7791F"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  mcp_style: {
+    style: {
+      fill: "#FAF5FF"
+      stroke: "#6B46C1"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  loop_style: {
+    style: {
+      fill: "#FFF5F5"
+      stroke: "#C53030"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  artifact_style: {
+    style: {
+      fill: "#E6FFFA"
+      stroke: "#234E52"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+}
+
+title: |md
+  # Autonomous Agentic Generation of `flake.nix`
+  ### Greenfield & Brownfield Flake Synthesis with Skill Invocation and MCP-NixOS Server
+| {
+  near: top-center
+  shape: text
+}
+
+# --- STAGE 1: INGESTION & CONTEXT DISCOVERY ---
+intake: 1. Project Ingestion & Context Discovery {
+  class: stage_container
+
+  user: Developer / User Prompt {
+    shape: person
+  }
+
+  router: Project Classification {
+    shape: diamond
+    style.fill: "#EDF2F7"
+  }
+
+  user -> router: "Submit prompt & context"
+
+  # Greenfield Branch
+  greenfield: Greenfield Pathway (New Project) {
+    class: greenfield_style
+
+    gf_req: Specification Extraction {
+      shape: document
+    }
+
+    gf_template: Nix Archetype Selection {
+      shape: rectangle
+    }
+
+    gf_req -> gf_template: "Define requirements"
+  }
+
+  # Brownfield Branch
+  brownfield: Brownfield Pathway (Existing Repository) {
+    class: brownfield_style
+
+    repo_scan: Codebase & Directory Scanner {
+      shape: rectangle
+    }
+
+    manifest_parser: Manifest Analyzer {
+      shape: document
+    }
+
+    dep_solver: Native Dependency Extractor {
+      shape: rectangle
+    }
+
+    repo_scan -> manifest_parser: "Detects build manifests"
+    manifest_parser -> dep_solver: "Identifies native requirements"
+  }
+
+  router -> greenfield.gf_req: "New Project (Clean Slate)" {
+    style: {
+      stroke: "#2F855A"
+      stroke-width: 2
+      bold: true
+    }
+  }
+
+  router -> brownfield.repo_scan: "Existing Repo (Brownfield)" {
+    style: {
+      stroke: "#C05621"
+      stroke-width: 2
+      bold: true
+    }
+  }
+}
+
+# --- STAGE 2: AGENT CORE REASONING ---
+agent: 2. Agent Core Orchestration {
+  class: agent_style
+
+  planner: LLM Planner & Task Orchestrator {
+    shape: rectangle
+    style: {
+      fill: "#BEE3F8"
+      bold: true
+    }
+  }
+
+  ast_gen: Flake AST & Expression Synthesizer {
+    shape: rectangle
+  }
+
+  planner -> ast_gen: "Synthesize flake model"
+}
+
+# --- STAGE 3: SKILL INVOCATION ---
+skill: 3. Skill Invocation Subsystem {
+  class: skill_style
+
+  invoker: Skill Invocation Gateway {
+    shape: hexagon
+  }
+
+  nix_rules: Nix & Flake Best Practices Skill {
+    shape: document
+    rules: |md
+      **Injected Domain Rules:**
+      - Flake Schema: `inputs` & `outputs`
+      - Multi-system matrix via `flake-utils` or `forAllSystems`
+      - Separation: `nativeBuildInputs` (host) vs `buildInputs` (target)
+      - `pkgs.mkShellNoCC` vs `pkgs.mkShell`
+      - Custom `shellHook` environment bootstrapping
+      - Pinned channel convention (`nixos-unstable`)
+    |
+  }
+
+  invoker -> nix_rules: "Loads skill instructions"
+}
+
+# --- STAGE 4: MCP-NIXOS INTEGRATION ---
+mcp: 4. Optional Context via MCP Server {
+  class: mcp_style
+
+  mcp_client: Agent MCP Client {
+    shape: rectangle
+  }
+
+  server: mcp-nixos Server {
+    shape: package
+
+    search_pkg: search_packages() {
+      shape: step
+    }
+
+    search_opt: search_options() {
+      shape: step
+    }
+
+    eval_expr: validate_expression() {
+      shape: step
+    }
+  }
+
+  mcp_client -> server.search_pkg: "Lookup exact package attrs"
+  mcp_client -> server.search_opt: "Inspect configuration options"
+  mcp_client -> server.eval_expr: "Test Nix expression validity"
+}
+
+# --- STAGE 5: VERIFICATION & REPAIR LOOP ---
+verify: 5. Evaluation & Self-Correction {
+  class: loop_style
+
+  write_scratch: Write flake.nix to Disk {
+    shape: rectangle
+  }
+
+  nix_check: nix flake check & eval {
+    shape: rectangle
+  }
+
+  env_test: nix develop --command <health_check> {
+    shape: rectangle
+  }
+
+  gate: Health & Build Gate {
+    shape: diamond
+    style.fill: "#FFF5F5"
+  }
+
+  write_scratch -> nix_check: "Inspect flake"
+  nix_check -> env_test: "Evaluation passed"
+  env_test -> gate: "Execution log"
+}
+
+# --- STAGE 6: OUTPUT ARTIFACTS ---
+output: 6. Generated Output Artifacts {
+  class: artifact_style
+
+  flake_code: |nix
+    {
+      description = "Hermetic Dev Environment";
+
+      inputs = {
+        nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+        flake-utils.url = "github:numtide/flake-utils";
+      };
+
+      outputs = { self, nixpkgs, flake-utils }:
+        flake-utils.lib.eachDefaultSystem (system:
+          let
+            pkgs = import nixpkgs { inherit system; };
+          in {
+            devShells.default = pkgs.mkShell {
+              nativeBuildInputs = with pkgs; [ pkg-config ];
+              buildInputs = with pkgs; [ openssl ];
+              packages = with pkgs; [ rustc cargo git ];
+              shellHook = ''
+                echo "🚀 Reproducible environment active!"
+              '';
+            };
+          });
+    }
+  | {
+    shape: code
+  }
+
+  flake_lock: flake.lock {
+    shape: document
+  }
+
+  active_shell: Active Developer Shell {
+    shape: cloud
+  }
+
+  flake_code -> flake_lock: "Locked hashes"
+  flake_code -> active_shell: "nix develop"
+}
+
+# --- INTER-STAGE CONNECTIONS ---
+
+# Ingestion to Agent Core
+intake.greenfield.gf_template -> agent.planner: "Specification & Archetype" {
+  style: {
+    stroke: "#2F855A"
+    stroke-width: 2
+  }
+}
+
+intake.brownfield.dep_solver -> agent.planner: "Discovered Dependencies & Toolchains" {
+  style: {
+    stroke: "#C05621"
+    stroke-width: 2
+  }
+}
+
+# Agent Core to Skill Subsystem
+agent.planner -> skill.invoker: "Invoke Skill (Nix Knowledge)" {
+  style: {
+    stroke: "#B7791F"
+    stroke-dash: 4
+    stroke-width: 2
+  }
+}
+
+skill.nix_rules -> agent.planner: "Templates, Schema & Hygiene Rules" {
+  style: {
+    stroke: "#B7791F"
+    stroke-width: 2
+  }
+}
+
+# Agent Core to MCP Server
+agent.planner <-> mcp.mcp_client: "MCP JSON-RPC Protocol (Optional / Live Query)" {
+  style: {
+    stroke: "#6B46C1"
+    stroke-dash: 4
+    stroke-width: 2
+  }
+}
+
+# Agent Core to Verification Loop
+agent.ast_gen -> verify.write_scratch: "Emit Draft flake.nix" {
+  style: {
+    stroke: "#2B6CB0"
+    stroke-width: 2
+  }
+}
+
+# Self-Correction Feedback Loop
+verify.gate -> agent.planner: "Error Diagnostics & Traceback (Self-Correction Loop)" {
+  style: {
+    stroke: "#C53030"
+    stroke-dash: 4
+    stroke-width: 2
+  }
+}
+
+# Verification to Output Artifacts
+verify.gate -> output.flake_code: "Pass / Verified" {
+  style: {
+    stroke: "#234E52"
+    stroke-width: 3
+    bold: true
+  }
+}

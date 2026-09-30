@@ -1,0 +1,124 @@
+vars: {
+  d2-config: {
+    theme-id: 4
+    pad: 30
+  }
+}
+
+classes: {
+  phase_card: {
+    style: {
+      stroke-width: 2
+      border-radius: 10
+      shadow: true
+    }
+  }
+}
+
+title: |md
+  # Autonomous Agentic Pipeline for Synthesizing `flake.nix` Environments
+| {
+  near: top-center
+  shape: text
+  style.font-size: 24
+}
+
+direction: right
+
+phase1: Phase 1: Requirement Ingestion {
+  class: phase_card
+  style: {
+    fill: "#F0FFF4"
+    stroke: "#2F855A"
+  }
+  p1_detail: |md
+    - User Prompt Parsing
+    - Archetype Classification
+    - Manifest Scanner (`Cargo.toml`, etc.)
+    - Native C/C++ Dep Extraction
+  | {
+    shape: document
+  }
+}
+
+phase2: Phase 2: Agent Core & Knowledge {
+  class: phase_card
+  style: {
+    fill: "#EBF8FF"
+    stroke: "#2B6CB0"
+  }
+  p2_detail: |md
+    - LLM Planner & AST Synthesizer
+    - Specialized Nix Skill Injection
+    - FastMCP Live Package Queries
+    - Flake Model Composition
+  | {
+    shape: document
+  }
+}
+
+phase3: Phase 3: Closed-Loop Verification {
+  class: phase_card
+  style: {
+    fill: "#FFF5F5"
+    stroke: "#C53030"
+  }
+  p3_detail: |md
+    - `nix flake check` Purity Eval
+    - Hermetic `nix develop` Health Test
+    - Compiler Diagnostics Telemetry
+    - Automated Self-Repair Loop
+  | {
+    shape: document
+  }
+}
+
+phase4: Phase 4: Output & Deployment {
+  class: phase_card
+  style: {
+    fill: "#E6FFFA"
+    stroke: "#234E52"
+  }
+  p4_detail: |md
+    - Production `flake.nix`
+    - Cryptographic `flake.lock`
+    - Hermetic Developer Shell
+    - Zero-Install Student Toolchains
+  | {
+    shape: document
+  }
+}
+
+# Linear & feedback connections
+phase1 -> phase2: "1. Inferred Specs" {
+  style: {
+    stroke: "#2F855A"
+    stroke-width: 3
+    bold: true
+  }
+}
+
+phase2 -> phase3: "2. Generated Flake" {
+  style: {
+    stroke: "#2B6CB0"
+    stroke-width: 3
+    bold: true
+  }
+}
+
+phase3 -> phase2: "3. Self-Correction Loop" {
+  style: {
+    stroke: "#C53030"
+    stroke-dash: 4
+    stroke-width: 3
+    bold: true
+  }
+}
+
+phase3 -> phase4: "4. Pass / Verified" {
+  style: {
+    stroke: "#234E52"
+    stroke-width: 4
+    bold: true
+  }
+}

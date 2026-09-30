@@ -1,0 +1,142 @@
+vars: {
+  d2-config: {
+    theme-id: 4
+    pad: 30
+  }
+}
+
+classes: {
+  container_card: {
+    style: {
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      fill: "#F7FAFC"
+      border-radius: 12
+      shadow: true
+    }
+  }
+  verify_sub: {
+    style: {
+      fill: "#FFF5F5"
+      stroke: "#C53030"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  pass_sub: {
+    style: {
+      fill: "#E6FFFA"
+      stroke: "#234E52"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+}
+
+title: |md
+  ### Phase 3: Deterministic Closed-Loop Verification & Self-Correction
+| {
+  near: top-center
+  shape: text
+  style.font-size: 22
+}
+
+# Input Port
+input_port: Candidate flake.nix Model {
+  shape: step
+  style: {
+    fill: "#EBF8FF"
+    stroke: "#2B6CB0"
+    stroke-width: 2
+    bold: true
+  }
+}
+
+verification_system: Closed-Loop Verification Engine {
+  class: container_card
+  direction: down
+
+  stages: {
+    grid-columns: 4
+    grid-gap: 25
+
+    disk_writer: 1. Write Draft flake.nix {
+      shape: rectangle
+    }
+
+    nix_check: 2. nix flake check & eval {
+      shape: rectangle
+    }
+
+    env_test: 3. nix develop health test {
+      shape: rectangle
+    }
+
+    gate: 4. Validation Gate {
+      shape: diamond
+      style.fill: "#FFF5F5"
+    }
+
+    disk_writer -> nix_check: "Parse purity"
+    nix_check -> env_test: "Syntax valid"
+    env_test -> gate: "Execution log"
+  }
+}
+
+input_port -> verification_system.stages.disk_writer: "Emit Candidate Expression" {
+  style: {
+    stroke: "#2B6CB0"
+    stroke-width: 3
+    bold: true
+  }
+}
+
+# Error Diagnostics / Self-Correction Feedback Loop
+repair_loop: Self-Correction Diagnostics Bus {
+  shape: step
+  class: verify_sub
+}
+
+verification_system.stages.gate -> repair_loop: "Fail (Non-zero exit code)" {
+  style: {
+    stroke: "#C53030"
+    stroke-dash: 4
+    stroke-width: 3
+    bold: true
+  }
+}
+
+repair_port: Feed Diagnostics to Agent Planner {
+  shape: step
+  style: {
+    fill: "#FFF5F5"
+    stroke: "#C53030"
+    stroke-width: 2
+    bold: true
+  }
+}
+
+repair_loop -> repair_port: "Iterative Self-Repair Traceback" {
+  style: {
+    stroke: "#C53030"
+    stroke-dash: 4
+    stroke-width: 3
+    bold: true
+  }
+}
+
+# Success Port
+pass_port: Verified & Sealed flake.nix {
+  shape: step
+  class: pass_sub
+}
+
+verification_system.stages.gate -> pass_port: "Pass (Exit Code 0)" {
+  style: {
+    stroke: "#234E52"
+    stroke-width: 4
+    bold: true
+  }
+}

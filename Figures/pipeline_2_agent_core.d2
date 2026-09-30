@@ -1,0 +1,185 @@
+vars: {
+  d2-config: {
+    theme-id: 4
+    pad: 30
+  }
+}
+
+classes: {
+  container_card: {
+    style: {
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      fill: "#F7FAFC"
+      border-radius: 12
+      shadow: true
+    }
+  }
+  agent_sub: {
+    style: {
+      fill: "#EBF8FF"
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  skill_sub: {
+    style: {
+      fill: "#FEFCBF"
+      stroke: "#B7791F"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  mcp_sub: {
+    style: {
+      fill: "#FAF5FF"
+      stroke: "#6B46C1"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+}
+
+title: |md
+  ### Phase 2: Agent Core Orchestration & Knowledge Extension Ecosystem
+| {
+  near: top-center
+  shape: text
+  style.font-size: 22
+}
+
+# Input Port
+input_port: Input {
+  shape: step
+  style: {
+    fill: "#F0FFF4"
+    stroke: "#2F855A"
+    stroke-width: 2
+    bold: true
+  }
+}
+
+agent_system: Agent Orchestration & Knowledge Ecosystem {
+  class: container_card
+  grid-columns: 3
+  grid-gap: 30
+
+  core: Agent Orchestration Engine (Harness) {
+    class: agent_sub
+    direction: down
+
+    planner: LLM Planner & Task Orchestrator {
+      shape: rectangle
+      style: {
+        fill: "#BEE3F8"
+        bold: true
+      }
+    }
+
+    mcp_client: Agent MCP Client {
+      shape: rectangle
+    }
+
+    generator: Flake Generator {
+      shape: rectangle
+    }
+
+    planner -> mcp_client: "Invoke tool"
+    planner -> generator: "Generate"
+  }
+
+  skill_box: Specialized Agent Skill {
+    class: skill_sub
+    direction: down
+
+    invoker: Skill Invocation Gateway {
+      shape: hexagon
+    }
+
+    nix_rules: Nix & Flake Best Practices Skill {
+      shape: document
+      text: |md
+        **Injected Domain Knowledge:**
+        - Standard `inputs` & `outputs` schema
+        - Multi-system matrix (`flake-utils`)
+        - `nativeBuildInputs` (host) vs `buildInputs` (target)
+        - `pkgs.mkShellNoCC` vs `pkgs.mkShell`
+        - Hermetic `shellHook` bootstrapping
+        - Channel pinning (`nixos-unstable`)
+      |
+    }
+
+    invoker -> nix_rules: "Inject domain rules"
+  }
+
+  mcp_box: MCP-NixOS Service {
+    class: mcp_sub
+    direction: down
+
+    server: mcp-nixos Server {
+      shape: package
+    }
+
+    external_sources: External Sources {
+      shape: cylinder
+    }
+
+    server -> external_sources: "Query APIs" {
+      style: {
+        stroke: "#6B46C1"
+        stroke-width: 2
+      }
+    }
+  }
+}
+
+# Input points to the entire Agent Orchestration component
+input_port -> agent_system.core: "Input" {
+  style: {
+    stroke: "#2F855A"
+    stroke-width: 3
+    bold: true
+  }
+}
+
+# Cross-component communication
+agent_system.core.planner <-> agent_system.skill_box.invoker: "Skill Rules & Templates" {
+  style: {
+    stroke: "#B7791F"
+    stroke-dash: 4
+    stroke-width: 2
+    bold: true
+  }
+}
+
+agent_system.core.mcp_client <-> agent_system.mcp_box.server: "MCP Protocol (JSON-RPC)" {
+  style: {
+    stroke: "#6B46C1"
+    stroke-dash: 4
+    stroke-width: 2
+    bold: true
+  }
+}
+
+# Output Port
+output_port: Generated flake.nix Expression {
+  shape: step
+  style: {
+    fill: "#EBF8FF"
+    stroke: "#2B6CB0"
+    stroke-width: 2
+    bold: true
+  }
+}
+
+agent_system.core.generator -> output_port: "Generated Flake Model" {
+  style: {
+    stroke: "#2B6CB0"
+    stroke-width: 3
+    bold: true
+  }
+}

@@ -1,0 +1,403 @@
+vars: {
+  d2-config: {
+    theme-id: 4
+    pad: 40
+  }
+}
+
+classes: {
+  board_style: {
+    style: {
+      fill: "transparent"
+      stroke: "transparent"
+    }
+  }
+  quadrant: {
+    style: {
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      fill: "#F7FAFC"
+      border-radius: 12
+      shadow: true
+    }
+  }
+  green_sub: {
+    style: {
+      fill: "#F0FFF4"
+      stroke: "#2F855A"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  brown_sub: {
+    style: {
+      fill: "#FFFAF0"
+      stroke: "#C05621"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  agent_sub: {
+    style: {
+      fill: "#EBF8FF"
+      stroke: "#2B6CB0"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  skill_sub: {
+    style: {
+      fill: "#FEFCBF"
+      stroke: "#B7791F"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  mcp_sub: {
+    style: {
+      fill: "#FAF5FF"
+      stroke: "#6B46C1"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  verify_sub: {
+    style: {
+      fill: "#FFF5F5"
+      stroke: "#C53030"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+  artifact_sub: {
+    style: {
+      fill: "#E6FFFA"
+      stroke: "#234E52"
+      stroke-width: 2
+      border-radius: 8
+      shadow: true
+    }
+  }
+}
+
+title: |md
+  # Autonomous Agentic Pipeline for Synthesizing `flake.nix`
+  **End-to-End Architecture: Discovery, Agent Reasoning, Skill & MCP Integration, Closed-Loop Verification, and Output**
+| {
+  near: top-center
+  shape: text
+  style.font-size: 26
+}
+
+# 2x2 Clean Perimeter-Flow Grid Layout
+pipeline: {
+  class: board_style
+  grid-columns: 2
+  grid-rows: 2
+  horizontal-gap: 200
+  vertical-gap: 150
+
+  # ========================================================
+  # QUADRANT 1 (Top-Left): INTAKE & CONTEXT DISCOVERY
+  # (Tight bounding box, eliminating empty left/right padding)
+  # ========================================================
+  q1_intake: 1. Project Ingestion & Context Discovery {
+    class: quadrant
+    direction: down
+
+    user_req: Developer / Instructor Prompt {
+      shape: person
+    }
+
+    classifier: Project Archetype Classifier {
+      shape: diamond
+      style.fill: "#EDF2F7"
+    }
+
+    user_req -> classifier: "Submit prompt & context"
+
+    branches: {
+      direction: right
+      style.fill: "transparent"
+      style.stroke: "transparent"
+
+      greenfield: Greenfield Pathway (New Project) {
+        class: green_sub
+        direction: down
+
+        gf_spec: Requirements Extraction {
+          shape: document
+        }
+        gf_arch: Flake Archetype Selection {
+          shape: rectangle
+        }
+        gf_spec -> gf_arch
+      }
+
+      brownfield: Brownfield Pathway (Existing Repo) {
+        class: brown_sub
+        direction: down
+
+        scanner: Workspace & File Scanner {
+          shape: rectangle
+        }
+        manifests: Build Manifest Analyzer {
+          shape: document
+        }
+        native_deps: Native Dependency Extractor {
+          shape: rectangle
+        }
+        scanner -> manifests -> native_deps
+      }
+    }
+
+    classifier -> branches.greenfield.gf_spec: "New Project (Clean Slate)" {
+      style.stroke: "#2F855A"
+      style.stroke-width: 2
+      style.bold: true
+    }
+
+    classifier -> branches.brownfield.scanner: "Existing Codebase (Brownfield)" {
+      style.stroke: "#C05621"
+      style.stroke-width: 2
+      style.bold: true
+    }
+  }
+
+  # ========================================================
+  # QUADRANT 4 (Bottom-Left): OUTPUT ARTIFACTS & DEPLOYMENT
+  # (Vertically Stacked per user request)
+  # ========================================================
+  q4_output: 4. Generated Output Artifacts & Deployment {
+    class: quadrant
+    direction: down
+
+    flake_code: |nix
+      {
+        description = "Hermetic Dev Environment";
+
+        inputs = {
+          nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+          flake-utils.url = "github:numtide/flake-utils";
+        };
+
+        outputs = { self, nixpkgs, flake-utils }:
+          flake-utils.lib.eachDefaultSystem (system:
+            let
+              pkgs = import nixpkgs { inherit system; };
+            in {
+              devShells.default = pkgs.mkShell {
+                nativeBuildInputs = with pkgs; [ pkg-config ];
+                buildInputs = with pkgs; [ openssl ];
+                packages = with pkgs; [ rustc cargo git ];
+                shellHook = ''
+                  echo "🚀 Reproducible environment active!"
+                '';
+              };
+            });
+      }
+    | {
+      shape: code
+    }
+
+    flake_lock: flake.lock {
+      shape: document
+    }
+
+    active_shell: Active Developer Shell {
+      shape: cloud
+    }
+
+    flake_code -> flake_lock: "Locked hashes"
+    flake_lock -> active_shell: "nix develop"
+  }
+
+  # ========================================================
+  # QUADRANT 2 (Top-Right): AGENT CORE & EXTENSIONS
+  # (Horizontally Stacked per user request)
+  # ========================================================
+  q2_agent: 2. Agent Core & Knowledge Extension Ecosystem {
+    class: quadrant
+    grid-columns: 3
+    grid-gap: 30
+
+    core: Agent Orchestration Engine {
+      class: agent_sub
+      direction: down
+
+      planner: LLM Planner & Task Orchestrator {
+        shape: rectangle
+        style: {
+          fill: "#BEE3F8"
+          bold: true
+        }
+      }
+
+      ast_synth: Flake AST & Model Synthesizer {
+        shape: rectangle
+      }
+
+      planner -> ast_synth: "Generate flake AST"
+    }
+
+    skill_box: Specialized Agent Skill {
+      class: skill_sub
+      direction: down
+
+      invoker: Skill Invocation Gateway {
+        shape: hexagon
+      }
+
+      nix_rules: Nix & Flake Best Practices Skill {
+        shape: document
+        text: |md
+          **Injected Domain Knowledge:**
+          - Flake Schema: `inputs` & `outputs`
+          - Multi-system matrix (`flake-utils`)
+          - `nativeBuildInputs` vs `buildInputs`
+          - `pkgs.mkShellNoCC` vs `pkgs.mkShell`
+          - Hermetic `shellHook` bootstrapping
+          - Canonical channel (`nixos-unstable`)
+        |
+      }
+
+      invoker -> nix_rules: "Loads skill rules"
+    }
+
+    mcp_box: MCP-NixOS Server (Live Context) {
+      class: mcp_sub
+      direction: down
+
+      mcp_client: Agent MCP Client {
+        shape: rectangle
+      }
+
+      server: mcp-nixos Service {
+        shape: package
+
+        q_pkg: search_packages() {
+          shape: step
+        }
+        q_opt: search_options() {
+          shape: step
+        }
+        q_eval: validate_expression() {
+          shape: step
+        }
+      }
+
+      mcp_client -> server.q_pkg: "Query packages"
+      mcp_client -> server.q_opt: "Inspect options"
+      mcp_client -> server.q_eval: "Test syntax"
+    }
+  }
+
+  # ========================================================
+  # QUADRANT 3 (Bottom-Right): CLOSED-LOOP VERIFICATION
+  # (Horizontally Stacked Pipeline per user request - no empty left padding!)
+  # ========================================================
+  q3_verify: 3. Verification & Closed-Loop Testing {
+    class: quadrant
+    grid-columns: 4
+    grid-gap: 25
+
+    disk_writer: 1. Write Draft flake.nix {
+      shape: rectangle
+    }
+
+    nix_check: 2. nix flake check & eval {
+      shape: rectangle
+    }
+
+    env_test: 3. nix develop health test {
+      shape: rectangle
+    }
+
+    gate: 4. Validation Gate {
+      shape: diamond
+      style.fill: "#FFF5F5"
+    }
+
+    disk_writer -> nix_check -> env_test -> gate
+  }
+}
+
+# Cross-component connections inside Agent Quadrant
+pipeline.q2_agent.core.planner <-> pipeline.q2_agent.skill_box.invoker: "Skill Rules & Templates" {
+  style.stroke: "#B7791F"
+  style.stroke-dash: 4
+  style.stroke-width: 2
+}
+
+pipeline.q2_agent.core.planner <-> pipeline.q2_agent.mcp_box.mcp_client: "MCP JSON-RPC Queries" {
+  style.stroke: "#6B46C1"
+  style.stroke-dash: 4
+  style.stroke-width: 2
+}
+
+# ========================================================
+# DEDICATED REPAIR WAYPOINT (Outside Right Gutter)
+# ========================================================
+repair_bus: Diagnostic Feedback & Repair Channel {
+  shape: step
+  class: verify_sub
+}
+
+# ========================================================
+# HIGH-LEGIBILITY PIPELINE DATA FLOWS
+# ========================================================
+
+# 1. Ingestion -> Agent Core (Top Horizontal Channel)
+pipeline.q1_intake -> pipeline.q2_agent: "1. Requirements & Inferred Dependencies" {
+  style: {
+    stroke: "#2F855A"
+    stroke-width: 4
+    font-size: 18
+    bold: true
+  }
+}
+
+# 2. Agent Core -> Verification (Right Vertical Channel)
+pipeline.q2_agent -> pipeline.q3_verify: "2. Emit Candidate flake.nix" {
+  style: {
+    stroke: "#2B6CB0"
+    stroke-width: 4
+    font-size: 18
+    bold: true
+  }
+}
+
+# 3. Self-Correction Loop: Bends around dedicated right-side channel
+pipeline.q3_verify -> repair_bus: "Build Errors Detected" {
+  style: {
+    stroke: "#C53030"
+    stroke-dash: 4
+    stroke-width: 3
+    font-size: 16
+    bold: true
+  }
+}
+
+repair_bus -> pipeline.q2_agent: "3. Automated Repair Loop (Diagnostics)" {
+  style: {
+    stroke: "#C53030"
+    stroke-dash: 4
+    stroke-width: 3
+    font-size: 16
+    bold: true
+  }
+}
+
+# 4. Verification -> Output Artifacts (Bottom Horizontal Channel)
+pipeline.q3_verify -> pipeline.q4_output: "4. Passed / Verified flake.nix" {
+  style: {
+    stroke: "#234E52"
+    stroke-width: 4
+    font-size: 18
+    bold: true
+  }
+}
