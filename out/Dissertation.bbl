@@ -41,9 +41,17 @@ S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to
   \url{https://dl.acm.org/doi/10.1145/3341525.3387424}
 \BIBentrySTDinterwordspacing
 
+\bibitem{hollandResearchIssuesNoFutz2001}
+\BIBentryALTinterwordspacing
+D.~Holland, W.~Josephson, K.~Magoutis, M.~Seltzer, C.~Stein, and A.~Lim,
+  ``Research issues in {{No-Futz}} computing,'' in \emph{Proceedings {{Eighth
+  Workshop}} on {{Hot Topics}} in {{Operating Systems}}}, pp. 106--110.
+  [Online]. Available: \url{https://ieeexplore.ieee.org/document/990069/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{dolstraNixSafePolicyFree}
-E.~Dolstra, M.~de~Jonge, and E.~Visser, ``Nix: {{A Safe}} and {{Policy-Free
-  System}} for {{Software Deployment}}.''
+E.~Dolstra, p.~u. family=Jonge, given=Merijn, and E.~Visser, ``Nix: {{A Safe}}
+  and {{Policy-Free System}} for {{Software Deployment}}.''
 
 \bibitem{NixBetterDocker2024}
 \BIBentryALTinterwordspacing
@@ -69,7 +77,7 @@ E.~Dolstra, A.~Löh, and N.~Pierron, ``{{NixOS}}: {{A}} purely functional
   \url{https://www.cambridge.org/core/product/identifier/S0956796810000195/type/journal_article}
 \BIBentrySTDinterwordspacing
 
-\bibitem{duNixRescueReproducible2026}
+\bibitem{duNixRescueReproducible2026a}
 \BIBentryALTinterwordspacing
 W.~Du, J.-M. Gratien, R.~Gayno, and B.~Raffin. Nix to the {{Rescue}} for a
   {{Reproducible HPC-AI Software Stack}}. [Online]. Available:
