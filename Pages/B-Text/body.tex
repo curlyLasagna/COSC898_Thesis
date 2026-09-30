@@ -14,7 +14,7 @@ This thesis investigates the feasibility, computational viability, and pedagogic
 
 To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix DSL language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
 
-The end-to-end architecture comprises four integrated subsystems (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
+The end-to-end architecture comprises of the following steps (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
 \begin{enumerate}
 	\item \textbf{Requirement Ingestion (Figure~\ref{fig:pipeline-ingestion}):} Natural language assignment specifications or unconfigured assignment codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
 	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval:} A custom agent skill provides domain-specific prompting, curated templates, and reference schemas, while the agent queries a Model Context Protocol (MCP) server that reaches out to trusted sources of information.
