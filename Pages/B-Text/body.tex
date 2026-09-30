@@ -44,11 +44,11 @@ The end-to-end architecture comprises of the following steps (illustrated at a h
 Synthesizing flake.nix configuration files requires navigating a purely functional domain-specific language. To eliminate the cognitive overhead of learning Nix syntax and package semantics, we evaluated how effectively modern agents can synthesize valid \texttt{flake.nix} files.
 
 The criteria for passing is as follows:
-\begin{enumerate}
+\begin{itemize}
 	\item A \texttt{flake.nix} is generated
 	\item Static code analysis via \texttt{nix flake check} passes
 	\item Declared dependencies are present in \texttt{\$PATH} after invoking \texttt{nix develop}
-\end{enumerate}
+\end{itemize}
 
 
 \subsection{Real-Time Package Retrieval via MCP-NixOS}\label{subsec:mcp-nixos}
