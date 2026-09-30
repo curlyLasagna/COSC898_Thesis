@@ -132,6 +132,13 @@ To rigorously evaluate the synthesis capabilities of the agents, we adapted the 
 	\item \textbf{Functional Task Execution:} The assignment source code builds and passes its unit test suite inside the synthesized \texttt{devShell}.
 \end{enumerate}
 
+Pass@K
+
+ \begin{align}
+    \text{pass@$k$} &:= \mathop{\mathbb{E}}_{\text{Problems}} \left[ 1 - \frac{{\binom{n-c}{k}}} {\binom{n}{k}} \right]
+    \label{eq:estimator}
+    \end{align}
+
 \section{Hardware Resource Benchmarking Methodology}
 
 To address RQ2, we designed an empirical hardware benchmarking suite comparing Nix Flakes, OCI DevContainers, and native host installations. In light of the ongoing global memory supply shortages and escalating semiconductor prices, computing hardware has become a primary bottleneck for educational institutions and students~\cite{2025PresentGlobal2026}. We measured three core operational metrics across identical programming coursework:
