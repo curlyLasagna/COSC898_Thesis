@@ -12,14 +12,14 @@ This thesis investigates the feasibility, computational viability, and pedagogic
 
 \section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
 
-To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix expression language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
+To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix DSL language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
 
 The end-to-end architecture comprises four integrated subsystems (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
 \begin{enumerate}
-	\item \textbf{Requirement Ingestion (Figure~\ref{fig:pipeline-ingestion}):} Natural language assignment specifications or unconfigured student codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
-	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval (Figure~\ref{fig:pipeline-agent-core}):} A dedicated agent skill provides domain-specific prompting, curated templates, and reference schemas, while a live Model Context Protocol (MCP) server connects the agent to official NixOS package registries.
-	\item \textbf{Deterministic Closed-Loop Verification (Figure~\ref{fig:pipeline-verification}):} Generated \texttt{flake.nix} files are evaluated via native Nix commands. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
-	\item \textbf{Output Artifacts and Runtime Deployment (Figure~\ref{fig:pipeline-artifacts}):} A production-ready, pure \texttt{flake.nix} file is finalized alongside a cryptographically pinned \texttt{flake.lock}, immediately activating a reproducible developer shell.
+	\item \textbf{Requirement Ingestion (Figure~\ref{fig:pipeline-ingestion}):} Natural language assignment specifications or unconfigured assignment codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
+	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval:} A custom agent skill provides domain-specific prompting, curated templates, and reference schemas, while the agent queries a Model Context Protocol (MCP) server that reaches out to trusted sources of information.
+	\item \textbf{Deterministic Closed-Loop Verification:} Generated \texttt{flake.nix} files are evaluated via native Nix commands. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
+	\item \textbf{Output Artifacts and Runtime Deployment:} A \texttt{flake.nix} file is written alongside a cryptographically pinned \texttt{flake.lock} file, immediately activating a reproducible developer shell.
 \end{enumerate}
 
 \begin{figure}[htbp]
@@ -36,26 +36,6 @@ The end-to-end architecture comprises four integrated subsystems (illustrated at
 	\label{fig:pipeline-ingestion}
 \end{figure}
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.95\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_2_agent_core.pdf}
-	\caption{Phase 2: Agent Core Orchestration Engine with Domain Skill Scaffolding and FastMCP Package Discovery}
-	\label{fig:pipeline-agent-core}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.9\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_3_verification.pdf}
-	\caption{Phase 3: Deterministic Closed-Loop Verification Engine and Iterative Self-Correction Feedback Loop}
-	\label{fig:pipeline-verification}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.85\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_4_artifacts.pdf}
-	\caption{Phase 4: Synthesized \texttt{flake.nix} Artifacts and Reproducible Developer Shell Activation}
-	\label{fig:pipeline-artifacts}
-\end{figure}
 
 \chapter{Experimental Methodology and Test Setup}\label{chap:testing}
 
