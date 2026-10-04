@@ -173,7 +173,7 @@ By aggregating and analyzing the frequency distribution of agent tool invocation
 
 
 	\item \textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of January 2025. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors. Crucially, when the closed-loop feedback mechanism returned the resulting Nix evaluation stack trace, the agent successfully recovered, querying the MCP server to obtain the current package identifier.
-	\item Gemini~3.8 Flash has this trained default behavior that caches results in a folder called scratch. Subsequent k passes were able to easily retrieve thoughts from the first kth pass. This scratch behavior is likely used to save the user tokens. In
+	\item Gemini~3.8 Flash has this trained default behavior that caches results in a folder called scratch. Subsequent k passes were able to easily retrieve thoughts from the first kth pass. This scratch behavior is likely used to save the user tokens. For the purposes of this test as this is proprietary behavior, we have are python script clear out the script directory
 \end{itemize}
 
 \section{Clean-Host Reproducibility Results - TODO}
