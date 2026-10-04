@@ -186,14 +186,15 @@ The clean-host replay will report the reproduction rate for eligible RQ1-passing
 
 \subsection{Nix Caches}
 
-Nix offers the ability to customize binary caches
+Nix offers the ability to customize binary caches by adding unofficial binary caches, also known as substituters.
+Binary caches can be used as an attack vector
 
 
 \section{Practical Adoption of Nix}
 
 
 % Topics for this section:
-% - 
+% - Updating packages and hydra doesn't have the build for it, causing a user to build from source if the binary isn't available. 
 % - 
 The entirety of all the packages in nixpkgs is hosted in GitHub.
 Unrelated packages result in unexpected merge conflicts.
