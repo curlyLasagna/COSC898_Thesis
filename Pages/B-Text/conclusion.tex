@@ -20,7 +20,7 @@ The empirical findings of this research provide definitive answers to the three 
 
 While this work demonstrates the viability of AI-assisted declarative environment synthesis, several avenues remain for ongoing research and refinement. The input data generated for testing was simple enough for Gemini models to avoid calling the Nix MCP server and relied on training data.
 
-Testing the cognitive load associated with setting up and long-term 
+Testing the cognitive load associated with setting up and long-term
 
 Second, while the \texttt{mcp-nixos} server successfully resolved package attribute lookups, further research is required to optimize agent tool selection. As observed in telemetry data, frontier models occasionally rely on stale parametric memory rather than querying external tools when encountering ambiguous dependencies. Enhancing agent prompt strategies with explicit retrieval-augmented decision thresholds could further minimize unnecessary tool round-trips and improve synthesis latency.
 
