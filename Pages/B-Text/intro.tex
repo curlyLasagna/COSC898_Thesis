@@ -42,7 +42,7 @@ To formalize this investigation, this research pursues three primary Research Qu
 In answering these questions, this thesis makes the following concrete contributions:
 \begin{enumerate}
 	\item We present an end-to-end automated synthesis pipeline that translates natural language course assignment descriptions and unconfigured codebases into hermetic, multi-architecture \texttt{flake.nix} specifications.
-	\item We design and implement a custom agent skill and an \texttt{mcp-nixos} retrieval server that queries official Nixpkgs search indices in real time, virtually eliminating package hallucinations in generated environment files.
+	\item We design and implement a custom agent skill that instructs the agent to  query official Nixpkgs search indices in real time, eliminating package hallucinations in generated environment files.
 	\item We construct a closed-loop deterministic validation mechanism that leverages compiler stack traces from native Nix evaluation commands to enable autonomous agent error diagnosis and self-correction.
 	\item We provide a clean-container replay evaluation that runs every stage for each RQ1-passing flake in a fresh, unmounted Nix Docker container, then measures successful evaluation, development-shell activation, required executable availability, and curated headless coursework-task execution.
 	\item We identify and evaluate the operational conditions that affect classroom reliability: locked-input availability, package maintenance, binary-cache coverage and source-build fallback, and the trust boundary introduced by additional substituters.
