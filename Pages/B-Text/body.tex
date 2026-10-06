@@ -195,7 +195,7 @@ The tool-call logs were analyzed to determine how the agent resolved package and
 
 The benchmark tasks did not require the \texttt{mcp-nixos} server for successful synthesis. The experimenter used a harness flag to run a condition in which the MCP server was not provided to the model. In that condition, the model still produced valid environments for the simple, conventional requirements represented in the dataset. The required toolchains, including standard language runtimes, compilers, and build tools, are widely documented nixpkgs attributes. The observed behavior is therefore consistent with the model recognizing common package conventions from prior exposure.
 
-When the model encountered uncertainty in the no-MCP condition, it used native Nix CLI discovery. Telemetry shows invocations of commands such as \texttt{nix search}, \texttt{nix-env -qaP}, and help interfaces including \texttt{nix --help} or a subcommand's \texttt{--help} flag. These commands gave the agent sufficient information to inspect available attributes and refine its subsequent commands. In this benchmark, the Nix CLI therefore served as an effective, self-describing retrieval interface when the additional MCP layer was unavailable.
+When the model encountered uncertainty in the no-MCP condition, it used native Nix CLI discovery. Test data shows invocations of commands such as \texttt{nix search}, \texttt{nix-env -qaP}, and help interfaces including \texttt{nix --help} or a subcommand's \texttt{--help} flag. These commands gave the agent sufficient information to inspect available attributes and refine its subsequent commands. In this benchmark, the Nix CLI therefore served as an effective, self-describing retrieval interface when the additional MCP layer was unavailable.
 
 This result should not be interpreted as evidence that MCP retrieval is generally unnecessary. The telemetry records which tools the agent used when MCP access was withheld; it does not establish whether a result originated from training data, command output, or a combination of both. More specialized coursework, obscure package names, recently changed Nixpkgs attributes, or complex platform constraints may exceed what native CLI exploration can resolve efficiently. In those conditions, the structured and current metadata exposed by \texttt{mcp-nixos} remains a useful capability for reducing package hallucination and configuration drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}. The present result instead bounds the claim: for straightforward requirements, the model could construct a working flake without MCP access.
 
@@ -213,8 +213,6 @@ The breadth of Nixpkgs also creates a maintenance risk. Package definitions may 
 
 Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. RQ3 consequently evaluates reliability as a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than as a property of the \texttt{flake.nix} file alone.
 
-
-\chapter{Security Considerations and Practical Adoption}\label{chap:discussion}
 
 \section{Security Considerations}
 
