@@ -26,8 +26,8 @@ A flake is a convention for organizing a Nix project around two files. The \text
 
 The companion \texttt{flake.lock} file records resolved input revisions and associated metadata. It is a commitment to a specific dependency graph: once an instructor reviews and commits it, students use the same pinned inputs rather than silently receiving the newest revision of Nixpkgs. Updating an input with \texttt{nix flake update} is therefore a maintenance action that intentionally changes the lock file; it is not part of ordinary activation of a fixed course environment. Pinning supports repeatability across student machines, but a lock file is not an offline archive. If an input or store path is absent locally, Nix may still need network access to retrieve it.
 
-\begin{figure}
-	\begin{lstlisting}[caption=flake.lock nixpkgs attributes]
+\begin{figure}[htbp]
+	\begin{lstlisting}
     "nixpkgs": {
       "locked": {
         "lastModified": 1791011291,
@@ -39,9 +39,11 @@ The companion \texttt{flake.lock} file records resolved input revisions and asso
       },
     }
   \end{lstlisting}
+	\caption{Flake.lock Nixpkgs Attributes}
+	\label{fig:flake-lock-nixpkgs-attributes}
 \end{figure}
 
-
+\texttt{revision} is the most recent commit
 
 This distinction is important to RQ3. An outage affecting a source host such as GitHub can interfere with updating a flake and can also interfere with first use when a locked input has not yet been fetched. These cases should not be conflated with failure of an already available, locked environment. Likewise, an instructor's decision to refresh a lock file can reveal renamed, removed, or insufficiently maintained package attributes that were not present in the version used for a prior course offering.
 
