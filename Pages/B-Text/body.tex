@@ -191,10 +191,10 @@ With the introduction of the \texttt{course-flake-generator} skill, synthesis ad
 
 By aggregating and analyzing the frequency distribution of agent tool invocations, we identified significant insights into model reasoning behaviors. Removing the agent's access to mcp-nixos mcp server showed suprising results. The agent was able to synthesize by invoking nix cli commands to retrieve enough information about the requirements prompted.
 
-	\textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server.
-	      Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model .
+\textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server.
+Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model .
 
-	\textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of March 2026. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors.
+\textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of March 2026. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors.
 
 \section{Clean-Container Reproducibility Results - TODO}
 
