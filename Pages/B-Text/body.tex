@@ -2,12 +2,12 @@
 
 \section{Research Questions}\label{sec:rqs}
 
-This thesis investigates the feasibility, computational viability, and pedagogical integration of automated declarative environment generation for computer science education. To guide the empirical inquiry, three central Research Questions (RQs) are formulated:
+This thesis investigates the feasibility, reproducibility, and ecosystem reliability of automated declarative environment generation for computer science education. To guide the empirical inquiry, three central Research Questions (RQs) are formulated:
 
 \begin{enumerate}
 	\item \textbf{RQ1 (Agentic Synthesis Accuracy):} Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?
-	\item \textbf{RQ2 (Clean-Host Reproducibility):} To what extent do Nix Flake environments that pass local validation reproduce and support headless coursework tasks on a clean NixOS host without the authoring machine's packages, configuration, or build cache?
-	\item \textbf{RQ3 (Single-Ecosystem Dependency and Redundancy Risks):} What availability and operational risks arise from relying exclusively on a single package management ecosystem without secondary fallbacks, and how does the absence of redundant distribution channels impact the student experience when upstream disruptions prevent package installation?
+	\item \textbf{RQ2 (Clean-Container Reproducibility):} To what extent do Nix Flake environments that pass local validation reproduce and support headless coursework tasks in a fresh Linux container without the authoring machine's files, configuration, or prior evaluation state?
+	\item \textbf{RQ3 (Classroom Deployment Reliability):} To what extent can Nix Flake environments provide a dependable foundation for classroom use, and what operational constraints and risk trade-offs shape that dependability?
 \end{enumerate}
 
 \section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
@@ -50,6 +50,10 @@ The criteria for passing is as follows:
 	\item Declared dependencies are present in \texttt{\$PATH} after invoking \texttt{nix develop}
 \end{itemize}
 
+Antigravity cli, \texttt{agy} and \texttt{codex} were 2 agent harnesses used for testing
+
+Gemini 3.8 Flash with medium reasoning was the default model used with agy
+GPT 5.6 was used for 
 
 \subsection{Real-Time Package Retrieval via MCP-NixOS}\label{subsec:mcp-nixos}
 
@@ -139,11 +143,11 @@ Pass@K
 \]
 
 
-\section{Clean-Host Reproducibility Methodology}
+\section{Clean-Container Reproducibility Methodology}
 
-RQ2 evaluates whether a successful local validation actually transfers to a machine that has none of the authoring host's package store, shell configuration, or prior build state. The replay cohort contains only RQ1 trial artifacts that passed the three-stage local verifier and include both a generated \texttt{flake.nix} and its \texttt{flake.lock}. This design evaluates the reproducibility of fixed artifacts rather than re-running the agent or permitting it to repair configurations during the clean-host test.
+RQ2 evaluates whether a successful local validation actually transfers to an environment that has none of the authoring host's files, shell configuration, or prior evaluation state. The replay cohort contains only RQ1 trial artifacts that passed the three-stage local verifier and include both a generated \texttt{flake.nix} and its \texttt{flake.lock}. This design evaluates the reproducibility of fixed artifacts rather than re-running the agent or permitting it to repair configurations during the clean-container test.
 
-Each eligible artifact is replayed in a pinned \texttt{aarch64-linux} NixOS guest managed by Lima. The guest is prepared once, with no project-directory mounts, and saved as a \texttt{clean-baseline} snapshot. Before each trial, the harness restores that snapshot, transfers a compressed copy of the trial through \texttt{limactl copy}, and extracts it into guest-local temporary storage. Consequently, neither the host Nix store nor files from earlier trials are visible to the flake under test. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts; availability failures are recorded separately from configuration failures.
+Each validation stage is replayed in a newly created, unmounted Linux Docker container containing Nix. The harness streams a compressed copy of the trial into the container and extracts it into container-local temporary storage; no project directory or host Nix store is mounted. The container is discarded when the stage finishes, so no writable state is shared by stages or trials. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts; availability failures are recorded separately from configuration failures.
 
 The guest-side verifier executes the following stages in order:
 \begin{enumerate}
@@ -153,7 +157,15 @@ The guest-side verifier executes the following stages in order:
 	\item \textbf{Headless Task Execution:} A curated per-task command set verifies applicable language runtimes, builds, dependency synchronization, or test commands. Graphical editor workflows, interactive credentials, and persistent database-service administration are excluded because they cannot be assessed consistently by a headless guest.
 \end{enumerate}
 
-The principal metric is the clean-host reproduction rate: the proportion of eligible RQ1-passing trials that complete every applicable guest-side stage. Failures are classified as flake-evaluation failures, shell-activation failures, missing dependencies, functional task failures, or infrastructure failures. For each trial, the harness records the source-run identifier, guest image and system architecture, Nix version, snapshot tag, command exit codes, standard output and error logs, and stage durations. These artifacts make it possible to distinguish a defective generated environment from a transient failure in the guest or an upstream package source.
+The principal metric is the clean-container reproduction rate: the proportion of eligible RQ1-passing trials that complete every applicable container-side stage. Failures are classified as flake-evaluation failures, shell-activation failures, missing dependencies, functional task failures, or infrastructure failures. For each trial, the harness records the source-run identifier, container image digest and system architecture, Nix version, command exit codes, standard output and error logs, and stage durations. These artifacts make it possible to distinguish a defective generated environment from a transient container or upstream package-source failure.
+
+\section{Ecosystem Reliability and Trust Methodology}
+
+RQ3 examines the operational dependencies that remain after a flake has passed local and clean-container validation. A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students should activate a committed lock file rather than invoke \texttt{nix flake update} during a lab. Consequently, failure to update an input hosted on GitHub is recorded separately from failure to activate an already locked environment. This distinction prevents a transient source-host outage from being mischaracterized as a failure of a fixed course environment.
+
+The assessment considers four conditions. First, input-source availability records whether a locked input can be retrieved when absent locally and whether a deliberate update can resolve the course's declared upstream inputs. Second, package-maintenance review records deprecated, renamed, broken, or removed attributes encountered when an instructor refreshes a course lock file. Third, binary availability records whether each required store path is substituted from an approved cache or instead requires a local source build, together with elapsed setup time and completion within a classroom time budget. Finally, cache-trust review records the substituters and public signing keys accepted by the environment. Nix verifies cached paths against trusted keys; adding a third-party cache can improve availability, but it also expands the set of entities trusted to provide course binaries~\cite{dolstraNixSafePolicyFree}.
+
+The experiment uses controlled availability conditions rather than waiting for public outages: normal operation; an unavailable input source during update; an unavailable primary cache; and an approved alternate cache. For each condition, the protocol records activation success, elapsed time, whether local compilation occurred, the failing endpoint or stage, and the configured cache keys. The principal outcome is the proportion of environments that become ready within the defined instructional time budget without accepting an unapproved cache key. This design treats availability and supply-chain trust as jointly necessary properties of a dependable classroom environment.
 
 \chapter{Empirical Results and Analysis}\label{chap:results}
 
@@ -176,9 +188,13 @@ By aggregating and analyzing the frequency distribution of agent tool invocation
 	\item Gemini~3.8 Flash has this trained default behavior that caches results in a folder called scratch. Subsequent k passes were able to easily retrieve thoughts from the first kth pass. This scratch behavior is likely used to save the user tokens. For the purposes of this test as this is proprietary behavior, we have are python script clear out the script directory
 \end{itemize}
 
-\section{Clean-Host Reproducibility Results - TODO}
+\section{Clean-Container Reproducibility Results - TODO}
 
-The clean-host replay will report the reproduction rate for eligible RQ1-passing artifacts, disaggregated by curriculum track and failure category. These results will identify which locally valid flakes remain functional on a clean NixOS host and which dependencies or task requirements escape the initial host-side validation.
+The clean-container replay will report the reproduction rate for eligible RQ1-passing artifacts, disaggregated by curriculum track and failure category. These results will identify which locally valid flakes remain functional in a fresh Nix container and which dependencies or task requirements escape the initial host-side validation.
+
+\section{Ecosystem Reliability and Trust Results - TODO}
+
+RQ3 results will report readiness within the instructional time budget under normal operation, unavailable input-source, unavailable-primary-cache, and approved-alternate-cache conditions. The analysis will separate locked-environment activation from \texttt{flake update}, identify package-maintenance failures encountered during lock refresh, and report source-build fallback and cache-key decisions without conflating an availability failure with an invalid flake.
 
 \chapter{Security Considerations and Practical Adoption}\label{chap:discussion}
 
@@ -186,23 +202,15 @@ The clean-host replay will report the reproduction rate for eligible RQ1-passing
 
 \subsection{Nix Caches}
 
-Nix offers the ability to customize binary caches by adding unofficial binary caches, also known as substituters.
-Binary caches can be used as an attack vector
+Nix normally realizes a required store path by downloading a signed substitute from a binary cache; when no acceptable substitute is available, it may instead build the path locally from source. This fallback preserves the possibility of realization but can be unsuitable for a classroom when compilation exceeds the time available for a laboratory session. Thus, cache availability is an operational reliability concern rather than merely a performance optimization.
+
+Nix can use additional binary caches, known as substituters, to improve availability. A substitute is accepted only when its signature corresponds to a configured trusted public key. This signature mechanism provides an integrity boundary, but adding an external cache and its key is a supply-chain decision: it authorizes that cache operator to provide binaries that students will execute. A course should therefore use only institutionally approved cache URLs and keys, document them in the course environment, and avoid asking students to trust arbitrary caches~\cite{dolstraNixSafePolicyFree}.
 
 
-\section{Practical Adoption of Nix}
+\section{Ecosystem Reliability in Classroom Deployment}
 
+Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
 
-% Topics for this section:
-% - Updating packages and hydra doesn't have the build for it, causing a user to build from source if the binary isn't available. 
-% - Nix only works for unixy systems, so Windows users will have to use WSL
-The entirety of all the packages in nixpkgs is hosted in GitHub.
-Unrelated packages result in unexpected merge conflicts.
+The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
 
-GitHub
-
-
-
-There are a lot of packages, and some have been abandoned due to a lack of maintainers to review incoming pull requests.
-
-Committers or people with the authority to merge in pull requests are volunteers
+Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. RQ3 consequently evaluates reliability as a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than as a property of the \texttt{flake.nix} file alone.
