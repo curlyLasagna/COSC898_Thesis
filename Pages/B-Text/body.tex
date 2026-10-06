@@ -151,7 +151,7 @@ To rigorously evaluate the synthesis capabilities of the agents, we adapted the 
 Pass@K where we generate $n >= k$ samples per task. For our testing purposes, we set
 
 \[
-	\text{pass}@k := \underset{\text{Problems}}{\mathbb{E}} \left[ 1 - \frac{\binom{n-c}{k}}{\binom{n}{k}} \right]
+	\mathrm{pass@}k := \underset{\text{Problems}}{\mathrm{E}} \left[ 1 - \frac{\binom{n-c}{k}}{\binom{n}{k}} \right]
 \]
 
 
@@ -189,22 +189,34 @@ With the introduction of the \texttt{course-flake-generator} skill, synthesis ad
 
 \section{Tool Invocation and Telemetry Analysis}
 
-By aggregating and analyzing the frequency distribution of agent tool invocations, we identified significant insights into model reasoning behaviors. Removing the agent's access to mcp-nixos mcp server showed suprising results. The agent was able to synthesize by invoking nix cli commands to retrieve enough information about the requirements prompted.
+The tool-call logs were analyzed to determine how the agent resolved package and command uncertainty while constructing a flake. This analysis complements the pass/fail synthesis metric: a successful flake does not reveal whether the agent relied on parametric knowledge, live package retrieval, or native command-line inspection to reach the result.
 
-\textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server.
-Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model .
+\subsection{Native Nix CLI Discovery versus MCP Retrieval}
 
-\textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of March 2026. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors.
+The benchmark tasks did not require the \texttt{mcp-nixos} server for successful synthesis. When MCP access was removed, Gemini~3.8 Flash still produced valid environments for the simple, conventional requirements represented in the dataset. The required toolchains---including standard language runtimes, compilers, and build tools---are widely documented Nixpkgs attributes. The observed behavior is therefore consistent with the model recognizing common package conventions from prior exposure.
+
+When the model encountered uncertainty, it frequently used native Nix CLI discovery rather than the MCP server. Telemetry shows invocations of commands such as \texttt{nix search}, \texttt{nix-env -qaP}, and help interfaces including \texttt{nix --help} or a subcommand's \texttt{--help} flag. These commands gave the agent sufficient information to inspect available attributes and refine its subsequent commands. In this benchmark, the Nix CLI therefore served as an effective, self-describing retrieval interface without the additional MCP layer.
+
+This result should not be interpreted as evidence that MCP retrieval is generally unnecessary. The telemetry records which tools the agent used, not whether a result originated from training data, command output, or a combination of both. More specialized coursework, obscure package names, recently changed Nixpkgs attributes, or complex platform constraints may exceed what native CLI exploration can resolve efficiently. In those conditions, the structured and current metadata exposed by \texttt{mcp-nixos} remains a useful fallback for reducing package hallucination and configuration drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}. The present result instead bounds the claim: for straightforward requirements, an additional retrieval service did not materially improve the agent's ability to construct a working flake.
 
 \section{Clean-Container Reproducibility Results - TODO}
 
 The clean-container replay will report the reproduction rate for eligible RQ1-passing artifacts, disaggregated by curriculum track and failure category. These results will identify which locally valid flakes remain functional in a fresh Nix container and which dependencies or task requirements escape the initial host-side validation.
 
-\section{Ecosystem Reliability and Trust Results - TODO}
+\section{Ecosystem Reliability - TODO}
 
 RQ3 results will report readiness within the instructional time budget under normal operation, unavailable input-source, unavailable-primary-cache, and approved-alternate-cache conditions. The analysis will separate locked-environment activation from \texttt{flake update}, identify package-maintenance failures encountered during lock refresh, and report source-build fallback and cache-key decisions without conflating an availability failure with an invalid flake.
 
-\subsection{Security Considerations}
+Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
+
+The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
+
+Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. RQ3 consequently evaluates reliability as a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than as a property of the \texttt{flake.nix} file alone.
+
+
+\chapter{Security Considerations and Practical Adoption}\label{chap:discussion}
+
+\section{Security Considerations}
 
 \subsection{Nix Caches}
 
@@ -215,8 +227,3 @@ Nix can use additional binary caches, known as substituters, to improve availabi
 
 \section{Ecosystem Reliability in Classroom Deployment}
 
-Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
-
-The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
-
-Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. RQ3 consequently evaluates reliability as a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than as a property of the \texttt{flake.nix} file alone.
