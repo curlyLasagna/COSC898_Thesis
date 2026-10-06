@@ -84,13 +84,17 @@ These two tracks capture diverse dependencies. While software development projec
 
 The input data is stored as a json file. Each input contains the following attributes:
 
-\begin{lstlisting}
+\begin{figure}[htbp]
+	\begin{lstlisting}
   {
     "track": "...",
     "instruction": "...",
     "dependency": "...",
   }
-\end{lstlisting}
+	\end{lstlisting}
+	\caption{Input Data Format}
+	\label{fig:input-data-format}
+\end{figure}
 
 Where track is either computer science or data science. \texttt{instruction} is the natural language that an instructor might provide. \texttt{dependecy} is a list of executables that should be present when a student invokes \texttt{nix develop}.
 
@@ -100,16 +104,21 @@ An agent skill represents a structured, reusable capability module that transfor
 
 We designed a custom agent skill named \texttt{course-flake-generator}. The skill exposes YAML frontmatter metadata that allows agent harnesses to index and match the skill against user instructions:
 
-\begin{lstlisting}[caption=Course flake generator metadata]
+\begin{figure}[htbp]
+	\begin{lstlisting}
 ---
 name: course-flake-generator
 description: Generates a nix flake file based on an instructor's requirements or with a provided project folder with source code and other artifacts. Use when creating, generating, or configuring a Nix flake (flake.nix) for course assignments, lab environments, or software projects from specifications, natural language instructions, or existing codebases. Don't use for non-Nix environments, simple shell scripts, or general documentation generation.
 ---
-\end{lstlisting}
+	\end{lstlisting}
+	\caption{Course Flake Generator Metadata}
+	\label{fig:course-flake-generator-metadata}
+\end{figure}
 
 The internal directory structure of the custom agent skill follows standardized agentic skill packaging conventions:
 
-\begin{lstlisting}[caption=Custom skill filetree structure]
+\begin{figure}[htbp]
+	\begin{lstlisting}
 .
 ├── assets
 │   ├── flake-devshell.template.nix
@@ -123,7 +132,10 @@ The internal directory structure of the custom agent skill follows standardized 
 │   ├── query-nixos.py
 │   └── validate-flake.py
 └── SKILL.md
-\end{lstlisting}
+	\end{lstlisting}
+	\caption{Custom Skill Filetree Structure}
+	\label{fig:custom-skill-filetree}
+\end{figure}
 
 The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory provides standalone Python utilities that execute deterministic requirement detection and local flake validation. According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
 
@@ -177,15 +189,13 @@ With the introduction of the \texttt{course-flake-generator} skill, synthesis ad
 
 \section{Tool Invocation and Telemetry Analysis}
 
-By aggregating and analyzing the frequency distribution of agent tool invocations, we identified significant insights into model reasoning behaviors:
+By aggregating and analyzing the frequency distribution of agent tool invocations, we identified significant insights into model reasoning behaviors. Removing the agent's access to mcp-nixos mcp server showed suprising results. The agent was able to synthesize by invoking nix cli commands to retrieve enough information about the requirements prompted.
 
 \begin{itemize}
 	\item \textbf{Nix CLI vs. MCP-NixOS Server Utilization:} Gemini~3.8 Flash, configured with medium reasoning effort, demonstrated a pronounced preference for invoking native Nix command-line inspection tools (such as \texttt{nix-env -qaP} and \texttt{nix search}) rather than routing requests through the dedicated \texttt{mcp-nixos} server.
-	      Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model frequently attempted to rely on internalized parametric memory before resorting to external MCP searches.
+	      Because Gemini's training data incorporates extensive documentation on standard Nix package conventions, the model .
 
-
-	\item \textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of January 2025. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors. Crucially, when the closed-loop feedback mechanism returned the resulting Nix evaluation stack trace, the agent successfully recovered, querying the MCP server to obtain the current package identifier.
-	\item Gemini~3.8 Flash has this trained default behavior that caches results in a folder called scratch. Subsequent k passes were able to easily retrieve thoughts from the first kth pass. This scratch behavior is likely used to save the user tokens. For the purposes of this test as this is proprietary behavior, we have are python script clear out the script directory
+	\item \textbf{Knowledge Cutoffs and Package Drift:} Gemini~3 has a documented pre-training knowledge cutoff of March 2026. In instances where upstream Nixpkgs deprecated specific package attributes between 2025 and 2026, models relying solely on internal knowledge produced evaluation errors. 
 \end{itemize}
 
 \section{Clean-Container Reproducibility Results - TODO}
@@ -196,9 +206,7 @@ The clean-container replay will report the reproduction rate for eligible RQ1-pa
 
 RQ3 results will report readiness within the instructional time budget under normal operation, unavailable input-source, unavailable-primary-cache, and approved-alternate-cache conditions. The analysis will separate locked-environment activation from \texttt{flake update}, identify package-maintenance failures encountered during lock refresh, and report source-build fallback and cache-key decisions without conflating an availability failure with an invalid flake.
 
-\chapter{Security Considerations and Practical Adoption}\label{chap:discussion}
-
-\section{Security Considerations}
+\subsection{Security Considerations}
 
 \subsection{Nix Caches}
 
