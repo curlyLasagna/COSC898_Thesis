@@ -215,7 +215,7 @@ Finally, binary-cache misses turn an availability event into a student-facing ti
 
 \section{Security Considerations}
 
-\subsection{Nix Caches}
+\subsection{Binary Caches}
 
 Nix normally realizes a required store path by downloading a signed substitute from a binary cache; when no acceptable substitute is available, it may instead build the path locally from source. This fallback preserves the possibility of realization but can be unsuitable for a classroom when compilation exceeds the time available for a laboratory session. Thus, cache availability is an operational reliability concern rather than merely a performance optimization.
 
