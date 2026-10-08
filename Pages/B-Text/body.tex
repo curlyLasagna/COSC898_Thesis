@@ -50,11 +50,7 @@ The criteria for passing is as follows:
 	\item Declared dependencies are present in \texttt{\$PATH} after invoking \texttt{nix develop}
 \end{itemize}
 
-Antigravity cli, \texttt{agy} and \texttt{codex} were 2 agent harnesses used for testing
 
-Gemini 3.8 Flash with medium reasoning was the default model used with the antigravity harness.
-
-The harness also provided non-Gemini models. I chose GPT-OSS-120B as a cheaper model to determine if a significantly cheaper model would result with a functional flake configuration
 
 
 \subsection{Real-Time Package Retrieval via MCP-NixOS}\label{subsec:mcp-nixos}
@@ -67,7 +63,7 @@ Recent studies by authors analyzing package hallucinations demonstrate that less
 
 To systematically evaluate synthesis performance, the experimental framework will be tested with the Antigravity CLI agent harness.
 
-Experiments were evaluated across two models: Google Gemini~3.8 Flash and GPT-OSS 120B, with medium reasoning effort.
+Experiments were evaluated across two models: Google Gemini~3.8 Flash and GPT-OSS 120B, both with medium reasoning effort.
 
 An automated Python test runner was developed to execute test suites, capture agent tool call telemetry, stream shell outputs, and record execution success metrics.
 
