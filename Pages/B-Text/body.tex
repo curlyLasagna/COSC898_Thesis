@@ -82,41 +82,32 @@ These two tracks capture diverse dependencies. While software development projec
 
 The input data is stored as a json file. Each input containing the following attributes:
 
-\begin{figure}[htbp]
-	\begin{lstlisting}
+\begin{lstlisting}[caption={Input Data Format}, label={lst:input-data-format}]
   {
     "track": "...",
     "instruction": "...",
     "dependency": "...",
   }
-	\end{lstlisting}
-	\caption{Input Data Format}
-	\label{fig:input-data-format}
-\end{figure}
+\end{lstlisting}
 
 Where track is either computer science or data science. \texttt{instruction} is the natural language that an instructor might provide. \texttt{dependecy} is a list of executables that should be present in PATH when a student invokes \texttt{nix develop}.
 
 \subsection{Specialized Agent Skill Design}\label{subsec:agent-skill}
 
-An agent skill represents a structured, reusable capability module that transforms a general-purpose language model into a specialized domain expert~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Because generating Nix Flakes for varied academic courses is a recurrent task, relying purely on unstructured zero-shot prompts produces high variance and erratic tool utilization.
+An agent skill represents a structured, reusable prompt that transforms a general-purpose language model into a specialized domain expert~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Because generating Nix Flakes for varied academic courses is a recurrent task, relying purely on unstructured zero-shot prompts produces high variance and erratic tool utilization.
 
 We designed a custom agent skill named \texttt{course-flake-generator}. The skill exposes YAML frontmatter metadata that allows agent harnesses to index and match the skill against user instructions:
 
-\begin{figure}[htbp]
-	\begin{lstlisting}
+\begin{lstlisting}[caption={Course Flake Generator Metadata}, label={lst:course-flake-generator-metadata}]
 ---
 name: course-flake-generator
 description: Generates a nix flake file based on an instructor's requirements or with a provided project folder with source code and other artifacts. Use when creating, generating, or configuring a Nix flake (flake.nix) for course assignments, lab environments, or software projects from specifications, natural language instructions, or existing codebases. Don't use for non-Nix environments, simple shell scripts, or general documentation generation.
 ---
-	\end{lstlisting}
-	\caption{Course Flake Generator Metadata}
-	\label{fig:course-flake-generator-metadata}
-\end{figure}
+\end{lstlisting}
 
 The internal directory structure of the custom agent skill follows standardized agentic skill packaging conventions:
 
-\begin{figure}[htbp]
-	\begin{lstlisting}
+\begin{lstlisting}[caption={Custom Skill Filetree Structure}, label={lst:custom-skill-filetree}]
 .
 ├── assets
 │   ├── flake-devshell.template.nix
@@ -130,10 +121,7 @@ The internal directory structure of the custom agent skill follows standardized 
 │   ├── query-nixos.py
 │   └── validate-flake.py
 └── SKILL.md
-	\end{lstlisting}
-	\caption{Custom Skill Filetree Structure}
-	\label{fig:custom-skill-filetree}
-\end{figure}
+\end{lstlisting}
 
 The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory provides standalone Python utilities that execute deterministic requirement detection and local flake validation. According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
 
