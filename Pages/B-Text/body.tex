@@ -94,7 +94,7 @@ Where track is either computer science or data science. \texttt{instruction} is 
 
 \subsection{Specialized Agent Skill Design}\label{subsec:agent-skill}
 
-An agent skill represents a structured, reusable prompt that transforms a general-purpose language model into a specialized domain expert~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Because generating Nix Flakes for varied academic courses is a recurrent task, relying purely on unstructured zero-shot prompts produces high variance and erratic tool utilization.
+An agent skill represents a structured, reusable framework that transforms a general-purpose language model into a specialized domain expert~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Because generating Nix Flakes for varied academic courses is a recurrent task, relying purely on unstructured zero-shot prompts produces high variance and erratic tool utilization.
 
 We designed a custom agent skill named \texttt{course-flake-generator}. The skill exposes YAML frontmatter metadata that allows agent harnesses to index and match the skill against user instructions:
 
