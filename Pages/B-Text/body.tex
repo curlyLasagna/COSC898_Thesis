@@ -176,6 +176,12 @@ Our experimental evaluation revealed notable variations across model architectur
 
 With the introduction of the \texttt{course-flake-generator} skill, synthesis adherence improved substantially. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in tfhe Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
 
+Pass@3, both models had at least one attempt pass the test
+
+On one-shot attempts, 
+
+GPT-OSS-120B performed signifcantly less calls to the MCP server  
+
 \section{Tool Invocation and Telemetry Analysis}
 
 The tool-call logs were analyzed to determine how the agent resolved package and command uncertainty while constructing a flake. This analysis complements the pass/fail synthesis metric: a successful flake does not reveal whether the agent relied on parametric knowledge, live package retrieval, or native command-line inspection to reach the result. MCP-server availability was controlled by the experimental harness; it was not a tool-selection decision made by the model.
