@@ -148,11 +148,11 @@ To rigorously evaluate the synthesis capabilities of the agents, we adapted the 
 	\item \textbf{Functional Task Execution:} The assignment source code builds and passes its unit test suite inside the synthesized \texttt{devShell}.
 \end{enumerate}
 
-Pass@K answers what the probability an AI model 
+Pass@K answers what the probability an AI model
 
 where we generate $n >= k$ samples per task. For our testing purposes, we set
 
-We use the unbiased esimator introduced by \cite{chenEvaluatingLargeLanguage2021}  
+We use the unbiased esimator introduced by \cite{chenEvaluatingLargeLanguage2021}
 \[
 	\mathrm{pass@}k := \underset{\text{Problems}}{\mathrm{E}} \left[ 1 - \frac{\binom{n-c}{k}}{\binom{n}{k}} \right]
 \]
