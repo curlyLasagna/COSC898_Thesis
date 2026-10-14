@@ -16,7 +16,7 @@ To bridge the gap between complex declarative configurations and educational usa
 
 The end-to-end architecture comprises of the following steps (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
 \begin{enumerate}
-	\item \textbf{Requirement Ingestion (Figure~\ref{fig:pipeline-ingestion}):} Natural language assignment specifications or unconfigured assignment codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
+	\item \textbf{Requirement Ingestion:} Natural language assignment specifications or unconfigured assignment codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
 	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval:} A custom agent skill provides domain-specific prompting, curated templates, and reference schemas, while the agent queries a Model Context Protocol (MCP) server that reaches out to trusted sources of information.
 	\item \textbf{Deterministic Closed-Loop Verification:} Generated \texttt{flake.nix} files are evaluated via native Nix commands. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
 	\item \textbf{Output Artifacts and Runtime Deployment:} A \texttt{flake.nix} file is written alongside a cryptographically pinned \texttt{flake.lock} file, immediately activating a reproducible developer shell.
@@ -24,16 +24,9 @@ The end-to-end architecture comprises of the following steps (illustrated at a h
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=\linewidth,height=0.38\textheight,keepaspectratio]{Figures/pipeline_overview.pdf}
-	\caption{High-Level End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis Pipeline}
+	\includegraphics[width=\linewidth,keepaspectratio]{Figures/pipeline_synthesis.pdf}
+	\caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis Pipeline}
 	\label{fig:pipeline-overview}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.9\linewidth,height=0.42\textheight,keepaspectratio]{Figures/pipeline_1_ingestion.pdf}
-	\caption{Phase 1: Project Ingestion and Context Discovery Subsystem Across Greenfield and Brownfield Projects}
-	\label{fig:pipeline-ingestion}
 \end{figure}
 
 
@@ -200,7 +193,7 @@ The clean-container replay will report the reproduction rate for eligible RQ1-pa
 
 \section{Ecosystem Reliability - TODO}
 
-RQ3 results will report readiness within the instructional time budget under normal operation, unavailable input-source, unavailable-primary-cache, and approved-alternate-cache conditions. The analysis will separate locked-environment activation from \texttt{flake update}, identify package-maintenance failures encountered during lock refresh, and report source-build fallback and cache-key decisions without conflating an availability failure with an invalid flake.
+RQ3 results will report readiness within the instructional time budget under normal operation, unavailable input-source, unavailable-primary-cache, and approved binary cache conditions. The analysis will separate locked-environment activation from \texttt{flake update}, identify package-maintenance failures encountered during lock refresh, and report source-build fallback and cache-key decisions without conflating an availability failure with an invalid flake.
 
 Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
 
