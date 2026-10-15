@@ -165,13 +165,11 @@ The experiment uses controlled availability conditions rather than waiting for p
 
 \section{Flake Synthesis Accuracy and Model Comparison}\label{sec:model-results}
 
-Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and the presence of specialized agent skills. In baseline evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely.
+Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and the presence of specialized agent skills. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely.
 
 With the introduction of the \texttt{course-flake-generator} skill, synthesis adherence improved substantially. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in tfhe Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
 
 Pass@3, both models had at least one attempt pass the test
-
-On one-shot attempts,
 
 GPT-OSS-120B performed signifcantly less calls to the MCP server
 
@@ -190,6 +188,8 @@ This result should not be interpreted as evidence that MCP retrieval is generall
 \section{Clean-Container Reproducibility Results - TODO}
 
 The clean-container replay will report the reproduction rate for eligible RQ1-passing artifacts, disaggregated by curriculum track and failure category. These results will identify which locally valid flakes remain functional in a fresh Nix container and which dependencies or task requirements escape the initial host-side validation.
+
+
 
 \section{Ecosystem Reliability - TODO}
 
