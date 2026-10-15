@@ -143,7 +143,7 @@ RQ2 evaluates whether a successful local validation actually transfers to an env
 
 To simulate Linux machines, and WSL, each validation stage is replayed in a newly created, unmounted Linux Docker container containing Nix. The harness streams a compressed copy of the trial into the container and extracts it into container-local temporary storage; no project directory or host Nix store is mounted. The container is discarded when the stage finishes, so no writable state is shared by stages or trials. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts; availability failures are recorded separately from configuration failures.
 
-As for MacOS machines, we use tart, a toolset that simplifies the management of virtual machines in MacOS by using the native MacOS virtualization framework. We pulled a vanilla image of MacOS Sonoma from \texttt{docker pull ghcr.io/cirruslabs/macos-sonoma-vanilla:14.8.7}, install Nix via the determinate Nix installer and create our own base image to run each  
+As for MacOS machines, we use tart, a toolset that simplifies the management of virtual machines in MacOS by using the native MacOS virtualization framework. We pulled a vanilla image of MacOS Sonoma from \texttt{docker pull ghcr.io/cirruslabs/macos-sonoma-vanilla:14.8.7}, install Nix via the determinate Nix installer and create our own base image to run each
 
 The guest-side verifier executes the following stages in order:
 \begin{enumerate}
