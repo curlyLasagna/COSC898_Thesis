@@ -43,9 +43,6 @@ The criteria for passing is as follows:
 	\item Declared dependencies are present in \texttt{\$PATH} after invoking \texttt{nix develop}
 \end{itemize}
 
-
-
-
 \subsection{Real-Time Package Retrieval via MCP-NixOS}\label{subsec:mcp-nixos}
 
 The Nix Packages collection (\texttt{nixpkgs}) represents one of the largest open-source package repositories in existence. At the time of this research, \texttt{nixpkgs} hosts over 139,008 packages distributed across 1,044 distinct package sets. Because Nixpkgs evolves rapidly with daily upstream commits, static LLM training data is inherently prone to package name mismatches, deprecated attribute paths, and package hallucinations~\cite{ImportingPhantomsMeasuring}.
