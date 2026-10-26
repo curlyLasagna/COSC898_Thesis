@@ -56,6 +56,13 @@
   file = {/Users/luis/Zotero/storage/77KNJ97X/Beurer-Kellner et al. - 2026 - Technical Report Exploring the Emerging Threats of the Agent Skill Ecosystem.pdf;/Users/luis/Zotero/storage/NLQ9PV4S/2605.html}
 }
 
+@online{BinaryCacheOfficial,
+  title = {Binary {{Cache}} - {{Official NixOS Wiki}}},
+  url = {https://wiki.nixos.org/wiki/Binary_Cache#Using_a_binary_cache},
+  urldate = {2026-10-04},
+  file = {/Users/luis/Zotero/storage/UJN3GYAI/Binary_Cache.html}
+}
+
 @article{borkLanguageServerProtocol2023,
   title = {Language {{Server Protocol}}: {{An Introduction}} to the {{Protocol}}, Its {{Use}}, and {{Adoption}} for {{Web Modeling Tools}}},
   shorttitle = {Language {{Server Protocol}}},
@@ -97,6 +104,13 @@
   abstract = {A nixpkgs content database with graph building!},
   langid = {english},
   file = {/Users/luis/Zotero/storage/L648UZXM/2022-09-13-nixpkgs-graph.html}
+}
+
+@online{ContentAddressingFileSystem,
+  title = {Content-{{Addressing File System Objects}} - {{Nix}} 2.35.2 {{Reference Manual}}},
+  url = {https://nix.dev/manual/nix/2.35/store/file-system-object/content-address#serial-nix-archive},
+  urldate = {2026-10-06},
+  file = {/Users/luis/Zotero/storage/AZ8G5IJM/content-address.html}
 }
 
 @article{dolstraNixOSPurelyFunctional2010,
@@ -150,6 +164,23 @@
   file = {/Users/luis/Zotero/storage/2W827DV7/Du et al. - 2026 - Nix to the Rescue for a Reproducible HPC-AI Software Stack.pdf;/Users/luis/Zotero/storage/98HJH3VR/2607.html}
 }
 
+@online{formentScaffoldingMattersMore2026,
+  title = {The {{Scaffolding Matters More Than}} the {{Interface}}: {{A Controlled Comparison}} of {{MCP}} and {{CLI Tool Use Across Seven Agent Scaffoldings}}, {{Five Language Models}}, and {{One Software Task}}},
+  shorttitle = {The {{Scaffolding Matters More Than}} the {{Interface}}},
+  author = {Forment, Marc Alier and Guerrero, María José Casañ and García-Peñalvo, Francisco José and Pereira, Juanan},
+  date = {2026-08-09},
+  eprint = {2608.08654},
+  eprinttype = {arXiv},
+  eprintclass = {cs.AI},
+  doi = {10.48550/arXiv.2608.08654},
+  url = {http://arxiv.org/abs/2608.08654},
+  urldate = {2026-10-06},
+  abstract = {How much an AI coding agent costs to run can depend more on the agent scaffolding that drives it than on the interface through which it reaches its tools. We set out to measure the cost of tool use over the Model Context Protocol (MCP) against tool use over an ordinary command-line interface (CLI), a difference on which published estimates disagree by more than an order of magnitude while resting on practitioner reports that cannot be reproduced. We ran one fixed software task -- six operations against a private online git repository -- across seven agent scaffoldings and five language models, and we verified completion by inspecting the repository state rather than trusting the agent's self-report. The dominant effect was the scaffolding. Two of the seven ship no MCP support at all; they completed every run using only the CLI, which shows that MCP is unnecessary for this class of work, and they were 5.0x to 28x cheaper than the five scaffoldings that do support MCP, comparing CLI runs alone with no MCP server attached anywhere. The effect was largest for a small 27-billion-parameter model running locally, whose cost varied 139x across scaffoldings while it completed the task under all of them. The comparison we set out to make proved unstable: thirteen strictly paired MCP-to-CLI ratios span 0.43x to 29x, with outliers on both sides. The two interfaces separate on the cost of failure, where 12.9 per cent of the money spent on MCP runs bought no completed work against 2.2 per cent on CLI runs, but not on its frequency: failures were equally common in both, in the original runs and in their repetitions alike. Agents frequently ignored the interface they were assigned, so comparisons that do not verify actual behaviour measure an unknown mixture. The harness, the task, the verification and the complete dataset are released as open source.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Artificial Intelligence},
+  file = {/Users/luis/Zotero/storage/VZDZ3JYT/Forment et al. - 2026 - The Scaffolding Matters More Than the Interface A Controlled Comparison of MCP and CLI Tool Use Acr.pdf;/Users/luis/Zotero/storage/NDPNSVPI/2608.html}
+}
+
 @book{functionalSoftware,
   title = {The Purely Functional Software Deployment Model},
   author = {Dolstra, Eelco},
@@ -159,6 +190,25 @@
   isbn = {978-90-393-4130-8},
   langid = {english},
   file = {/Users/luis/Zotero/storage/7HY2XZMP/Dolstra - 2006 - The purely functional software deployment model.pdf}
+}
+
+@online{GarnixBlogStop,
+  title = {Garnix {{Blog}}: {{Stop}} Trusting {{Nix}} Caches},
+  shorttitle = {Garnix {{Blog}}},
+  url = {https://garnix.io/blog/stop-trusting-nix-caches/},
+  urldate = {2026-10-04},
+  abstract = {With most caches, you are giving a lot of people a lot of access},
+  langid = {english}
+}
+
+@online{Gemini38Flash,
+  title = {Gemini 3.8 {{Flash}} - {{Model Card}}},
+  url = {https://deepmind.google/models/model-cards/gemini-3-8-flash/},
+  urldate = {2026-10-06},
+  abstract = {Google DeepMind},
+  langid = {english},
+  organization = {Google DeepMind},
+  file = {/Users/luis/Zotero/storage/MG63PPJL/gemini-3-8-flash.html}
 }
 
 @online{GitHubActionsHit2026,
@@ -238,7 +288,7 @@
 }
 
 @article{konIaCEvalCodeGeneration,
-  title = {{{IaC-Eval}}: {{A Code Generation Benchmark}} for {{Cloud Infrastructure-as-Code Programs}}},
+  title = {{{IaC-Eval}}: {{A Code Generation Benchmark}} for {{Cloud Infrastructure}}-as-{{Code Programs}}},
   author = {Kon, Patrick Tser Jern and Liu, Jiachen and Qiu, Yiming and Fan, Weijun and He, Ting and Lin, Lei and Zhang, Haoran and Park, Owen M and Elengikal, George S and Kang, Yuxin and Chen, Ang and Chowdhury, Mosharaf and Lee, Myungjin and Wang, Xinyu},
   abstract = {Infrastructure-as-Code (IaC), an important component of cloud computing, allows the definition of cloud infrastructure in high-level programs. However, developing IaC programs is challenging, complicated by factors that include the burgeoning complexity of the cloud ecosystem (e.g., diversity of cloud services and workloads), and the relative scarcity of IaC-specific code examples and public repositories. While large language models (LLMs) have shown promise in general code generation and could potentially aid in IaC development, no benchmarks currently exist for evaluating their ability to generate IaC code. We present IaC-Eval, a first step in this research direction. IaC-Eval’s dataset includes 458 human-curated scenarios covering a wide range of popular AWS services, at varying difficulty levels. Each scenario mainly comprises a natural language IaC problem description and an infrastructure intent specification. The former is fed as user input to the LLM, while the latter is a general notion used to verify if the generated IaC program conforms to the user’s intent; by making explicit the problem’s requirements that can encompass various cloud services, resources and internal infrastructure details. Our in-depth evaluation shows that contemporary LLMs perform poorly on IaC-Eval, with the top-performing model, GPT-4, obtaining a pass@1 accuracy of 19.36\%. In contrast, it scores 86.6\% on EvalPlus, a popular Python code generation benchmark, highlighting a need for advancements in this domain. We open-source the IaC-Eval dataset and evaluation framework at https://github.com/autoiac-project/iac-eval to enable future research on LLM-based IaC code generation.},
   langid = {english},
@@ -434,9 +484,19 @@
   file = {/Users/luis/Zotero/storage/P8ACGCQN/Valstar et al. - 2020 - Using DevContainers to Standardize Student Development Environments An Experience Report.pdf}
 }
 
+@online{VirtualizeMacOSMac,
+  title = {Virtualize {{macOS}} on a {{Mac}}},
+  url = {https://developer.apple.com/documentation/virtualization/virtualize-macos-on-a-mac},
+  urldate = {2026-10-15},
+  abstract = {Configure and run macOS guests on Apple silicon.},
+  langid = {american},
+  organization = {Apple Developer Documentation},
+  file = {/Users/luis/Zotero/storage/SQATJRTH/virtualize-macos-on-a-mac.html}
+}
+
 @online{zhangDeployabilityCentricInfrastructureasCodeGeneration2025,
-  title = {Deployability-{{Centric Infrastructure-as-Code Generation}}: {{Fail}}, {{Learn}}, {{Refine}}, and {{Succeed}} through {{LLM-Empowered DevOps Simulation}}},
-  shorttitle = {Deployability-{{Centric Infrastructure-as-Code Generation}}},
+  title = {Deployability-{{Centric Infrastructure}}-as-{{Code Generation}}: {{Fail}}, {{Learn}}, {{Refine}}, and {{Succeed}} through {{LLM-Empowered DevOps Simulation}}},
+  shorttitle = {Deployability-{{Centric Infrastructure}}-as-{{Code Generation}}},
   author = {Zhang, Tianyi and Pan, Shidong and Zhang, Zejun and Xing, Zhenchang and Sun, Xiaoyu},
   date = {2025},
   doi = {10.48550/ARXIV.2506.05623},

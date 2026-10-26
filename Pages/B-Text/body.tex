@@ -2,29 +2,29 @@
 
 \section{Research Questions}\label{sec:rqs}
 
-This thesis investigates the feasibility, reproducibility, and ecosystem reliability of automated declarative environment generation for computer science education. To guide the empirical inquiry, three central Research Questions (RQs) are formulated:
+This thesis investigates the feasibility, reproducibility, and reliability of the ecosystem of automated declarative environment generation for computer science education. To guide empirical inquiry, three central Research Questions (RQs) are formulated:
 
 \begin{enumerate}
 	\item \textbf{RQ1 (Agentic Synthesis Accuracy):} Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?
-	\item \textbf{RQ2 (Clean-Container Reproducibility):} To what extent do Nix Flake environments that pass local validation reproduce and support headless coursework tasks in a fresh Linux container without the authoring machine's files, configuration, or prior evaluation state?
-	\item \textbf{RQ3 (Classroom Deployment Reliability):} To what extent can Nix Flake environments provide a dependable foundation for classroom use, and what operational constraints and risk trade-offs shape that dependability?
+	\item \textbf{RQ2 (Clean-Container Reproducibility):} To what extent do Nix Flake environments that pass static validation reproduce and support headless coursework tasks in a fresh Linux container and a base MacOS system without the authoring machine's files, configuration, or states?
+	\item \textbf{RQ3 (Classroom Deployment Reliability and Ergonomics):} To what extent can Nix Flake environments provide a reliable foundation for classroom use, and what operational constraints and risk trade-offs shape that dependability?
 \end{enumerate}
 
-\section{Proposed Solution: The AI-Assisted Flake Synthesis Architecture}\label{chap:solution}
+\section{Proposed Solution: An agent skill for AI-Assisted Flake Synthesis }\label{chap:solution}
 
-To bridge the gap between complex declarative configurations and educational usability, we propose an automated environment synthesis pipeline. Rather than forcing instructors or students to master the Nix DSL language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
+To bridge the gap between complex declarative configurations and educational usability, we propose the use of an agent skill. Rather than forcing instructors or students to master the Nix DSL language, our framework delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
 
-The end-to-end architecture comprises of the following steps (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
+The end-to-end architecture comprises the following steps (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
 \begin{enumerate}
-	\item \textbf{Requirement Ingestion:} Natural language assignment specifications or unconfigured assignment codebases are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
-	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval:} A custom agent skill provides domain-specific prompting, curated templates, and reference schemas, while the agent queries a Model Context Protocol (MCP) server that reaches out to trusted sources of information.
+	\item \textbf{Requirement Ingestion:} Natural language assignment specifications, unconfigured assignment codebases, or instructional documents are analyzed to extract inferred toolchains, language runtimes, and system-level libraries.
+	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval:} A custom agent skill provides domain-specific prompting, curated templates, and reference schemas, while the agent queries a Model Context Protocol (MCP) server that reaches out to trusted sources of information. A python script
 	\item \textbf{Deterministic Closed-Loop Verification:} Generated \texttt{flake.nix} files are evaluated via native Nix commands. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
 	\item \textbf{Output Artifacts and Runtime Deployment:} A \texttt{flake.nix} file is written alongside a cryptographically pinned \texttt{flake.lock} file, immediately activating a reproducible developer shell.
 \end{enumerate}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{Figures/pipeline_synthesis.pdf}
+	\includegraphics[width=\linewidth,keepaspectratio]{Thesis_Submission/Figures/high-level-process.pdf}
 	\caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis Pipeline}
 	\label{fig:pipeline-overview}
 \end{figure}
@@ -34,12 +34,18 @@ The end-to-end architecture comprises of the following steps (illustrated at a h
 
 \section{Agentic Flake Synthesis Test Design}
 
+The tests performed for the entirety of this thesis is performed with a MacBook with the following specifications:
+
+
+
+
+
 Synthesizing flake.nix configuration files requires navigating a purely functional domain-specific language. To eliminate the cognitive overhead of learning Nix syntax and package semantics, we evaluated how effectively modern agents can synthesize valid \texttt{flake.nix} files.
 
-The criteria for passing is as follows:
+The passing criterion is as follows:
 \begin{itemize}
 	\item A \texttt{flake.nix} is generated
-	\item Static code analysis via \texttt{nix flake check} passes
+	\item Static code analysis on the generated \texttt{flake.nix} via \texttt{nix flake check} passes
 	\item Declared dependencies are present in \texttt{\$PATH} after invoking \texttt{nix develop}
 \end{itemize}
 
@@ -59,18 +65,16 @@ An automated Python test runner was developed to execute test suites, capture ag
 
 \subsection{Input Dataset Curation}
 
-Because benchmark datasets for declarative Nix environments did not exist, we constructed an evaluation benchmark representing standard computer science course curricula. The evaluation suite consists of synthetic assignment prompts, existing instructional documents in pdf, docx, and markdown files and  divided into two distinct curriculum tracks:
+Because benchmark datasets for declarative Nix environments did not exist, we constructed an evaluation benchmark representing standard computer science course curricula. The evaluation suite consists of AI generated natural language instructions that a professor would provide students, codebase that an agent can infer requirements from and existing instructional documents in pdf, docx, and markdown format. The tests are divided into two distinct curriculum tracks:
 
 \begin{enumerate}
-	\item \textbf{Software Development Track:} Curated assignments focusing on systems programming, web engineering, and software construction. These prompts require toolchains such as C++ (GCC/Clang, CMake, Make), Rust (Cargo, rustc), and full-stack Python/Node.js environments.
+	\item \textbf{Software Development Track:} Curated assignments focusing on systems programming, and web development. These prompts require toolchains such as C++ (GCC/Clang, CMake, Make), Rust (Cargo, rustc), and Python, Node.js environments.
 	\item \textbf{Data Science Track:} Curated coursework requiring complex scientific libraries, interpreted runtimes, and external mathematical packages, including Python (NumPy, SciPy, Pandas, PyTorch), R programming environments, and Jupyter notebook kernels.
 \end{enumerate}
 
-These two tracks capture diverse dependencies. While software development projects prioritize native compilation toolchains, data science projects introduce intricate native shared library bindings (such as BLAS, LAPACK, and libstdc++), which often cause severe dependency conflicts on student machines.
+\subsection{AI Generated Natural Language Dataset Format}
 
-\subsection{Input Data Format}
-
-The input data is stored as a json file. Each input containing the following attributes:
+The input data is stored as a \texttt{jsonl} file. Each object contains the following attributes:
 
 \begin{lstlisting}[caption={Input Data Format}, label={lst:input-data-format}]
   {
@@ -80,11 +84,11 @@ The input data is stored as a json file. Each input containing the following att
   }
 \end{lstlisting}
 
-Where track is either computer science or data science. \texttt{instruction} is the natural language that an instructor might provide. \texttt{dependecy} is a list of executables that should be present in PATH when a student invokes \texttt{nix develop}.
+Track is either computer science or data science. \texttt{instruction} is the natural language that an instructor might provide to the agent with their requirements. \texttt{dependecy} is a list of packages or executables that should be present in PATH\texttt{nix develop} is invoked for evaluating agent performance.
 
 \subsection{Specialized Agent Skill Design}\label{subsec:agent-skill}
 
-An agent skill represents a structured, reusable framework that transforms a general-purpose language model into a specialized domain expert~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Because generating Nix Flakes for varied academic courses is a recurrent task, relying purely on unstructured zero-shot prompts produces high variance and erratic tool utilization.
+An agent skill represents a structured, reusable framework that transforms a general-purpose language model into a specialized domain expert~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Because generating Nix Flakes for varied academic courses is a recurrent task, relying purely on unstructured zero-shot prompts produced high variance and erratic tool utilization.
 
 We designed a custom agent skill named \texttt{course-flake-generator}. The skill exposes YAML frontmatter metadata that allows agent harnesses to index and match the skill against user instructions:
 
@@ -99,25 +103,28 @@ The internal directory structure of the custom agent skill follows standardized 
 
 \begin{lstlisting}[caption={Custom Skill Filetree Structure}, label={lst:custom-skill-filetree}]
 .
+├── README.md
+├── SKILL.md
 ├── assets
-│   ├── flake-devshell.template.nix
-│   └── mcp-servers.template.json
+│   ├── flake-devshell.template.nix
+│   └── mcp-servers.template.json
 ├── references
-│   ├── flake-patterns.md
-│   ├── inferring-requirements.md
-│   └── mcp-nixos.md
-├── scripts
-│   ├── detect-project-requirements.py
-│   ├── query-nixos.py
-│   └── validate-flake.py
-└── SKILL.md
+│   ├── flake-patterns.md
+│   ├── inferring-requirements.md
+│   └── mcp-nixos.md
+└── scripts
+    ├── detect-project-requirements.py
+    ├── extract-document-content.py
+    └── validate-flake.py
 \end{lstlisting}
 
-The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory provides standalone Python utilities that execute deterministic requirement detection and local flake validation. According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
+The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory stores Python scripts to perform deterministic actions such as extracting text from user submitted documents. 
+
+According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
 
 \subsection{Evaluation Metrics and Pass@K Formulation}
 
-To rigorously evaluate the synthesis capabilities of the agents, we adapted the standard Pass@$k$ formulation from code generation literature. A synthesized environment is considered successful if and only if it satisfies three automated validation stages:
+To rigorously evaluate the synthesis capabilities of the agents, we adapted the Pass@$k$ formulation from code generation literature . A synthesized environment is considered successful if and only if it satisfies three automated validation stages:
 \begin{enumerate}
 	\item \textbf{Grammar and Evaluation Validity:} The command \texttt{nix flake check} evaluates without syntax or attribute resolution errors.
 	\item \textbf{Build and Realization Determinism:} The command \texttt{nix develop --command <test-cmd>} successfully enters the ephemeral shell and resolves all declared binaries on the \texttt{PATH}.
@@ -126,7 +133,7 @@ To rigorously evaluate the synthesis capabilities of the agents, we adapted the 
 
 Pass@K answers what the probability an AI model
 
-where we generate $n >= k$ samples per task. For our testing purposes, we set
+where we generate $n >= k$ samples per task. For our testing script, we set $k = 3$.
 
 We use the unbiased esimator introduced by \cite{chenEvaluatingLargeLanguage2021}
 \[
@@ -134,27 +141,31 @@ We use the unbiased esimator introduced by \cite{chenEvaluatingLargeLanguage2021
 \]
 
 
-\section{Clean-Container Reproducibility Methodology}
+\section{Base OS Reproducibility Methodology}
 
-RQ2 evaluates whether a successful local validation actually transfers to an environment that has none of the authoring host's files, shell configuration, or prior evaluation state. The replay cohort contains only RQ1 trial artifacts that passed the three-stage local verifier and include both a generated \texttt{flake.nix} and its \texttt{flake.lock}. This design evaluates the reproducibility of the generated flake.nix file rather than re-running the agent or permitting it to repair configurations during the clean-container test.
+RQ2 evaluates whether a successful local validation actually transfers to a fresh environment that has none of the authoring host's files, shell configuration, or prior evaluation state. The inputs contain only RQ1 trial artifacts that passed the three-stage local verifier and include both a generated \texttt{flake.nix} and its \texttt{flake.lock}. This design evaluates the reproducibility of the generated flake.nix file. 
 
-To simulate Linux machines, and WSL, each validation stage is replayed in a newly created, unmounted Linux Docker container containing Nix. The harness streams a compressed copy of the trial into the container and extracts it into container-local temporary storage; no project directory or host Nix store is mounted. The container is discarded when the stage finishes, so no writable state is shared by stages or trials. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts; availability failures are recorded separately from configuration failures.
+To simulate Linux machines, and WSL for Windows machines, each validation stage is replayed in a newly created, unmounted Linux Docker container with nix installed. The harness streams a compressed copy of the trial into the container and extracts it into container-local temporary storage; no project directory or host Nix store is mounted. The container is discarded when the stage finishes, so no writable state is shared by stages or trials. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts; availability failures are recorded separately from configuration failures.
 
-As for MacOS machines, we use tart, a toolset that simplifies the management of virtual machines in MacOS by using the native MacOS virtualization framework. We pulled a vanilla image of MacOS Sonoma from \texttt{docker pull ghcr.io/cirruslabs/macos-sonoma-vanilla:14.8.7}, install Nix via the determinate Nix installer and create our own base image to run each
+As for MacOS machines, we use tart, a toolset that simplifies the management of virtual machines in MacOS . We pulled a vanilla image of MacOS Sonoma via \texttt{docker pull ghcr.io/cirruslabs/macos-sonoma-vanilla:14.8.7}, install Nix via the determinate Nix installer and use that as our base VM image to fork off of for the other tasks.
 
 The guest-side verifier executes the following stages in order:
 \begin{enumerate}
 	\item \textbf{Locked Flake Evaluation:} \texttt{nix flake check} evaluates the generated flake with lock-file writes disabled.
-	\item \textbf{Development-Shell Activation:} \texttt{nix develop --command true} verifies that the development shell can be realized and activated.
+	\item \textbf{Development-Shell Activation:} \texttt{nix develop --command true} verifies that the development shell can be activated.
 	\item \textbf{Required Tool Availability:} Each executable listed in the original RQ1 dependency assertion is checked with \texttt{command -v} inside the development shell.
 	\item \textbf{Headless Task Execution:} A curated per-task command set verifies applicable language runtimes, builds, dependency synchronization, or test commands. Graphical editor workflows, interactive credentials, and persistent database-service administration are excluded because they cannot be assessed consistently by a headless guest.
 \end{enumerate}
 
-The principal metric is the clean-container reproduction rate: the proportion of eligible RQ1-passing trials that complete every applicable container-side stage. Failures are classified as flake-evaluation failures, shell-activation failures, missing dependencies, functional task failures, or infrastructure failures. For each trial, the harness records the source-run identifier, container image digest and system architecture, Nix version, command exit codes, standard output and error logs, and stage durations. These artifacts make it possible to distinguish a defective generated environment from a transient container or upstream package-source failure.
+The principal metric is the base OS reproduction rate: the proportion of eligible RQ1-passing trials that complete every applicable container-side stage. Failures are classified as flake-evaluation failures, shell-activation failures, missing dependencies, functional task failures, or infrastructure failures. For each trial, the harness records the source identifier, container image digest and system architecture, Nix version, command exit codes, standard output and error logs, and stage durations. These artifacts make it possible to distinguish a defective generated environment from a transient container or upstream package-source failure.
 
-\section{Ecosystem Reliability and Trust Methodology}
+\section{Ecosystem Reliability, and Student Ergonomics Methodology}
 
-RQ3 examines the operational dependencies that remain after a flake has passed local and clean-container validation. A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students should activate a committed lock file rather than invoke \texttt{nix flake update} during a lab. Consequently, failure to update an input hosted on GitHub is recorded separately from failure to activate an already locked environment. This distinction prevents a transient source-host outage from being mischaracterized as a failure of a fixed course environment.
+RQ3 evaluates the reality of using Nix as a student and the drawbacks . We tasked 2 undergraduate students and 2 graduate students in setting up a development environment with the guidance of an installation guide from a course and the \texttt{flake.nix} generated from that document through our methodology in RQ1.
+
+Using tart, the virtualization management tool used in RQ2, we clone the base macOS Sonoma for each run. 
+
+A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students should activate a committed lock file rather than invoke \texttt{nix flake update} during a lab. Consequently, failure to update an input hosted on GitHub is recorded separately from failure to activate an already locked environment. This distinction prevents a transient source-host outage from being mischaracterized as a failure of a fixed course environment.
 
 The assessment considers four conditions. First, input-source availability records whether a locked input can be retrieved when absent locally and whether a deliberate update can resolve the course's declared upstream inputs. Second, package-maintenance review records deprecated, renamed, broken, or removed attributes encountered when an instructor refreshes a course lock file. Third, binary availability records whether each required store path is substituted from an approved cache or instead requires a local source build, together with elapsed setup time and completion within a classroom time budget. Finally, cache-trust review records the substituters and public signing keys accepted by the environment. Nix verifies cached paths against trusted keys; adding a third-party cache can improve availability, but it also expands the set of entities trusted to provide course binaries~\cite{dolstraNixSafePolicyFree}.
 
@@ -162,13 +173,11 @@ The experiment uses controlled availability conditions rather than waiting for p
 
 \chapter{Empirical Results and Analysis}\label{chap:results}
 
-
-
 \section{Flake Synthesis Accuracy and Model Comparison}\label{sec:model-results}
 
-Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and the presence of specialized agent skills. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely.
+Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and agent access to an MCP server. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely.
 
-With the introduction of the \texttt{course-flake-generator} skill, synthesis adherence improved substantially. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in tfhe Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
+With the introduction of the \texttt{course-flake-generator} skill, the model behaved significantly more . The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
 
 Pass@3, both models had at least one attempt pass the test
 
@@ -180,19 +189,17 @@ The tool-call logs were analyzed to determine how the agent resolved package and
 
 \subsection{Native Nix CLI Discovery versus MCP Retrieval}
 
-The benchmark tasks did not require the \texttt{mcp-nixos} server for successful synthesis. In our testing script, we added a flag to run a condition in which the MCP server was not provided to the model. In that condition, the model still produced valid environments for the simple, conventional requirements represented in the dataset. The required toolchains, including standard language runtimes, compilers, and build tools, are widely documented nixpkgs attributes. The observed behavior is therefore consistent with the model recognizing common package conventions from prior exposure.
+ \texttt{mcp-nixos} server for successful synthesis. In our testing script, we added a flag to run a condition in which the MCP server was not provided to the model. In that condition, the model still produced valid environments for the simple, conventional requirements represented in the dataset. The required toolchains, including standard language runtimes, compilers, and build tools, are widely documented nixpkgs attributes. The observed behavior is therefore consistent with the model recognizing common package conventions from prior exposure.
 
 When the model encountered uncertainty in the no-MCP condition, it used native Nix CLI discovery. Test data shows invocations of commands such as \texttt{nix search}, \texttt{nix-env -qaP}, and help interfaces including \texttt{nix --help} or a subcommand's \texttt{--help} flag. These commands gave the agent sufficient information to inspect available attributes and refine its subsequent commands. In this benchmark, the Nix CLI therefore served as an effective, self-describing retrieval interface when the additional MCP layer was unavailable.
 
 This result should not be interpreted as evidence that MCP retrieval is generally unnecessary. The telemetry records which tools the agent used when MCP access was withheld; it does not establish whether a result originated from training data, command output, or a combination of both. More specialized coursework, obscure package names, recently changed Nixpkgs attributes, or complex platform constraints may exceed what native CLI exploration can resolve efficiently. In those conditions, the structured and current metadata exposed by \texttt{mcp-nixos} remains a useful capability for reducing package hallucination and configuration drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}. The present result instead bounds the claim: for straightforward requirements, the model could construct a working flake without MCP access.
 
-\section{Clean-Container Reproducibility Results - TODO}
+\section{Base OS Reproducibility Results - TODO}
 
-The clean-container replay will report the reproduction rate for eligible RQ1-passing artifacts, disaggregated by curriculum track and failure category. These results will identify which locally valid flakes remain functional in a fresh Nix container and which dependencies or task requirements escape the initial host-side validation.
+The base OS replay script will report the reproduction rate for eligible RQ1-passing artifacts, disaggregated by curriculum track and failure category. These results will identify which locally valid flakes remain functional in a fresh Nix container and which dependencies or task requirements escape the initial host-side validation.
 
-
-
-\section{Ecosystem Reliability - TODO}
+\section{A look into Ecosystem Reliability of nixpkgs - TODO}
 
 RQ3 results will report readiness within the instructional time budget under normal operation, unavailable input-source, unavailable-primary-cache, and approved binary cache conditions. The analysis will separate locked-environment activation from \texttt{flake update}, identify package-maintenance failures encountered during lock refresh, and report source-build fallback and cache-key decisions without conflating an availability failure with an invalid flake.
 

@@ -29,7 +29,12 @@
 % in this way, ~ will be rendered as a space and make sure the last character ``i'' will not be isolated in a new line.
 %%% -----------------------------------------------------------------------
 \documentclass{TUgrad}
-\newfontfamily\zedmono{ZedMono Nerd Font}[Scale=MatchLowercase]
+\newfontfamily\zedmono{ZedMonoNerdFont}[
+  Path=Fonts/,
+  Extension=.ttf,
+  UprightFont=*-Regular,
+  Scale=MatchLowercase
+]
 \makeatletter
 % Ensure newlines are emitted at start of line before any multibyte Unicode characters,
 % and allow listings to wrap lines (TUgrad.cls sets \exhyphenpenalty=10000 which prevents wrapping)
@@ -42,6 +47,12 @@
   lineskip=0pt,
   breaklines=true,
   breakatwhitespace=false,
+  captionpos=b,
+}
+\captionsetup[lstlisting]{labelsep=period, justification=justified}
+\renewcommand{\lstlistingname}{Listing}
+\AtBeginDocument{%
+  \counterwithout{lstlisting}{chapter}%
 }
 %%% -----------------------------------------------------------------------
 %% replace with your title, no need to type in capital, the template will make capital automatically

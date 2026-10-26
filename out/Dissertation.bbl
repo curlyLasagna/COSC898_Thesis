@@ -135,12 +135,12 @@ K.~G. Srivatsa, S.~Mukhopadhyay, G.~Katrapati, and M.~Shrivastava, ``A
 P.~T.~J. Kon, J.~Liu, Y.~Qiu, W.~Fan, T.~He, L.~Lin, H.~Zhang, O.~M. Park,
   G.~S. Elengikal, Y.~Kang, A.~Chen, M.~Chowdhury, M.~Lee, and X.~Wang,
   ``{{IaC-Eval}}: {{A Code Generation Benchmark}} for {{Cloud
-  Infrastructure-as-Code Programs}}.''
+  Infrastructure}}-as-{{Code Programs}}.''
 
 \bibitem{zhangDeployabilityCentricInfrastructureasCodeGeneration2025}
 \BIBentryALTinterwordspacing
 T.~Zhang, S.~Pan, Z.~Zhang, Z.~Xing, and X.~Sun. Deployability-{{Centric
-  Infrastructure-as-Code Generation}}: {{Fail}}, {{Learn}}, {{Refine}}, and
+  Infrastructure}}-as-{{Code Generation}}: {{Fail}}, {{Learn}}, {{Refine}}, and
   {{Succeed}} through {{LLM-Empowered DevOps Simulation}}. [Online]. Available:
   \url{https://arxiv.org/abs/2506.05623}
 \BIBentrySTDinterwordspacing
@@ -190,6 +190,21 @@ Modularity and {{Lazy Evaluation}} in {{Nixos}}: {{A Functional Approach}} to
 \BIBentryALTinterwordspacing
 Nix is a better {{Docker}} image builder than {{Docker}}'s image builder.
   [Online]. Available: \url{https://xeiaso.net/talks/2024/nix-docker-build/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{chenEvaluatingLargeLanguage2021}
+\BIBentryALTinterwordspacing
+M.~Chen, J.~Tworek, H.~Jun, Q.~Yuan, H.~P. d.~O. Pinto, J.~Kaplan, H.~Edwards,
+  Y.~Burda, N.~Joseph, G.~Brockman, A.~Ray, R.~Puri, G.~Krueger, M.~Petrov,
+  H.~Khlaaf, G.~Sastry, P.~Mishkin, B.~Chan, S.~Gray, N.~Ryder, M.~Pavlov,
+  A.~Power, L.~Kaiser, M.~Bavarian, C.~Winter, P.~Tillet, F.~P. Such,
+  D.~Cummings, M.~Plappert, F.~Chantzis, E.~Barnes, A.~Herbert-Voss, W.~H.
+  Guss, A.~Nichol, A.~Paino, N.~Tezak, J.~Tang, I.~Babuschkin, S.~Balaji,
+  S.~Jain, W.~Saunders, C.~Hesse, A.~N. Carr, J.~Leike, J.~Achiam, V.~Misra,
+  E.~Morikawa, A.~Radford, M.~Knight, M.~Brundage, M.~Murati, K.~Mayer,
+  P.~Welinder, B.~McGrew, D.~Amodei, S.~McCandlish, I.~Sutskever, and
+  W.~Zaremba. Evaluating {{Large Language Models Trained}} on {{Code}}.
+  [Online]. Available: \url{http://arxiv.org/abs/2107.03374}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}

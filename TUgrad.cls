@@ -116,6 +116,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{stfloats}
 \RequirePackage{float}
+\RequirePackage{svg}
 \RequirePackage{indentfirst}
 \RequirePackage[hyphens]{url}
 \RequirePackage{hyperref}

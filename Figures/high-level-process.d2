@@ -1,0 +1,30 @@
+direction: down
+
+prompt: |md
+  Natural language instruction 
+  > "This assignment uses Python 3.12..."
+|
+
+codebase: {
+  icon: ./source-code.png
+}
+
+document: Instruction Guide {
+  icon: ./word-document.png
+}
+
+harness: Agent Harness
+harness.LLM
+harness.skill: Course Flake Generator
+MCP: nixos-mcp
+output: flake.nix {
+  icon: ./nix_snowflake.svg
+}
+
+prompt -> harness
+codebase -> harness
+document -> harness
+harness.LLM -> harness.skill: /call-skill
+harness -> MCP: \{action="search", query="javac"\}
+MCP -> harness: Package information
+harness -> output: Synthesize
