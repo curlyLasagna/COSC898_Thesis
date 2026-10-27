@@ -120,7 +120,7 @@ The internal directory structure of the custom agent skill follows standardized 
     └── validate-flake.py
 \end{lstlisting}
 
-The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory stores Python scripts to perform deterministic actions such as extracting text from user submitted documents. 
+The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory stores Python scripts to perform deterministic actions such as extracting text from user submitted documents.
 
 According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
 
@@ -143,7 +143,7 @@ We use the unbiased estimator introduced by Chen et~al.~\cite{chenEvaluatingLarg
 
 \section{Base OS Reproducibility Methodology}
 
-RQ2 evaluates whether a successful local validation actually transfers to a fresh environment that has none of the authoring host's files, shell configuration, or prior evaluation state. The inputs contain only RQ1 trial artifacts that passed the three-stage local verifier and include both a generated \texttt{flake.nix} and its \texttt{flake.lock}. This design evaluates the reproducibility of the generated flake.nix file. 
+RQ2 evaluates whether a successful local validation actually transfers to a fresh environment that has none of the authoring host's files, shell configuration, or prior evaluation state. The inputs contain only RQ1 trial artifacts that passed the three-stage local verifier and include both a generated \texttt{flake.nix} and its \texttt{flake.lock}. This design evaluates the reproducibility of the generated flake.nix file.
 
 To simulate Linux machines, and WSL for Windows machines, each validation stage is replayed in a newly created, unmounted Linux Docker container with nix installed. The harness streams a compressed copy of the trial into the container and extracts it into container-local temporary storage; no project directory or host Nix store is mounted. The container is discarded when the stage finishes, so no writable state is shared by stages or trials. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts; availability failures are recorded separately from configuration failures.
 
@@ -163,7 +163,7 @@ The principal metric is the base OS reproduction rate: the proportion of eligibl
 
 RQ3 evaluates the practical ergonomics and operational reliability of Nix Flakes from a student perspective. We tasked two undergraduate students and two graduate students with configuring a course development environment using both traditional manual instructions and an AI-generated \texttt{flake.nix} synthesized via our RQ1 pipeline.
 
-Using Tart, the virtualization management tool described in Section~\ref{chap:testing}, we cloned a fresh macOS Sonoma instance for each participant run to ensure a clean evaluation environment. 
+Using Tart, the virtualization management tool described in Section~\ref{chap:testing}, we cloned a fresh macOS Sonoma instance for each participant run to ensure a clean evaluation environment.
 
 A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students should activate a committed lock file rather than invoke \texttt{nix flake update} during a lab. Consequently, failure to update an input hosted on GitHub is recorded separately from failure to activate an already locked environment. This distinction prevents a transient source-host outage from being mischaracterized as a failure of a fixed course environment.
 
