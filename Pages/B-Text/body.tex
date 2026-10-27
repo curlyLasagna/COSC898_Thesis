@@ -116,7 +116,7 @@ RQ2 evaluates whether a successful local validation actually transfers to a fres
 
 \subsection{Isolation Objectives and Threat Model}
 
-On a local development machine, an existing warmed Nix store or globally installed host library may mask missing dependency declarations, creating a false impression of reproducibility. To isolate the environment from authoring host pollution, our protocol mandates that candidate flakes be tested in fresh, ephemeral guest environments where no host directories or store paths are mounted. 
+On a local development machine, an existing warmed Nix store or globally installed host library may mask missing dependency declarations, creating a false impression of reproducibility. To isolate the environment from authoring host pollution, our protocol mandates that candidate flakes be tested in fresh, ephemeral guest environments where no host directories or store paths are mounted.
 
 The harness streams a compressed copy of the trial into the guest environment and extracts it into guest-local temporary storage; no project directory or host Nix store is mounted. The guest instance is discarded when the stage finishes, so no writable state is shared across stages or trials. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts, and availability failures are recorded separately from configuration failures.
 
