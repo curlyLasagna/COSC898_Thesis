@@ -217,6 +217,10 @@
 % use \useabbr to activate
 \newif\ifabbrspage \abbrspagefalse
 \def\useabbr{\abbrspagetrue}
+% default no list of listings page
+% use \uselistings to activate
+\newif\iflistingspage \listingspagefalse
+\def\uselistings{\listingspagetrue}
 %%% -----------------------------------------------------------------------
 \def\no@breaks#1{{\def\\{ \ignorespaces}#1}}    % disallow explicit line breaks
 %%% -----------------------------------------------------------------------
@@ -308,6 +312,10 @@
 	\phantomsection
 	\addcontentsline{toc}{chapter}{List of Figures}\listoffigures
 	\newpage
+	\iflistingspage
+		\phantomsection
+		\addcontentsline{toc}{chapter}{List of Listings}\lstlistoflistings
+		\newpage\fi
 	\ifabbrspage
 		\phantomsection
 		\addcontentsline{toc}{chapter}{Keys to Symbols, Abbreviations, or Nomenclature}
@@ -385,6 +393,43 @@
 \newlength\tabhanglength
 \settowidth\tabhanglength{\cfttabpresnum}
 \addtolength\cfttabnumwidth{\tabhanglength}
+% List of Listings formatting matching tocloft style
+\renewcommand*{\lstlistlistingname}{List of Listings}
+\newlength\cftbeforelstlistingskip
+\setlength{\cftbeforelstlistingskip}{\z@ \@plus .2\p@}
+\newlength\cftlstlistingindent
+\setlength{\cftlstlistingindent}{0em}
+\newlength\cftlstlistingnumwidth
+\setlength{\cftlstlistingnumwidth}{2.5em}
+\newcommand{\cftlstlistingfont}{\normalfont}
+\newcommand{\cftlstlistingpresnum}{Listing\ }
+\newcommand{\cftlstlistingaftersnum}{}
+\newcommand{\cftlstlistingaftersnumb}{}
+\newcommand{\cftlstlistingdotsep}{\cftdotsep}
+\newcommand{\cftlstlistingleader}{\normalfont\cftdotfill{\cftlstlistingdotsep}}
+\newcommand{\cftlstlistingpagefont}{\normalfont}
+\newcommand{\cftlstlistingafterpnum}{}
+\newcommand{\cftlstlistingfillnum}[1]{%
+	{\cftlstlistingleader}\nobreak
+	\makebox[\@pnumwidth][\cftpnumalign]{\cftlstlistingpagefont #1}\cftlstlistingafterpnum\par}
+\newlength\lsthanglength
+\settowidth\lsthanglength{\cftlstlistingpresnum}
+\addtolength\cftlstlistingnumwidth{\lsthanglength}
+\renewcommand*{\l@lstlisting}[2]{%
+	\vskip \cftbeforelstlistingskip
+	{\leftskip \cftlstlistingindent\relax
+	\rightskip \@tocrmarg
+	\parfillskip -\rightskip
+	\parindent \cftlstlistingindent\relax\@afterindenttrue
+	\interlinepenalty\@M
+	\leavevmode
+	\@tempdima \cftlstlistingnumwidth\relax
+	\let\@cftbsnum \cftlstlistingpresnum
+	\let\@cftasnum \cftlstlistingaftersnum
+	\let\@cftasnumb \cftlstlistingaftersnumb
+	\advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
+	{\cftlstlistingfont #1}\nobreak
+	\cftlstlistingfillnum{#2}}}
 \newcommand{\etal}{{\em et al.~}}
 %%% -----------------------------------------------------------------------
 %% default without numbering headings

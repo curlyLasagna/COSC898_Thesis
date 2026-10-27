@@ -50,8 +50,8 @@ D.~Holland, W.~Josephson, K.~Magoutis, M.~Seltzer, C.~Stein, and A.~Lim,
 \BIBentrySTDinterwordspacing
 
 \bibitem{dolstraNixSafePolicyFree}
-E.~Dolstra, p.~u. family=Jonge, given=Merijn, and E.~Visser, ``Nix: {{A Safe}}
-  and {{Policy-Free System}} for {{Software Deployment}}.''
+D.~Eelco, ``Nix: {{A Safe}} and {{Policy-Free System}} for {{Software
+  Deployment}}.''
 
 \bibitem{dolstraPurelyFunctionalSystema}
 E.~Dolstra and A.~Hemel, ``Purely {{Functional System Conﬁguration
