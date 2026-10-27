@@ -71,7 +71,7 @@ Recent studies by authors analyzing package hallucinations demonstrate that less
 
 To systematically evaluate synthesis performance, the experimental framework was evaluated using the Antigravity CLI agent harness. This harness coordinates prompt delivery, tool routing, and automated terminal execution in an isolated session.
 
-Experiments were evaluated across two frontier models: Google Gemini~3.8 Flash and GPT-OSS 120B, both configured with medium reasoning effort. Evaluating models of differing parameter scale and architecture allows us to assess how reasoning capacity impacts Nix DSL synthesis and error recovery.
+Experiments were evaluated across two frontier models: Google Gemini~3.8 Flash and GPT-OSS 120B, both configured with medium reasoning effort. Evaluating models of differing parameter scale, training data and architecture allows us to assess whether weaker and cheaper models are able to generate a functionally equivalent nix flake.
 
 An automated Python test runner was developed to execute test suites, capture agent tool call telemetry, stream shell outputs, and record execution success metrics. The runner logs detailed traces for every synthesis attempt to facilitate post-hoc telemetry analysis.
 
