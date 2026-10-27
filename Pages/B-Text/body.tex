@@ -214,9 +214,22 @@ RQ3 evaluates the dependability of Nix Flake environments under practical classr
 
 \subsection{Student Ergonomics and Environment Onboarding}
 
-To assess the human factors of adopting declarative environments, we conducted an onboarding trial with two undergraduate and two graduate computer science students. Each participant was tasked with configuring a development environment for a course project using both conventional imperative setup instructions and an AI-generated \texttt{flake.nix} environment.
+To assess the human factors of adopting declarative environments, we conducted an onboarding trial with two undergraduate and a graduate computer science student. Each participant was tasked with configuring a development environment for a course project using both conventional imperative setup instructions and an AI-generated \texttt{flake.nix} environment.
 
-Participants reported that traditional manual setup guides were error-prone, requiring substantial manual intervention to resolve version conflicts with pre-existing packages on their personal machines. In contrast, activating the declarative environment via \texttt{nix develop} required only a single terminal command once Nix was installed. The graduate students noted the distinct advantage of knowing their project dependencies would not collide with thesis or research software. However, participants also identified usability hurdles: the initial download time for store paths was non-negligible, and students unfamiliar with Nix found error messages confusing when attempting to install ad-hoc tools imperatively within the active shell. These results emphasize that while declarative flakes substantially lower onboarding friction, clear conceptual onboarding regarding Nix's read-only store model remains critical for classroom adoption.
+Each student was provided a 
+
+Emma - Rust installation
+
+Imperative (3:21.22)
+- Assumed the \$ was part of the commands
+- Skipped a vital instruction of running the source command, or the
+
+Insight: during imperative installation, students may skip a vital step, causing confusion as to what went wrong
+
+Declarative flake (4:54.86)
+- Installing nix took a huge part of the time
+- nix develop shell instantiation also took more time
+
 
 \subsection{Operational Availability and Maintenance Conditions}
 
