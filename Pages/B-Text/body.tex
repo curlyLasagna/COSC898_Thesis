@@ -35,22 +35,22 @@ The end-to-end architecture comprises the following steps (illustrated at a high
 \section{Agentic Flake Synthesis Test Design}
 
 The experiments conducted for this thesis were executed on an Apple MacBook Air with the following hardware and software specifications:
- \begin{table}[htbp]
-    \centering
-    \caption{Host Machine Hardware and System Environment}
-    \label{tab:host-specifications}
-    \begin{tabular}{ll}
-    \toprule
-    \textbf{Attribute} & \textbf{Specification} \\
-    \midrule
-    Host Model         & Apple MacBook Air \\
-    Processor    & Apple M5 (10 cores: 4 Performance, 6 Efficiency) \\
-    Architecture   & \texttt{arm64} (\texttt{aarch64}) \\
-    RAM       & 24\,GB Unified Memory \\
-    Operating System   & macOS 27.0.1 \\
-    \bottomrule
-    \end{tabular}
-    \end{table}
+\begin{table}[htbp]
+	\centering
+	\caption{Host Machine Hardware and System Environment}
+	\label{tab:host-specifications}
+	\begin{tabular}{ll}
+		\toprule
+		\textbf{Attribute} & \textbf{Specification}                           \\
+		\midrule
+		Host Model         & Apple MacBook Air                                \\
+		Processor          & Apple M5 (10 cores: 4 Performance, 6 Efficiency) \\
+		Architecture       & \texttt{arm64} (\texttt{aarch64})                \\
+		RAM                & 24\,GB Unified Memory                            \\
+		Operating System   & macOS 27.0.1                                     \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 Synthesizing \texttt{flake.nix} configuration files requires navigating a purely functional domain-specific language. To eliminate the cognitive overhead of learning Nix syntax and package semantics, we evaluated how effectively modern agents can synthesize valid \texttt{flake.nix} files.
 
