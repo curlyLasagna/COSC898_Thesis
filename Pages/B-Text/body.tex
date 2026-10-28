@@ -175,7 +175,7 @@ To ensure consistent, reproducible execution across all evaluation stages, the e
 For guest-level replay and ergonomics testing, the testbed configures two distinct virtualization tiers:
 \begin{itemize}
 	\item \textbf{Linux Replay Containers:} To simulate standard Linux and Windows Subsystem for Linux (WSL) environments, validation stages are replayed inside unmounted Docker containers running official Nix images. Each trial executes in an isolated container lifecycle without shared filesystem volumes or pre-warmed host store paths.
-	\item \textbf{macOS Tart Virtual Machines:} To evaluate macOS and Apple Silicon guest environments, we utilize Tart, an open-source virtualization framework optimized for Apple Silicon hypervisors. We obtained a clean image of macOS Sonoma via \texttt{docker pull ghcr.io/cirruslabs/macos-sonoma-vanilla:14.8.7}, installed Nix using the Determinate Systems Nix installer, and used that snapshot as a base VM image to clone for subsequent evaluation stages.
+	\item \textbf{macOS Tart Virtual Machines:} To evaluate macOS and Apple Silicon guest environments, we utilize Tart, an open-source virtualization framework optimized for Apple Silicon hypervisors. We obtained a clean image of macOS Golden Bridge via \texttt{ghcr.io/cirruslabs/macos-golden-gate-base:latest macos-27-base}, installed Nix using the Determinate Systems Nix installer, and used that snapshot as a base VM image to clone for subsequent evaluation stages.
 \end{itemize}
 
 This dual-platform infrastructure allows us to systematically evaluate both containerized Linux and native macOS execution environments under identical experimental rigor.
