@@ -94,68 +94,68 @@ Although modern LLMs excel at conversational code synthesis, they exhibit high e
 
 
 \begin{table}[htbp]
-\centering
-\caption{Comparison of Development Environment Management Approaches}
-\label{tab:env-comparison}
-\small
-\renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{@{}l X X@{}}
-\toprule
-\textbf{Approach} & \textbf{Advantages} & \textbf{Disadvantages} \\
-\midrule
-Institution-Hosted Server
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Nothing to install on student machines
-    \item Single environment maintained in one place
-    \item Instructor and IT control over resources and access
-  \end{itemize}
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Requires a persistent, low-latency network or VPN
-    \item Depends on central IT for setup and toolchain updates
-    \item Server outage affects the entire class
-  \end{itemize} \\
-\midrule
-Virtual Machines
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Strong isolation from the host 
-    \item Complete, uniform operating system for all students \cite{stokerUsingVirtualMachines2013}
-    \item Supports any guest OS and toolchain
-  \end{itemize}
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Multi-gigabyte images to distribute and store
-    \item High CPU, memory, and disk overhead
-    \item Slow startup; hardware virtualization required
-    \item Imperative installation
-  \end{itemize} \\
-\midrule
-DevContainers
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Environment described in a version-controlled specification
-    \item Lighter than full VMs; shares the host kernel
-    \item Editor integration (e.g., VS Code)
-  \end{itemize}
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Docker daemon on macOS and Windows requires a background Linux VM~\cite{valstarUsingDevContainersStandardize2020}
-    \item Docker images may take significant amount of storage
-    \item Slower file I/O on macOS and Windows
-    \item Built images are opaque binary blobs
-    \item Rebuilds are not guaranteed bit-for-bit reproducibility
-  \end{itemize} \\
-\midrule
-Nix
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Declarative, pinned inputs via \texttt{flake.lock}
-    \item Native performance
-    \item Shared store avoids duplicated dependencies
-    \item No root privileges needed for activation
-  \end{itemize}
-& \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
-    \item Steep learning curve of the Nix language
-    \item Requires Nix installation
-    \item Weaker isolation than VMs or containers
-    \item Requires network or binary cache for first use
-  \end{itemize} \\
-\bottomrule
-\end{tabularx}
+	\centering
+	\caption{Comparison of Development Environment Management Approaches}
+	\label{tab:env-comparison}
+	\small
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabularx}{\textwidth}{@{}l X X@{}}
+		\toprule
+		\textbf{Approach} & \textbf{Advantages}                                                                                                     & \textbf{Disadvantages} \\
+		\midrule
+		Institution-Hosted Server
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Nothing to install on student machines
+			                    \item Single environment maintained in one place
+			                    \item Instructor and IT control over resources and access
+		                    \end{itemize}
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Requires a persistent, low-latency network or VPN
+			                    \item Depends on central IT for setup and toolchain updates
+			                    \item Server outage affects the entire class
+		                    \end{itemize}                                                                                  \\
+		\midrule
+		Virtual Machines
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Strong isolation from the host
+			                    \item Complete, uniform operating system for all students \cite{stokerUsingVirtualMachines2013}
+			                    \item Supports any guest OS and toolchain
+		                    \end{itemize}
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Multi-gigabyte images to distribute and store
+			                    \item High CPU, memory, and disk overhead
+			                    \item Slow startup; hardware virtualization required
+			                    \item Imperative installation
+		                    \end{itemize}                                                                                  \\
+		\midrule
+		DevContainers
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Environment described in a version-controlled specification
+			                    \item Lighter than full VMs; shares the host kernel
+			                    \item Editor integration (e.g., VS Code)
+		                    \end{itemize}
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Docker daemon on macOS and Windows requires a background Linux VM~\cite{valstarUsingDevContainersStandardize2020}
+			                    \item Docker images may take significant amount of storage
+			                    \item Slower file I/O on macOS and Windows
+			                    \item Built images are opaque binary blobs
+			                    \item Rebuilds are not guaranteed bit-for-bit reproducibility
+		                    \end{itemize}                           \\
+		\midrule
+		Nix
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Declarative, pinned inputs via \texttt{flake.lock}
+			                    \item Native performance
+			                    \item Shared store avoids duplicated dependencies
+			                    \item No root privileges needed for activation
+		                    \end{itemize}
+		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
+			                    \item Steep learning curve of the Nix language
+			                    \item Requires Nix installation
+			                    \item Weaker isolation than VMs or containers
+			                    \item Requires network or binary cache for first use
+		                    \end{itemize}                                                                                  \\
+		\bottomrule
+	\end{tabularx}
 \end{table}
 
