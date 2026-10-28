@@ -101,7 +101,7 @@ Although modern LLMs excel at conversational code synthesis, they exhibit high e
 	\renewcommand{\arraystretch}{1.2}
 	\begin{tabularx}{\textwidth}{@{}l X X@{}}
 		\toprule
-		\textbf{Approach} & \textbf{Advantages}                                                                                                     & \textbf{Disadvantages} \\
+		\textbf{Approach} & \textbf{Advantages}                                                                                                                        & \textbf{Disadvantages} \\
 		\midrule
 		Institution-Hosted Server
 		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
@@ -112,7 +112,7 @@ Although modern LLMs excel at conversational code synthesis, they exhibit high e
 			                    \item Requires a persistent, low-latency network or VPN
 			                    \item Depends on central IT for setup and toolchain updates
 			                    \item Server outage affects the entire class
-		                    \end{itemize}                                                                                  \\
+		                    \end{itemize}                                                                                                     \\
 		\midrule
 		Virtual Machines
 		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
@@ -125,7 +125,7 @@ Although modern LLMs excel at conversational code synthesis, they exhibit high e
 			                    \item High CPU, memory, and disk overhead
 			                    \item Slow startup; hardware virtualization required
 			                    \item Imperative installation
-		                    \end{itemize}                                                                                  \\
+		                    \end{itemize}                                                                                                     \\
 		\midrule
 		DevContainers
 		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
@@ -139,7 +139,7 @@ Although modern LLMs excel at conversational code synthesis, they exhibit high e
 			                    \item Slower file I/O on macOS and Windows
 			                    \item Built images are opaque binary blobs
 			                    \item Rebuilds are not guaranteed bit-for-bit reproducibility
-		                    \end{itemize}                           \\
+		                    \end{itemize}                                              \\
 		\midrule
 		Nix
 		                  & \begin{itemize}\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}
@@ -153,7 +153,7 @@ Although modern LLMs excel at conversational code synthesis, they exhibit high e
 			                    \item Requires Nix installation
 			                    \item Weaker isolation than VMs or containers
 			                    \item Requires network or binary cache for first use
-		                    \end{itemize}                                                                                  \\
+		                    \end{itemize}                                                                                                     \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
