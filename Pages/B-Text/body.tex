@@ -17,7 +17,7 @@ To bridge the gap between complex declarative configurations and educational usa
 The end-to-end architecture comprises the following steps (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
 \begin{enumerate}
 	\item \textbf{Requirement Ingestion:} Specifications from natural language, existing codebases, or instructional documents on setting up compute environments are analyzed to extract inferred toolchains, language runtimes, and system-level libraries. To accurately retrieve requirements from unstructured course documents, a Python script is bundled alongside the skill that leverages the Docling \cite{Docling} package to parse out the text for the agent to use as context.
-	      
+
 	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval:} A custom agent skill provides domain-specific prompting, curated templates, and reference schemas. The skill also provides the agent the proper information to query a Model Context Protocol (MCP) server that reaches out to live NixOS search indices.
 	\item \textbf{Deterministic Closed-Loop Verification:} Generated \texttt{flake.nix} files are evaluated via native Nix commands such as \texttt{nix flake check}, which statically checks the generated flake configuration. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
 	\item \textbf{Output Artifacts and Runtime Deployment:} A cryptographically pinned \texttt{flake.lock} file is generated from \texttt{nix flake check}, allowing students to activate a reproducible developer shell.
