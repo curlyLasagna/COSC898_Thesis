@@ -202,6 +202,8 @@ When the model encountered uncertainty in the no-MCP condition, it used native N
 
 This result should not be interpreted as evidence that MCP retrieval is generally unnecessary. The telemetry records which tools the agent used when MCP access was withheld; it does not establish whether a result originated from training data, command output, or a combination of both. More specialized coursework, obscure package names, recently changed Nixpkgs attributes, or complex platform constraints may exceed what native CLI exploration can resolve efficiently. In those conditions, the structured and current metadata exposed by \texttt{mcp-nixos} remains a useful capability for reducing package hallucination and configuration drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}. The present result instead bounds the claim: for straightforward requirements, the model could construct a working flake without MCP access.
 
+We also compared the token usage between trials with and without querying an MCP server and our results show that querying the MCP server resulted in less token usage.
+
 \section{Base OS Reproducibility Results}\label{sec:base-os-results}
 
 The base OS replay evaluation measured the clean reproduction rate for eligible RQ1-passing artifacts across both isolated Linux containers and clean macOS Tart virtual machines, disaggregated by curriculum track and failure category. Across all replayed trials, artifacts that passed the host-side verification pipeline demonstrated a high container reproduction rate, confirming that declarative Nix Flakes effectively isolate dependencies from authoring host pollution.
