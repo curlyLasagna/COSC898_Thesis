@@ -7,7 +7,8 @@
 \providecommand{\BIBentrySTDinterwordspacing}{\spaceskip=0pt\relax}
 \providecommand{\BIBentryALTinterwordstretchfactor}{4}
 \providecommand{\BIBentryALTinterwordspacing}{\spaceskip=\fontdimen2\font plus
-\BIBentryALTinterwordstretchfactor\fontdimen3\font minus \fontdimen4\font\relax}
+\BIBentryALTinterwordstretchfactor\fontdimen3\font minus
+  \fontdimen4\font\relax}
 \providecommand{\BIBforeignlanguage}[2]{{%
 \expandafter\ifx\csname l@#1\endcsname\relax
 \typeout{** WARNING: IEEEtran.bst: No hyphenation pattern has been}%
@@ -21,179 +22,278 @@
 \BIBdecl
 
 \bibitem{dolstraNixSafePolicyFree}
-D.~Eelco, ``Nix: {{A Safe}} and {{Policy-Free System}} for {{Software Deployment}}.''
+D.~Eelco, ``Nix: {{A Safe}} and {{Policy-Free System}} for {{Software
+  Deployment}}.''
 
 \bibitem{functionalSoftware}
-E.~Dolstra, \emph{The Purely Functional Software Deployment Model}.\hskip 1em plus 0.5em minus 0.4em\relax s.n.
+E.~Dolstra, \emph{The Purely Functional Software Deployment Model}.\hskip 1em
+  plus 0.5em minus 0.4em\relax s.n.
 
 \bibitem{OSCodeMy2024}
 \BIBentryALTinterwordspacing
-{{OS}} as {{Code}} - {{My Experience}} of {{NixOS}}. This Cute World. [Online]. Available: \url{https://thiscute.world/en/posts/my-experience-of-nixos/}
+{{OS}} as {{Code}} - {{My Experience}} of {{NixOS}}. This Cute World. [Online].
+  Available: \url{https://thiscute.world/en/posts/my-experience-of-nixos/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{stokerUsingVirtualMachines2013}
-G.~Stoker, T.~Arnold, and P.~Maxwell, ``Using virtual machines to improve learning and save resources in an introductory {{IT}} course,'' pp. 91--96.
+G.~Stoker, T.~Arnold, and P.~Maxwell, ``Using virtual machines to improve
+  learning and save resources in an introductory {{IT}} course,'' pp. 91--96.
 
 \bibitem{valstarUsingDevContainersStandardize2020}
 \BIBentryALTinterwordspacing
-S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to {{Standardize Student Development Environments}}: {{An Experience Report}},'' in \emph{Proceedings of the 2020 {{ACM Conference}} on {{Innovation}} and {{Technology}} in {{Computer Science Education}}}.\hskip 1em plus 0.5em minus 0.4em\relax ACM, pp. 377--383. [Online]. Available: \url{https://dl.acm.org/doi/10.1145/3341525.3387424}
+S.~Valstar, W.~G. Griswold, and L.~Porter, ``Using {{DevContainers}} to
+  {{Standardize Student Development Environments}}: {{An Experience Report}},''
+  in \emph{Proceedings of the 2020 {{ACM Conference}} on {{Innovation}} and
+  {{Technology}} in {{Computer Science Education}}}.\hskip 1em plus 0.5em minus
+  0.4em\relax ACM, pp. 377--383. [Online]. Available:
+  \url{https://dl.acm.org/doi/10.1145/3341525.3387424}
 \BIBentrySTDinterwordspacing
 
 \bibitem{malanContainerizingCS50Standardizing2024}
 \BIBentryALTinterwordspacing
-D.~J. Malan, ``Containerizing {{CS50}}: {{Standardizing Students}}' {{Programming Environments}},'' in \emph{Proceedings of the 2024 on {{Innovation}} and {{Technology}} in {{Computer Science Education V}}. 1}, ser. {{ITiCSE}} 2024.\hskip 1em plus 0.5em minus 0.4em\relax Association for Computing Machinery, pp. 534--540. [Online]. Available: \url{https://dl.acm.org/doi/10.1145/3649217.3653567}
+D.~J. Malan, ``Containerizing {{CS50}}: {{Standardizing Students}}'
+  {{Programming Environments}},'' in \emph{Proceedings of the 2024 on
+  {{Innovation}} and {{Technology}} in {{Computer Science Education V}}. 1},
+  ser. {{ITiCSE}} 2024.\hskip 1em plus 0.5em minus 0.4em\relax Association for
+  Computing Machinery, pp. 534--540. [Online]. Available:
+  \url{https://dl.acm.org/doi/10.1145/3649217.3653567}
 \BIBentrySTDinterwordspacing
 
 \bibitem{harvieUsingVirtualMachines2019}
 \BIBentryALTinterwordspacing
-D.~P. Harvie, J.~R. Cody, C.~Morrell, and T.~T. Estes, ``Using {{Virtual Machines}} to {{Enhance}} the {{Educational Experience}} in an {{Introductory Computing Course}},'' in \emph{Proceedings of the 20th {{Annual SIG Conference}} on {{Information Technology Education}}}.\hskip 1em plus 0.5em minus 0.4em\relax ACM, pp. 28--32. [Online]. Available: \url{https://dl.acm.org/doi/10.1145/3349266.3351401}
+D.~P. Harvie, J.~R. Cody, C.~Morrell, and T.~T. Estes, ``Using {{Virtual
+  Machines}} to {{Enhance}} the {{Educational Experience}} in an {{Introductory
+  Computing Course}},'' in \emph{Proceedings of the 20th {{Annual SIG
+  Conference}} on {{Information Technology Education}}}.\hskip 1em plus 0.5em
+  minus 0.4em\relax ACM, pp. 28--32. [Online]. Available:
+  \url{https://dl.acm.org/doi/10.1145/3349266.3351401}
 \BIBentrySTDinterwordspacing
 
 \bibitem{hollandResearchIssuesNoFutz2001}
 \BIBentryALTinterwordspacing
-D.~Holland, W.~Josephson, K.~Magoutis, M.~Seltzer, C.~Stein, and A.~Lim, ``Research issues in {{No-Futz}} computing,'' in \emph{Proceedings {{Eighth Workshop}} on {{Hot Topics}} in {{Operating Systems}}}, pp. 106--110. [Online]. Available: \url{https://ieeexplore.ieee.org/document/990069/}
+D.~Holland, W.~Josephson, K.~Magoutis, M.~Seltzer, C.~Stein, and A.~Lim,
+  ``Research issues in {{No-Futz}} computing,'' in \emph{Proceedings {{Eighth
+  Workshop}} on {{Hot Topics}} in {{Operating Systems}}}, pp. 106--110.
+  [Online]. Available: \url{https://ieeexplore.ieee.org/document/990069/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{duNixRescueReproducible2026a}
 \BIBentryALTinterwordspacing
-W.~Du, J.-M. Gratien, R.~Gayno, and B.~Raffin. Nix to the {{Rescue}} for a {{Reproducible HPC-AI Software Stack}}. [Online]. Available: \url{http://arxiv.org/abs/2607.26688}
+W.~Du, J.-M. Gratien, R.~Gayno, and B.~Raffin. Nix to the {{Rescue}} for a
+  {{Reproducible HPC-AI Software Stack}}. [Online]. Available:
+  \url{http://arxiv.org/abs/2607.26688}
 \BIBentrySTDinterwordspacing
 
 \bibitem{NixBetterDocker2024}
 \BIBentryALTinterwordspacing
-Nix is a better {{Docker}} image builder than {{Docker}}'s image builder. [Online]. Available: \url{https://xeiaso.net/talks/2024/nix-docker-build/}
+Nix is a better {{Docker}} image builder than {{Docker}}'s image builder.
+  [Online]. Available: \url{https://xeiaso.net/talks/2024/nix-docker-build/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{dolstraPurelyFunctionalSystema}
-E.~Dolstra and A.~Hemel, ``Purely {{Functional System Conﬁguration Management}}.''
+E.~Dolstra and A.~Hemel, ``Purely {{Functional System Conﬁguration
+  Management}}.''
 
 \bibitem{dolstraNixOSPurelyFunctional2010}
 \BIBentryALTinterwordspacing
-E.~Dolstra, A.~Löh, and N.~Pierron, ``{{NixOS}}: {{A}} purely functional {{Linux}} distribution,'' vol.~20, no. 5--6, pp. 577--615. [Online]. Available: \url{https://www.cambridge.org/core/product/identifier/S0956796810000195/type/journal_article}
+E.~Dolstra, A.~Löh, and N.~Pierron, ``{{NixOS}}: {{A}} purely functional
+  {{Linux}} distribution,'' vol.~20, no. 5--6, pp. 577--615. [Online].
+  Available:
+  \url{https://www.cambridge.org/core/product/identifier/S0956796810000195/type/journal_article}
 \BIBentrySTDinterwordspacing
 
 \bibitem{bandtAssessmentReproducibilityNix2025}
 \BIBentryALTinterwordspacing
-Bandt, ``Assessment of {{Reproducibility}} in {{Nix}}.'' [Online]. Available: \url{https://zenodo.org/records/17372811}
+Bandt, ``Assessment of {{Reproducibility}} in {{Nix}}.'' [Online]. Available:
+  \url{https://zenodo.org/records/17372811}
 \BIBentrySTDinterwordspacing
 
 \bibitem{malkaReproducibilityBuildEnvironments2024}
 \BIBentryALTinterwordspacing
-J.~Malka, S.~Zacchiroli, and T.~Zimmermann, ``Reproducibility of {{Build Environments}} through {{Space}} and {{Time}},'' in \emph{Proceedings of the 2024 {{ACM}}/{{IEEE}} 44th {{International Conference}} on {{Software Engineering}}: {{New Ideas}} and {{Emerging Results}}}.\hskip 1em plus 0.5em minus 0.4em\relax ACM, pp. 97--101. [Online]. Available: \url{https://dl.acm.org/doi/10.1145/3639476.3639767}
+J.~Malka, S.~Zacchiroli, and T.~Zimmermann, ``Reproducibility of {{Build
+  Environments}} through {{Space}} and {{Time}},'' in \emph{Proceedings of the
+  2024 {{ACM}}/{{IEEE}} 44th {{International Conference}} on {{Software
+  Engineering}}: {{New Ideas}} and {{Emerging Results}}}.\hskip 1em plus 0.5em
+  minus 0.4em\relax ACM, pp. 97--101. [Online]. Available:
+  \url{https://dl.acm.org/doi/10.1145/3639476.3639767}
 \BIBentrySTDinterwordspacing
 
 \bibitem{5BuildingReproducible}
 \BIBentryALTinterwordspacing
-(5) {{Building Reproducible}}, {{Interactive C}}++ {{Learning Environments}} with {{Nix Flakes}} and {{Pixi}} | {{LinkedIn}}. [Online]. Available: \url{https://www.linkedin.com/pulse/building-reproducible-interactive-c-learning-nix-flakes-hasanovi%C4%87-tol9e/}
+(5) {{Building Reproducible}}, {{Interactive C}}++ {{Learning Environments}}
+  with {{Nix Flakes}} and {{Pixi}} | {{LinkedIn}}. [Online]. Available:
+  \url{https://www.linkedin.com/pulse/building-reproducible-interactive-c-learning-nix-flakes-hasanovi%C4%87-tol9e/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{ModularityLazyEvaluation}
 \BIBentryALTinterwordspacing
-Modularity and {{Lazy Evaluation}} in {{Nixos}}: {{A Functional Approach}} to {{Operating System Configuration}}. [Online]. Available: \url{https://ieeexplore.ieee.org/abstract/document/10991248?casa_token=SRx031-v1FkAAAAA:nqGmgm6Rbw4Um5tOoherapYaYndJ8JH5xvF-M0wRX4RuwscLFky9oG5f5RfFGh5UmHQfOPx633eWlQ}
+Modularity and {{Lazy Evaluation}} in {{Nixos}}: {{A Functional Approach}} to
+  {{Operating System Configuration}}. [Online]. Available:
+  \url{https://ieeexplore.ieee.org/abstract/document/10991248?casa_token=SRx031-v1FkAAAAA:nqGmgm6Rbw4Um5tOoherapYaYndJ8JH5xvF-M0wRX4RuwscLFky9oG5f5RfFGh5UmHQfOPx633eWlQ}
 \BIBentrySTDinterwordspacing
 
 \bibitem{hauschImprovingReproducibilityScientific2025}
 \BIBentryALTinterwordspacing
-M.~Hausch, S.~Hauser, and B.~Uekermann, ``Improving reproducibility of scientific software using {{Nix}}/{{NixOS}}: {{A}} case study on the {{preCICE}} ecosystem,'' vol.~83. [Online]. Available: \url{http://eceasst.org/index.php/eceasst/article/view/2613}
+M.~Hausch, S.~Hauser, and B.~Uekermann, ``Improving reproducibility of
+  scientific software using {{Nix}}/{{NixOS}}: {{A}} case study on the
+  {{preCICE}} ecosystem,'' vol.~83. [Online]. Available:
+  \url{http://eceasst.org/index.php/eceasst/article/view/2613}
 \BIBentrySTDinterwordspacing
 
 \bibitem{mengAgentHarnessLarge2026}
 \BIBentryALTinterwordspacing
-Q.~Meng, Y.~Wang, L.~Chen, Y.~Li, W.~Wu, W.~Jiang, Q.~Wang, C.~Lu, Y.~Gao, Y.~Wu, and Y.~Hu. Agent {{Harness}} for {{Large Language Model Agents}}: {{A Survey}}. [Online]. Available: \url{https://www.preprints.org/manuscript/202604.0428}
+Q.~Meng, Y.~Wang, L.~Chen, Y.~Li, W.~Wu, W.~Jiang, Q.~Wang, C.~Lu, Y.~Gao,
+  Y.~Wu, and Y.~Hu. Agent {{Harness}} for {{Large Language Model Agents}}: {{A
+  Survey}}. [Online]. Available:
+  \url{https://www.preprints.org/manuscript/202604.0428}
 \BIBentrySTDinterwordspacing
 
 \bibitem{formentScaffoldingMattersMore2026}
 \BIBentryALTinterwordspacing
-M.~A. Forment, M.~J.~C. Guerrero, F.~J. García-Peñalvo, and J.~Pereira. The {{Scaffolding Matters More Than}} the {{Interface}}: {{A Controlled Comparison}} of {{MCP}} and {{CLI Tool Use Across Seven Agent Scaffoldings}}, {{Five Language Models}}, and {{One Software Task}}. [Online]. Available: \url{http://arxiv.org/abs/2608.08654}
+M.~A. Forment, M.~J.~C. Guerrero, F.~J. García-Peñalvo, and J.~Pereira. The
+  {{Scaffolding Matters More Than}} the {{Interface}}: {{A Controlled
+  Comparison}} of {{MCP}} and {{CLI Tool Use Across Seven Agent Scaffoldings}},
+  {{Five Language Models}}, and {{One Software Task}}. [Online]. Available:
+  \url{http://arxiv.org/abs/2608.08654}
 \BIBentrySTDinterwordspacing
 
 \bibitem{konIaCEvalCodeGeneration}
-P.~T.~J. Kon, J.~Liu, Y.~Qiu, W.~Fan, T.~He, L.~Lin, H.~Zhang, O.~M. Park, G.~S. Elengikal, Y.~Kang, A.~Chen, M.~Chowdhury, M.~Lee, and X.~Wang, ``{{IaC-Eval}}: {{A Code Generation Benchmark}} for {{Cloud Infrastructure}}-as-{{Code Programs}}.''
+P.~T.~J. Kon, J.~Liu, Y.~Qiu, W.~Fan, T.~He, L.~Lin, H.~Zhang, O.~M. Park,
+  G.~S. Elengikal, Y.~Kang, A.~Chen, M.~Chowdhury, M.~Lee, and X.~Wang,
+  ``{{IaC-Eval}}: {{A Code Generation Benchmark}} for {{Cloud
+  Infrastructure}}-as-{{Code Programs}}.''
 
 \bibitem{zhangDeployabilityCentricInfrastructureasCodeGeneration2025}
 \BIBentryALTinterwordspacing
-T.~Zhang, S.~Pan, Z.~Zhang, Z.~Xing, and X.~Sun. Deployability-{{Centric Infrastructure}}-as-{{Code Generation}}: {{Fail}}, {{Learn}}, {{Refine}}, and {{Succeed}} through {{LLM-Empowered DevOps Simulation}}. [Online]. Available: \url{https://arxiv.org/abs/2506.05623}
+T.~Zhang, S.~Pan, Z.~Zhang, Z.~Xing, and X.~Sun. Deployability-{{Centric
+  Infrastructure}}-as-{{Code Generation}}: {{Fail}}, {{Learn}}, {{Refine}}, and
+  {{Succeed}} through {{LLM-Empowered DevOps Simulation}}. [Online]. Available:
+  \url{https://arxiv.org/abs/2506.05623}
 \BIBentrySTDinterwordspacing
 
 \bibitem{ImportingPhantomsMeasuring}
 \BIBentryALTinterwordspacing
-Importing {{Phantoms}}: {{Measuring LLM Package Hallucination Vulnerabilities}}. [Online]. Available: \url{https://arxiv.org/html/2501.19012v1}
+Importing {{Phantoms}}: {{Measuring LLM Package Hallucination
+  Vulnerabilities}}. [Online]. Available:
+  \url{https://arxiv.org/html/2501.19012v1}
 \BIBentrySTDinterwordspacing
 
 \bibitem{srivatsaSurveyUsingLarge}
-K.~G. Srivatsa, S.~Mukhopadhyay, G.~Katrapati, and M.~Shrivastava, ``A {{Survey}} of using {{Large Language Models}} for {{Generating Infrastructure}} as {{Code}}.''
+K.~G. Srivatsa, S.~Mukhopadhyay, G.~Katrapati, and M.~Shrivastava, ``A
+  {{Survey}} of using {{Large Language Models}} for {{Generating
+  Infrastructure}} as {{Code}}.''
 
 \bibitem{AgentSkills}
 \BIBentryALTinterwordspacing
-Agent {{Skills}}. Claude Platform Docs. [Online]. Available: \url{https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview}
+Agent {{Skills}}. Claude Platform Docs. [Online]. Available:
+  \url{https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview}
 \BIBentrySTDinterwordspacing
 
 \bibitem{lingAgentSkillsDataDriven2026}
 \BIBentryALTinterwordspacing
-G.~Ling, S.~Zhong, and R.~Huang. Agent {{Skills}}: {{A Data-Driven Analysis}} of {{Claude Skills}} for {{Extending Large Language Model Functionality}}. [Online]. Available: \url{https://arxiv.org/abs/2602.08004}
+G.~Ling, S.~Zhong, and R.~Huang. Agent {{Skills}}: {{A Data-Driven Analysis}}
+  of {{Claude Skills}} for {{Extending Large Language Model Functionality}}.
+  [Online]. Available: \url{https://arxiv.org/abs/2602.08004}
 \BIBentrySTDinterwordspacing
 
 \bibitem{MCPLandscape}
 \BIBentryALTinterwordspacing
-X.~Hou, Y.~Zhao, S.~Wang, and H.~Wang. Model {{Context Protocol}} ({{MCP}}): {{Landscape}}, {{Security Threats}}, and {{Future Research Directions}}. [Online]. Available: \url{http://arxiv.org/abs/2503.23278}
+X.~Hou, Y.~Zhao, S.~Wang, and H.~Wang. Model {{Context Protocol}} ({{MCP}}):
+  {{Landscape}}, {{Security Threats}}, and {{Future Research Directions}}.
+  [Online]. Available: \url{http://arxiv.org/abs/2503.23278}
 \BIBentrySTDinterwordspacing
 
 \bibitem{borkLanguageServerProtocol2023}
 \BIBentryALTinterwordspacing
-D.~Bork and P.~Langer, ``Language {{Server Protocol}}: {{An Introduction}} to the {{Protocol}}, its {{Use}}, and {{Adoption}} for {{Web Modeling Tools}},'' vol.~18, pp. 9:1--16. [Online]. Available: \url{https://emisa-journal.org/emisa/article/view/320}
+D.~Bork and P.~Langer, ``Language {{Server Protocol}}: {{An Introduction}} to
+  the {{Protocol}}, its {{Use}}, and {{Adoption}} for {{Web Modeling Tools}},''
+  vol.~18, pp. 9:1--16. [Online]. Available:
+  \url{https://emisa-journal.org/emisa/article/view/320}
 \BIBentrySTDinterwordspacing
 
 \bibitem{guptaCTFArchiveCapture2025}
 \BIBentryALTinterwordspacing
-P.~Gupta, A.~Gabani, C.~Nelson, and Y.~Shoshitaishvili. {{CTF Archive}}: {{Capture}}, {{Curate}}, {{Learn Forever}}. [Online]. Available: \url{http://arxiv.org/abs/2512.01233}
+P.~Gupta, A.~Gabani, C.~Nelson, and Y.~Shoshitaishvili. {{CTF Archive}}:
+  {{Capture}}, {{Curate}}, {{Learn Forever}}. [Online]. Available:
+  \url{http://arxiv.org/abs/2512.01233}
 \BIBentrySTDinterwordspacing
 
 \bibitem{malkaDoesFunctionalPackage2025}
 \BIBentryALTinterwordspacing
-J.~Malka, S.~Zacchiroli, and T.~Zimmermann, ``Does {{Functional Package Management Enable Reproducible Builds}} at {{Scale}}? {{Yes}}.'' in \emph{2025 {{IEEE}}/{{ACM}} 22nd {{International Conference}} on {{Mining Software Repositories}} ({{MSR}})}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, pp. 775--787. [Online]. Available: \url{https://ieeexplore.ieee.org/document/11025777/}
+J.~Malka, S.~Zacchiroli, and T.~Zimmermann, ``Does {{Functional Package
+  Management Enable Reproducible Builds}} at {{Scale}}? {{Yes}}.'' in
+  \emph{2025 {{IEEE}}/{{ACM}} 22nd {{International Conference}} on {{Mining
+  Software Repositories}} ({{MSR}})}.\hskip 1em plus 0.5em minus 0.4em\relax
+  IEEE, pp. 775--787. [Online]. Available:
+  \url{https://ieeexplore.ieee.org/document/11025777/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{kateGenerativeAIInfrastructure}
-A.~Kate, ``Generative {{AI}} for {{Infrastructure}} as {{Code}} ({{IaC}}): {{Automating DevOps Configuration}}, {{Scripting}}, and {{Workflow Management}} with {{LLMs}}.''
+A.~Kate, ``Generative {{AI}} for {{Infrastructure}} as {{Code}} ({{IaC}}):
+  {{Automating DevOps Configuration}}, {{Scripting}}, and {{Workflow
+  Management}} with {{LLMs}}.''
 
 \bibitem{beurer-kellnerTechnicalReportExploring2026}
 \BIBentryALTinterwordspacing
-L.~Beurer-Kellner, A.~Kudrinskii, M.~Milanta, K.~B. Nielsen, H.~Sarkar, and L.~Tal. Technical {{Report}}: {{Exploring}} the {{Emerging Threats}} of the {{Agent Skill Ecosystem}}. [Online]. Available: \url{http://arxiv.org/abs/2605.28588}
+L.~Beurer-Kellner, A.~Kudrinskii, M.~Milanta, K.~B. Nielsen, H.~Sarkar, and
+  L.~Tal. Technical {{Report}}: {{Exploring}} the {{Emerging Threats}} of the
+  {{Agent Skill Ecosystem}}. [Online]. Available:
+  \url{http://arxiv.org/abs/2605.28588}
 \BIBentrySTDinterwordspacing
 
 \bibitem{wuCallNotCall2026}
 \BIBentryALTinterwordspacing
-Q.~Wu, S.~Das, M.~Amani, A.~Nag, S.~Lee, K.~P. Gummadi, A.~Ravichander, and M.~B. Zafar. To {{Call}} or {{Not}} to {{Call}}: {{A Framework}} to {{Assess}} and {{Optimize LLM Tool Calling}}. [Online]. Available: \url{http://arxiv.org/abs/2605.00737}
+Q.~Wu, S.~Das, M.~Amani, A.~Nag, S.~Lee, K.~P. Gummadi, A.~Ravichander, and
+  M.~B. Zafar. To {{Call}} or {{Not}} to {{Call}}: {{A Framework}} to
+  {{Assess}} and {{Optimize LLM Tool Calling}}. [Online]. Available:
+  \url{http://arxiv.org/abs/2605.00737}
 \BIBentrySTDinterwordspacing
 
 \bibitem{ContentAddressingFileSystem}
 \BIBentryALTinterwordspacing
-Content-{{Addressing File System Objects}} - {{Nix}} 2.35.2 {{Reference Manual}}. [Online]. Available: \url{https://nix.dev/manual/nix/2.35/store/file-system-object/content-address#serial-nix-archive}
+Content-{{Addressing File System Objects}} - {{Nix}} 2.35.2 {{Reference
+  Manual}}. [Online]. Available:
+  \url{https://nix.dev/manual/nix/2.35/store/file-system-object/content-address#serial-nix-archive}
 \BIBentrySTDinterwordspacing
 
 \bibitem{GitHubActionsHit2026}
 \BIBentryALTinterwordspacing
-{{GitHub Actions Hit Three-Nines Failure}}; {{One August Outage Consumed Year}}'s {{Downtime Budget}}. Tech Times. [Online]. Available: \url{https://www.techtimes.com/articles/324820/20260818/github-actions-hit-three-nines-failure-one-august-outage-consumed-years-downtime-budget.htm}
+{{GitHub Actions Hit Three-Nines Failure}}; {{One August Outage Consumed
+  Year}}'s {{Downtime Budget}}. Tech Times. [Online]. Available:
+  \url{https://www.techtimes.com/articles/324820/20260818/github-actions-hit-three-nines-failure-one-august-outage-consumed-years-downtime-budget.htm}
 \BIBentrySTDinterwordspacing
 
 \bibitem{BinaryCacheOfficial}
 \BIBentryALTinterwordspacing
-Binary {{Cache}} - {{Official NixOS Wiki}}. [Online]. Available: \url{https://wiki.nixos.org/wiki/Binary_Cache#Using_a_binary_cache}
+Binary {{Cache}} - {{Official NixOS Wiki}}. [Online]. Available:
+  \url{https://wiki.nixos.org/wiki/Binary_Cache#Using_a_binary_cache}
 \BIBentrySTDinterwordspacing
 
 \bibitem{GarnixBlogStop}
 \BIBentryALTinterwordspacing
-Garnix {{Blog}}: {{Stop}} trusting {{Nix}} caches. [Online]. Available: \url{https://garnix.io/blog/stop-trusting-nix-caches/}
+Garnix {{Blog}}: {{Stop}} trusting {{Nix}} caches. [Online]. Available:
+  \url{https://garnix.io/blog/stop-trusting-nix-caches/}
 \BIBentrySTDinterwordspacing
 
 \bibitem{chenEvaluatingLargeLanguage2021}
 \BIBentryALTinterwordspacing
-M.~Chen, J.~Tworek, H.~Jun, Q.~Yuan, H.~P. d.~O. Pinto, J.~Kaplan, H.~Edwards, Y.~Burda, N.~Joseph, G.~Brockman, A.~Ray, R.~Puri, G.~Krueger, M.~Petrov, H.~Khlaaf, G.~Sastry, P.~Mishkin, B.~Chan, S.~Gray, N.~Ryder, M.~Pavlov, A.~Power, L.~Kaiser, M.~Bavarian, C.~Winter, P.~Tillet, F.~P. Such, D.~Cummings, M.~Plappert, F.~Chantzis, E.~Barnes, A.~Herbert-Voss, W.~H. Guss, A.~Nichol, A.~Paino, N.~Tezak, J.~Tang, I.~Babuschkin, S.~Balaji, S.~Jain, W.~Saunders, C.~Hesse, A.~N. Carr, J.~Leike, J.~Achiam, V.~Misra, E.~Morikawa, A.~Radford, M.~Knight, M.~Brundage, M.~Murati, K.~Mayer, P.~Welinder, B.~McGrew, D.~Amodei, S.~McCandlish, I.~Sutskever, and W.~Zaremba. Evaluating {{Large Language Models Trained}} on {{Code}}. [Online]. Available: \url{http://arxiv.org/abs/2107.03374}
+M.~Chen, J.~Tworek, H.~Jun, Q.~Yuan, H.~P. d.~O. Pinto, J.~Kaplan, H.~Edwards,
+  Y.~Burda, N.~Joseph, G.~Brockman, A.~Ray, R.~Puri, G.~Krueger, M.~Petrov,
+  H.~Khlaaf, G.~Sastry, P.~Mishkin, B.~Chan, S.~Gray, N.~Ryder, M.~Pavlov,
+  A.~Power, L.~Kaiser, M.~Bavarian, C.~Winter, P.~Tillet, F.~P. Such,
+  D.~Cummings, M.~Plappert, F.~Chantzis, E.~Barnes, A.~Herbert-Voss, W.~H.
+  Guss, A.~Nichol, A.~Paino, N.~Tezak, J.~Tang, I.~Babuschkin, S.~Balaji,
+  S.~Jain, W.~Saunders, C.~Hesse, A.~N. Carr, J.~Leike, J.~Achiam, V.~Misra,
+  E.~Morikawa, A.~Radford, M.~Knight, M.~Brundage, M.~Murati, K.~Mayer,
+  P.~Welinder, B.~McGrew, D.~Amodei, S.~McCandlish, I.~Sutskever, and
+  W.~Zaremba. Evaluating {{Large Language Models Trained}} on {{Code}}.
+  [Online]. Available: \url{http://arxiv.org/abs/2107.03374}
 \BIBentrySTDinterwordspacing
 
 \bibitem{NixFasterDocker}
 \BIBentryALTinterwordspacing
-Nix is faster than {{Docker}} build. Dwarves Memo. [Online]. Available: \url{https://memo.d.foundation/topics/devbox/research/nix-is-faster-than-docker-build}
+Nix is faster than {{Docker}} build. Dwarves Memo. [Online]. Available:
+  \url{https://memo.d.foundation/topics/devbox/research/nix-is-faster-than-docker-build}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}
