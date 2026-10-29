@@ -94,6 +94,23 @@ AI-Assisted Adoption of Nix Flakes for Reproducible Development Environments in 
 % final submission requires no highlight! make sure you have \hypersetup{hidelinks} activated!
 \hypersetup{hidelinks}
 %%% -----------------------------------------------------------------------
+%% Research Question Macros
+\newcommand{\rqonetitle}{\textbf{RQ1 (Agentic Synthesis Accuracy):}}
+\newcommand{\rqtwotitle}{\textbf{RQ2 (Clean OS Reproducibility):}}
+\newcommand{\rqthreetitle}{\textbf{RQ3 (Student Onboarding Ergonomics):}}
+
+\newcommand{\rqone}{\rqonetitle\ Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?}
+\newcommand{\rqtwo}{\rqtwotitle\ To what extent do Nix Flake environments that pass local validation reproduce and support headless coursework tasks in a fresh Linux container and macOS VM without the authoring machine's files, configuration, or prior evaluation state?}
+\newcommand{\rqthree}{\rqthreetitle\ How does invoking a preconfigured shell via \texttt{nix develop} compare to manual imperative installation in terms of setup time delta and cognitive benefits for students?}
+
+\newcommand{\rqlist}{%
+\begin{enumerate}
+	\item \rqone
+	\item \rqtwo
+	\item \rqthree
+\end{enumerate}%
+}
+%%% -----------------------------------------------------------------------
 %% main document begins here, do not change this part
 \begin{document}
 \beforepreface

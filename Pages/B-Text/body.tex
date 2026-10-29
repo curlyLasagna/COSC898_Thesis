@@ -4,11 +4,7 @@
 
 This thesis investigates the feasibility, reproducibility, and reliability of the ecosystem of automated declarative environment generation for computer science education. To guide empirical inquiry, three central Research Questions (RQs) are formulated:
 
-\begin{enumerate}
-	\item \textbf{RQ1 (Agentic Synthesis Accuracy):} Can an AI agent accurately infer system-level dependencies from natural language assignment instructions or unconfigured source code to automatically generate valid, reproducible \texttt{flake.nix} environments?
-	\item \textbf{RQ2 (Clean OS Reproducibility):} To what extent do Nix Flake environments that pass local validation reproduce and support headless coursework tasks in a fresh Linux container and macOS VM without the authoring machine's files, configuration, or prior evaluation state?
-	\item \textbf{RQ3 (Classroom Deployment Reliability and Student Ergonomics):} To what extent can Nix Flake environments provide a dependable foundation for classroom use, and what operational constraints and risk trade-offs shape that dependability? Is the use of Nix demonstrably better in terms of cognitive ergonomics
-\end{enumerate}
+\rqlist
 
 \section{Proposed Solution: An agent skill for AI-Assisted Nix Flake Synthesis}\label{chap:solution}
 
@@ -32,7 +28,7 @@ The end-to-end architecture comprises the following steps (illustrated at a high
 
 \chapter{Experimental Methodology and Test Setup}\label{chap:testing}
 
-This chapter details the empirical methodology and experimental design developed to evaluate the three primary research questions of this thesis. Section~\ref{sec:rq1-methodology} outlines the agentic flake synthesis evaluation protocol, including dataset curation, model harnesses, and the multi-stage Pass@$k$ validation metric (RQ1). Section~\ref{sec:rq2-methodology} formalizes the clean-environment replay protocol designed to assess host-independent reproducibility across Linux containers and macOS virtual machines (RQ2). Section~\ref{sec:rq3-methodology} describes the assessment of classroom reliability under controlled upstream failure conditions, alongside a user study examining student setup ergonomics (RQ3). Finally, Section~\ref{sec:testbed-infrastructure} consolidates the experimental testbed infrastructure, documenting host hardware specifications and guest virtualization environments.
+This chapter details the empirical methodology and experimental design developed to evaluate the three primary research questions of this thesis. Section~\ref{sec:rq1-methodology} outlines the agentic flake synthesis evaluation protocol, including dataset curation, model harnesses, and the multi-stage Pass@$k$ validation metric (RQ1). Section~\ref{sec:rq2-methodology} formalizes the clean-environment replay protocol designed to assess host-independent reproducibility across Linux containers and macOS virtual machines (RQ2). Section~\ref{sec:rq3-methodology} describes the user study protocol examining student setup time delta and cognitive ergonomics when onboarding with \texttt{nix develop} versus imperative instructions (RQ3). Finally, Section~\ref{sec:testbed-infrastructure} consolidates the experimental testbed infrastructure, documenting host hardware specifications and guest virtualization environments.
 
 \section{Agentic Flake Synthesis Evaluation Protocol}\label{sec:rq1-methodology}
 
@@ -132,23 +128,11 @@ The guest-side verifier executes four sequential stages on each RQ1-passing arti
 
 The principal metric is the base OS reproduction rate: the proportion trials that complete every applicable container-side stage. Failures are classified as flake-evaluation failures, shell-activation failures, missing dependencies, functional task failures, or infrastructure failures (an executable doesn't exist for this specific architecture). For each trial, the harness records the source identifier, container image digest and system architecture, Nix version, command exit codes, standard output and error logs, and stage durations. These artifacts make it possible to distinguish a defective generated environment from a transient container or upstream package-source failure.
 
-\section{Ecosystem Reliability and Student Ergonomics Protocol}\label{sec:rq3-methodology}
+\section{Student Onboarding Ergonomics Protocol}\label{sec:rq3-methodology}
 
-RQ3 evaluates the practical ergonomics and operational reliability of Nix Flakes from a student perspective. We tasked two undergraduate students and a graduate students with configuring a course development environment using both traditional manual instructions and an AI-generated \texttt{flake.nix} synthesized via our RQ1 pipeline.
+RQ3 evaluates the practical ergonomics and setup time delta of Nix Flakes from a student perspective compared to traditional manual installation. To assess human ergonomics and onboarding friction, we conducted a controlled user study involving two undergraduate students and a graduate computer science student. Each participant was tasked with configuring a course development environment using two contrasting methods: traditional imperative instructions from a course syllabus, and single-command activation via \texttt{nix develop} using an AI-generated \texttt{flake.nix} file synthesized via our RQ1 pipeline.
 
-\subsection{Controlled Availability and Upstream Maintenance Conditions}
-
-A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students should activate a committed lock file rather than invoke \texttt{nix flake update} during a lab. Consequently, failure to update an input hosted on GitHub is recorded separately from failure to activate an already locked environment. This distinction prevents a transient source-host outage from being mischaracterized as a failure of a fixed course environment.
-
-The assessment considers four conditions. First, input-source availability records whether a locked input can be retrieved when absent locally and whether a deliberate update can resolve the course's declared upstream inputs. Second, package-maintenance review records deprecated, renamed, broken, or removed attributes encountered when an instructor refreshes a course lock file. Third, binary availability records whether each required store path is substituted from an approved cache or instead requires a local source build, together with elapsed setup time and completion within a classroom time budget. Finally, cache-trust review records the substituters and public signing keys accepted by the environment. Nix verifies cached paths against trusted keys; adding a third-party cache can improve availability, but it also expands the set of entities trusted to provide course binaries~\cite{dolstraNixSafePolicyFree}.
-
-The experiment uses controlled availability conditions rather than waiting for public outages: normal operation; an unavailable input source during update; an unavailable primary cache; and an approved alternate cache. For each condition, the protocol records activation success, elapsed time, whether local compilation occurred, the failing endpoint or stage, and the configured cache keys. The principal outcome is the proportion of environments that become ready within the defined instructional time budget without accepting an unapproved cache key. This design treats availability and supply-chain trust as jointly necessary properties of a dependable classroom environment.
-
-\subsection{Student Ergonomics and Onboarding Study}
-
-To assess human ergonomics and onboarding friction, we conducted a controlled user study involving two undergraduate and two graduate computer science students. Each participant was tasked with configuring a course development environment using two contrasting methods: traditional imperative instructions from a course syllabus, and single-command activation via an AI-generated \texttt{flake.nix} file.
-
-Each trial was executed in a fresh macOS Sonoma guest instance cloned from a clean snapshot. We recorded setup completion time, and the student's personal opinion on which setup was easier, and qualitative observations regarding environment comprehension.
+Each trial was executed in a fresh macOS Sonoma guest instance cloned from a clean snapshot. We recorded total setup completion time, the time delta between imperative installation and declarative shell activation, the student's personal assessment of which workflow was easier, and qualitative observations regarding cognitive load and environment comprehension.
 
 \section{Experimental Testbed and System Infrastructure}\label{sec:testbed-infrastructure}
 
@@ -210,13 +194,9 @@ The base OS replay evaluation measured the clean reproduction rate for eligible 
 
 Failures encountered during clean replay were categorized into evaluation errors, shell activation errors, missing runtime dependencies, and task execution failures. In the Software Development track, the primary failure mode stemmed from implicit assumptions regarding host-installed tools (such as native dynamic linkers or unpinned C standard library dependencies) that were present on the authoring host but absent in the minimal container image. The closed-loop verification pipeline captured these discrepancies, and once pinned in the flake specification, subsequent replays executed deterministically. In the Data Science track, replay failures predominantly occurred during Python package native extensions compilation when underlying C headers were not explicitly included in \texttt{buildInputs}. These outcomes demonstrate that host-side validation alone is insufficient; clean-environment replay is essential for certifying that an AI-synthesized development environment is truly hermetic.
 
-\section{Ecosystem Reliability, Student Ergonomics, and Deployment Discussion}\label{sec:rq3-reliability-discussion}
+\section{Student Onboarding Ergonomics Results}\label{sec:rq3-results}
 
-RQ3 evaluates the dependability of Nix Flake environments under practical classroom constraints, identifying the operational conditions, human ergonomics, and supply-chain trust boundaries that shape long-term educational adoption.
-
-\subsection{Student Ergonomics and Environment Onboarding}
-
-To assess the human factors of adopting declarative environments, we conducted an onboarding trial with two undergraduate and a graduate computer science student. Each participant was tasked with configuring a development environment for a course project using both conventional imperative setup instructions and its respective AI-generated \texttt{flake.nix} environment from the same document.
+RQ3 evaluates how single-command environment activation via \texttt{nix develop} compares to manual imperative installation in terms of setup time delta and cognitive benefits for students. To assess the human factors of adopting declarative environments, we conducted an onboarding trial with two undergraduate and a graduate computer science student. Each participant was tasked with configuring a development environment for a course project using both conventional imperative setup instructions and its respective AI-generated \texttt{flake.nix} environment from the same document.
 
 Each student was provided a
 
@@ -232,15 +212,19 @@ Declarative flake (4:54.86)
 - Installing nix took a huge part of the time
 - nix develop shell instantiation also took time
 
+\section{Operational Constraints and Deployment Limitations}\label{sec:operational-constraints}
+
+Beyond the empirical synthesis, clean-replay, and student onboarding evaluations, deploying Nix Flake environments in live classroom settings introduces theoretical operational constraints and supply-chain considerations documented in prior literature and official Nix specifications. This section examines the upstream availability, package lifecycle maintenance, binary-cache coverage, and trust-boundary limitations that instructors must account for when adopting declarative environments.
+
 \subsection{Operational Availability and Maintenance Conditions}
 
-Classroom readiness within an instructional time budget depends heavily on normal operation, input source availability, primary cache availability, and approved binary cache conditions. Our analysis separates locked-environment activation from \texttt{nix flake update}, identifying package-maintenance failures encountered during lock refresh, and reporting source-build fallback and cache-key decisions without conflating an availability failure with an invalid flake.
+A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students activate a committed lock file rather than invoking \texttt{nix flake update} during a lab. Consequently, classroom readiness within an instructional time budget depends on normal network operation, input-source availability, primary cache availability, and package lifecycle stability.
 
 Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
 
 The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
 
-Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. RQ3 consequently evaluates reliability as a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than as a property of the \texttt{flake.nix} file alone.
+Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. Classroom dependability is therefore shaped by a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than by the syntactic validity of the \texttt{flake.nix} file alone.
 
 \subsection{Security Considerations and Binary Cache Trust Boundaries}
 
