@@ -14,13 +14,27 @@ The empirical findings of this research provide definitive answers to the three 
 	\item \rqonetitle\ AI agents can accurately infer system-level dependencies and generate valid \texttt{flake.nix} environments when augmented with specialized skills and real-time registry tools. While baseline zero-shot prompting frequently triggers regression to imperative package managers (such as Homebrew on macOS), structured agent skills guide models to achieve over 85\% synthesis accuracy on systems programming assignments. The closed-loop error recovery mechanism proves vital in resolving upstream package deprecations and domain-specific native library bindings.
 	\item \rqtwotitle\ A locally valid flake is not, by itself, evidence that the environment will work for a student who lacks the authoring machine's state. RQ2 therefore replays every RQ1-passing flake and lock file in a fresh, unmounted Nix Docker container. Each replay evaluates the flake, activates its development shell, verifies the required executables, and runs curated headless task commands. The resulting clean-container reproduction rate, together with classified failures in evaluation, activation, dependency availability, or task execution, provides a stricter measure of reproducibility than a single host-side validation pass.
 	\item \rqthreetitle\ Single-command activation via \texttt{nix develop} reduces cognitive friction during student onboarding compared to manual imperative installation. While declarative setup incurs an initial one-time overhead for installing the Nix package manager and realizing the development shell, imperative multi-step instructions expose students to command-syntax misinterpretations and skipped configuration steps (such as shell profile sourcing) that silently break the environment.
+
 \end{itemize}
 
 \section{Discussion: Operational Constraints and Deployment Limitations}\label{sec:operational-constraints}
 
 Beyond the empirical synthesis, clean-replay, and student onboarding evaluations, deploying Nix Flake environments in live classroom settings introduces theoretical operational constraints and supply-chain considerations documented in prior literature and official Nix specifications. This section examines the upstream availability, package lifecycle maintenance, binary-cache coverage, and trust-boundary limitations that instructors must account for when adopting declarative environments.
 
+\subsection{Adopting Nix}
+
+% new section?
+Nix is best utilized if the majority of the department mandated that courses use it. If only a few sections were to use nix,
+
+The inclusion of a single flake.nix file in a project
+
+\cite{straubUnderstandingTechnologyAdoption2009}
+
 \subsection{Operational Availability and Maintenance Conditions}
+
+
+% circle back on the issue with students having different machines/os
+The initial macOS VM image that we used for our RQ3 test was Sonoma, which was released in 2023. Installation via brew took more than an hour and exceeded the time that student A had available. This is due to brew compiling all packages and their respective dependencies from source. According to brew's FAQ~\cite{FAQFrequentlyAsked} pre-built binaries, also called bottles, are only provided for versions of MacOS that brew supports. 
 
 A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students activate a committed lock file rather than invoking \texttt{nix flake update} during a lab. Consequently, classroom readiness within an instructional time budget depends on normal network operation, input-source availability, primary cache availability, and package lifecycle stability.
 
@@ -29,6 +43,7 @@ Nix Flakes make dependencies explicit, but they do not eliminate dependence on t
 The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression \cite{TrackingPackagesBe}. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
 
 Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. Classroom dependability is therefore shaped by a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than by the syntactic validity of the \texttt{flake.nix} file alone.
+
 
 \subsection{Security Considerations and Binary Cache Trust Boundaries}
 

@@ -201,6 +201,16 @@ S.~Gooding. Devenv {{Faces Backlash Over AI-Driven Telemetry}} in {{Version}} 1.
 Nix is faster than {{Docker}} build. Dwarves Memo. [Online]. Available: \url{https://memo.d.foundation/topics/devbox/research/nix-is-faster-than-docker-build}
 \BIBentrySTDinterwordspacing
 
+\bibitem{straubUnderstandingTechnologyAdoption2009}
+\BIBentryALTinterwordspacing
+E.~T. Straub, ``Understanding {{Technology Adoption}}: {{Theory}} and {{Future Directions}} for {{Informal Learning}},'' vol.~79, no.~2, pp. 625--649. [Online]. Available: \url{https://doi.org/10.3102/0034654308325896}
+\BIBentrySTDinterwordspacing
+
+\bibitem{FAQFrequentlyAsked}
+\BIBentryALTinterwordspacing
+{{FAQ}} ({{Frequently Asked Questions}}). Homebrew Documentation. [Online]. Available: \url{https://docs.brew.sh/FAQ}
+\BIBentrySTDinterwordspacing
+
 \bibitem{TrackingPackagesBe}
 \BIBentryALTinterwordspacing
 Tracking: {{Packages}} to be orphaned (please consider adopting) · {{Issue}} \#576945 · {{NixOS}}/nixpkgs. GitHub. [Online]. Available: \url{https://github.com/NixOS/nixpkgs/issues/576945}

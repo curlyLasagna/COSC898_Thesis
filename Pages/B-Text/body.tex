@@ -323,7 +323,11 @@ RQ3 evaluates how single-command environment activation via \texttt{nix develop}
 
 Each student was tasked in setting up 3 different development environments. The first task only involved installing the rust compiler. The second task is installing Python with the Jupyter notebook package. Lastly, a full stack development environment of multiple technologies and with configuration
 
-\subsection{Installing Rust Compiler}
+% Student A: Emma
+% Student B: Keyon
+% Student C: Rakesh
+
+\subsection{Installation of the Rust Compiler}
 
 The first onboarding task evaluated a single-toolchain setup requiring participants to install the Rust compiler toolchain (\texttt{rustup}, \texttt{rustc}, and \texttt{cargo}) and verify its availability in the shell. Table~\ref{tab:rq3-rust-results} summarizes the setup completion times and time deltas across participants for the Rust installation task.
 
@@ -344,7 +348,7 @@ The first onboarding task evaluated a single-toolchain setup requiring participa
 \subsubsection{Student A}
 During the imperative installation trial, Student~A completed the setup in 3~minutes and 21.22~seconds, but encountered multiple points of procedural friction along the way. Most notably, Student~A initially assumed that the leading shell prompt symbol (\texttt{\$}) printed in the documentation was a literal part of the command string to be executed. Furthermore, Student~A overlooked a critical post-installation instruction requiring them to source the Cargo environment script (\texttt{source "\$HOME/.cargo/env"}), which caused subsequent verification commands (\texttt{rustc --version} and \texttt{cargo --version}) to fail with command-not-found errors and created confusion regarding whether the compiler had actually been installed. This observation highlights a fundamental vulnerability of imperative installation guides: because manual procedures consist of stateful, sequential steps, inadvertently skipping a single environment-configuration step silently breaks downstream verification even when the underlying binaries have been downloaded successfully.
 
-In the declarative Nix Flake trial, Student~A completed the setup in 4~minutes and 54.86~seconds, representing an additional 1~minute and 33.64~seconds compared to the imperative workflow. The majority of this wall-clock duration was spent waiting for the one-time installation of the Nix package manager itself and the initial realization of the development shell via \texttt{nix develop}. Despite the longer total wait time, Student~A expressed a clear preference for the declarative Nix Flake method, noting that once Nix was installed, activating the environment required a single deterministic command without having to manually manage shell profiles or troubleshoot missing \texttt{PATH} entries.
+In the declarative Nix Flake trial, Student~A completed the setup in 4~minutes and 54.86~seconds, representing an additional 1~minute and 33.64~seconds compared to the imperative workflow. The majority of the time was spent waiting for the one-time installation of the Nix package manager itself and the initial realization of the development shell via \texttt{nix develop}. Despite the longer total wait time, Student~A expressed a clear preference for the declarative Nix Flake method, noting that once Nix was installed, activating the environment required a single deterministic command.
 
 \subsubsection{Student B}
 During the imperative installation trial, Student~B required 5~minutes and 19.95~seconds to complete the Rust setup. Throughout the process, Student~B reported feeling overwhelmed by the dense terminal output emitted by the \texttt{rustup} installer and consequently skimmed past the post-installation instructions printed to the console. As a result, Student~B failed to restart the terminal session or reload the shell configuration as instructed by the installer output, and expressed confusion when presented with system-specific explanations regarding \texttt{PATH} environment variable exports and shell profile files.
@@ -354,3 +358,21 @@ In the declarative Nix Flake trial, Student~B completed the environment setup in
 \subsection{Jupyter Notebook}
 
 \subsection{Full Stack Environment}
+
+The final onboarding task evaluated a multi-component full-stack web development environment combining multiple language runtimes, package managers, database tools, and post-installation configuration steps. Specifically, the setup guide required provisioning an Elixir and Phoenix, initializing the Hex package manager (\texttt{mix local.hex}), the Rebar3 build tool (\texttt{mix local.rebar}), and the Phoenix application generator archive (\texttt{phx\_new}), alongside a Node.js (LTS v20+) and \texttt{npm} frontend asset pipeline, the SQLite~3 relational database engine (\texttt{sqlite3}), and optionally, (\texttt{sqlitebrowser}) for graphical database inspection. 
+
+In the imperative workflow, participants had to install Homebrew and each system package individually, manually link the pinned Node.js formula (\texttt{brew link node@20}), execute the sequential \texttt{mix} bootstrap commands, and verify the stack by scaffolding a SQLite-backed Phoenix project (\texttt{mix phx.new}), running Ecto database migrations (\texttt{mix ecto.setup}), and launching the local development server (\texttt{mix phx.server}). Table~\ref{tab:rq3-fullstack-results} summarizes the setup completion times and time deltas for the full-stack environment task.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Onboarding Results for Full Stack Environment Setup}
+	\label{tab:rq3-fullstack-results}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Participant} & \textbf{Imperative Time} & \textbf{Declarative Time} & \textbf{Time Delta} \\
+		\midrule
+		Student A            & 11:22.12                 & 12:02.39                  & +0:40.27            \\
+		Student B            & 8:59.18                  & 10:27.73                  & +1:28.55            \\
+		\bottomrule
+	\end{tabular}
+\end{table}

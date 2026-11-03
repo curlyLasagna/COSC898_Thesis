@@ -28,25 +28,25 @@ Despite these reproducibility guarantees, adopting Nix introduces a significant 
 
 The rapid proliferation of Large Language Models has spurred widespread investigation into automating Infrastructure as Code (IaC) and system configuration management~\cite{kateGenerativeAIInfrastructure}. Rather than manually composing complex scripts, developers can specify deployment goals in natural language and delegate script generation to automated models. Srivatsa et~al.~\cite{srivatsaSurveyUsingLarge} conduct a comprehensive survey evaluating LLM capabilities across major declarative and procedural configuration platforms, noting that limited training data and rapidly evolving cloud APIs frequently cause models to produce syntactically plausible configurations that fail or introduce security risks in real-world deployments. This divergence stems from the models' lack of awareness of current best practices, platform updates, and complex multi-resource dependencies~\cite{srivatsaSurveyUsingLarge}.
 
-Recent benchmark studies substantiate these findings. Kon et~al.~\cite{konIaCEvalCodeGeneration} introduce IaC-Eval, demonstrating that contemporary models like GPT-4 achieve only a 19.36\% pass@1 accuracy rate when generating declarative cloud infrastructure programs from natural language requirements, compared to 86.6\% on standard Python benchmarks. Similarly, Zhang et~al.~\cite{zhangDeployabilityCentricInfrastructureasCodeGeneration2025} emphasize that deployability, rather than surface syntax correctness, is the decisive metric for automated infrastructure generation, finding that state-of-the-art LLMs achieve only 20.8\% to 30.2\% first-attempt deployment success unless augmented with iterative verification and deployment feedback loops. A foundational vulnerability in automated code and environment synthesis is package hallucination~\cite{ImportingPhantomsMeasuring}. Krishna et~al.~\cite{ImportingPhantomsMeasuring} analyze package hallucination across Python, JavaScript, and Rust, demonstrating that LLMs frequently fabricate non-existent package identifiers—particularly in ecosystems with smaller registries and less training data representation such as Rust, where mean hallucination rates reach 24.74\% and exceed 42\% for several models. In software pipelines, these hallucinations break build executions and expose users to package squatting supply-chain attacks, underscoring the critical need for deterministic external package verification~\cite{ImportingPhantomsMeasuring}.
+Recent benchmark studies substantiate these findings. Kon et~al.~\cite{konIaCEvalCodeGeneration} introduce IaC-Eval, demonstrating that contemporary models like GPT-4 achieve only a 19.36\% pass@1 accuracy rate when generating declarative cloud infrastructure programs from natural language requirements, compared to 86.6\% on standard Python benchmarks. Similarly, Zhang et~al.~\cite{zhangDeployabilityCentricInfrastructureasCodeGeneration2025} emphasize that deployability, rather than surface syntax correctness, is the decisive metric for automated infrastructure generation, finding that SOTA LLMs achieve only 20.8\% to 30.2\% first-attempt deployment success unless augmented with iterative verification and deployment feedback loops. A foundational vulnerability in automated code and environment synthesis is package hallucination~\cite{ImportingPhantomsMeasuring}. Krishna et~al.~\cite{ImportingPhantomsMeasuring} analyze package hallucination across Python, JavaScript, and Rust, demonstrating that LLMs frequently fabricate non-existent package identifiers; particularly in ecosystems with smaller registries and less training data representation such as Rust, where mean hallucination rates reach 24.74\% and exceed 42\% for several models. In software pipelines, these hallucinations break build executions and expose users to package squatting supply-chain attacks, underscoring the critical need for deterministic external package verification~\cite{ImportingPhantomsMeasuring}.
 
 \subsection{Agentic Skills and Tool-Augmented Assistance}
 
-While Nix Flakes offer strong reproducibility and lightweight execution, their lazy, purely functional configuration model~\cite{ModularityLazyEvaluation} poses a steep learning curve for students and faculty unfamiliar with functional package management~\cite{duNixRescueReproducible2026a,OSCodeMy2024}. Recent research in agent harness architectures demonstrates that the reliability of autonomous LLMs on complex, multi-step tasks is governed heavily by the surrounding harness—comprising the execution loop, tool registry, context management, and verification interfaces—rather than the base model alone~\cite{mengAgentHarnessLarge2026,formentScaffoldingMattersMore2026}. To structure domain-specific procedural knowledge within such harnesses, Agent Skills have emerged as modular, reusable packages that combine triggering metadata, workflow instructions, templates, and helper scripts~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Ling et~al.~\cite{lingAgentSkillsDataDriven2026} conduct a large-scale analysis of 40,285 public agent skills, showing that skills are heavily concentrated in software engineering and infrastructure workflows while remaining compact enough (with a median length of 1,414 tokens) to fit within standard prompt budgets without hard-coded orchestration rules. At the same time, security audits of public skill marketplaces reveal that unvetted third-party skills frequently introduce command-execution and data-exfiltration risks~\cite{beurer-kellnerTechnicalReportExploring2026,lingAgentSkillsDataDriven2026}, motivating carefully curated, sandboxed skill designs.
+While Nix Flakes offer strong reproducibility and lightweight execution, their lazy, purely functional configuration model~\cite{ModularityLazyEvaluation} poses a steep learning curve for students and faculty unfamiliar with functional package management~\cite{duNixRescueReproducible2026a,OSCodeMy2024}. Recent research in agent harness architectures demonstrates that the reliability of autonomous LLMs on complex, multi-step tasks is governed heavily by the surrounding harness; comprising the execution loop, tool registry, context management, and verification interfaces; rather than the base model alone~\cite{mengAgentHarnessLarge2026,formentScaffoldingMattersMore2026}. To structure domain-specific procedural knowledge within such harnesses, Agent Skills have emerged as modular, reusable packages that combine triggering metadata, workflow instructions, templates, and helper scripts~\cite{AgentSkills,lingAgentSkillsDataDriven2026}. Ling et~al.~\cite{lingAgentSkillsDataDriven2026} conduct a large-scale analysis of 40,285 public agent skills, showing that skills are heavily concentrated in software engineering and infrastructure workflows while remaining compact enough (with a median length of 1,414 tokens) to fit within standard prompt budgets without hard-coded orchestration rules. At the same time, security audits of public skill marketplaces reveal that unvetted third-party skills frequently introduce command-execution and data-exfiltration risks~\cite{beurer-kellnerTechnicalReportExploring2026,lingAgentSkillsDataDriven2026}, motivating carefully curated, sandboxed skill designs.
 
 Integrating standardized tool protocols further strengthens agentic workflows. Inspired by the architectural decoupling of the Language Server Protocol (LSP) for development editors~\cite{borkLanguageServerProtocol2023}, the Model Context Protocol (MCP) defines a unified, bidirectional standard for connecting AI agents with external tools and data sources~\cite{MCPLandscape}. Although indiscriminate tool invocation can inflate token costs or degrade performance when unnecessary~\cite{wuCallNotCall2026,formentScaffoldingMattersMore2026}, coupling LLM reasoning with targeted, real-time package registry lookups and compiler verification provides a direct mechanism to ground package selection and mitigate the hallucination vulnerabilities identified in prior studies~\cite{ImportingPhantomsMeasuring,zhangDeployabilityCentricInfrastructureasCodeGeneration2025}.
 
 \section{Nix Foundations}\label{sec:nix-foundations}
 
-Having reviewed existing approaches and the emerging role of declarative tooling, this section establishes the fundamental Nix concepts required to understand its architectural advantages and operational limitations. Nix is both a package manager and a purely functional domain-specific language for describing how software dependencies and runtime environments are constructed. Unlike an imperative installation procedure, which modifies a shared system state step by step, a Nix expression describes the inputs from which a package or environment should be produced. Nix then evaluates that description and creates an immutable derivation. This distinction is central to the thesis: an agent generates a declarative specification rather than a sequence of host-specific installation commands.
+Having reviewed existing approaches and the emerging role of declarative tooling, this section establishes the fundamental Nix concepts required to understand its architectural advantages and operational limitations. 
+
+Nix is both a package manager and a purely functional domain-specific language for describing how software dependencies and runtime environments are constructed. Unlike an imperative installation procedure, which modifies a shared system state step by step, a Nix expression describes the inputs from which a package or environment should be produced. Nix then evaluates that description and creates an immutable derivation. This distinction is central to the thesis: an agent generates a declarative specification rather than a sequence of host-specific installation commands.
 
 \subsection{Declarative Packages and Nixpkgs}
 
-In Nix, a \emph{derivation} is a build specification. It identifies the builder, its source inputs, build-time and run-time dependencies, configuration arguments, and expected outputs. Nix evaluates derivations as part of a dependency graph, allowing a package to depend on specific versions of compilers, libraries, and build tools rather than on whichever versions happen to be installed globally. The functional model aims to make a build result a function of its declared inputs, thereby avoiding hidden dependencies on mutable global directories~\cite{dolstraNixSafePolicyFree,dolstraPurelyFunctionalSystema}.
+In Nix, a \emph{derivation} is a build specification for a package. It identifies the builder, its source inputs, build-time and run-time dependencies, configuration arguments, and expected outputs. Nix evaluates derivations as part of a dependency graph, allowing a package to depend on specific versions of compilers, libraries, and build tools rather than on whichever versions happen to be installed globally. The functional model aims to make a build result a function of its declared inputs, thereby avoiding hidden dependencies on mutable global directories~\cite{dolstraNixSafePolicyFree,dolstraPurelyFunctionalSystema}.
 
-The collection of such package definitions is nixpkgs. It exposes packages as named attributes, such as \texttt{python3}, \texttt{cmake}, or \texttt{rustc}, and parameterizes many definitions by the target platform. A generated development environment therefore does not install packages by conventional system mutation; it selects attributes from a particular Nixpkgs revision and composes them into a shell or package output. This is why an invalid attribute name, a deprecated package, or a package unavailable on the target platform can prevent an otherwise plausible environment from evaluating. RQ1 evaluates whether the agent can make these selections correctly.
-
-Declarative does not mean that every result is permanently identical in every context. Reproducibility depends on retaining the relevant input revisions, source artifacts, platform assumptions, and configuration. It also depends on the continued ability to obtain or build the required dependency closure. Consequently, the explicit declarations produced by Nix provide a strong basis for reproducibility, but they do not by themselves guarantee that a new student machine can activate an environment within an acceptable time.
+The collection of such package definitions is a repository called nixpkgs. It exposes packages as named attributes, such as \texttt{python3}, \texttt{cmake}, or \texttt{rustc}, and parameterizes many definitions by the target platform. A generated development environment therefore does not install packages by conventional system mutation; it selects attributes from a particular Nixpkgs revision and composes them into a shell or package output. This is why an invalid attribute name, a deprecated package, or a package unavailable on the target platform can prevent an otherwise plausible environment from evaluating. RQ1 evaluates whether the agent can make these selections correctly.
 
 \subsection{The Nix Store and Dependency Closures}
 
@@ -58,8 +58,52 @@ The store model explains both the benefit and the limitation evaluated by RQ2. A
 
 \subsection{Flakes, Locked Inputs, and Development Shells}
 
-A flake is an experimental convention for organizing a Nix project around two files. The \texttt{flake.nix} file declares inputs and outputs. Inputs commonly include Nixpkgs, the nix package manager or other Git repositories; outputs may include packages, applications, NixOS configurations, or development shells. 
-Before the advent of flakes, 
+A flake is an experimental convention for organizing a Nix project around two files. The \texttt{flake.nix} file declares inputs and outputs. Inputs commonly include Nixpkgs, the nix package manager or other Git repositories; outputs may include packages, applications, NixOS configurations, or development shells.
+
+\begin{lstlisting}[caption={Example of a flake file}, label={lst:example-flake-nix}]
+{
+  description = "Go Development Environment";
+
+  # External dependency sources called inputs
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  # Build outputs
+  outputs =
+    {
+      nixpkgs,
+      flake-utils,
+      ...
+    }:
+    # Generate outputs across standard target architectures (e.g., x86_64-linux, aarch64-darwin)
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        # Instantiate the Nixpkgs package set for the target system
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+      in
+      {
+        # Ephemeral development environment activated via `nix develop`
+        devShells.default = pkgs.mkShell {
+          # Packages added to the shell's PATH
+          packages = with pkgs; [
+            go
+          ];
+
+          # Commands executed automatically upon entering the shell
+          shellHook = ''
+            echo "Entering environment for Go Development Environment"
+          '';
+        };
+      }
+    );
+}
+\end{lstlisting}
 
 In this thesis, the relevant output is a \texttt{devShell}, which lists the tools and environment configuration required by a course assignment. A student activates that output with the \texttt{nix develop} nix command, which instantiates an ephemeral subshell containing all declared dependencies and environment variables from the generated \texttt{flake.nix} file.
 
