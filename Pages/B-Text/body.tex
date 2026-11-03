@@ -8,7 +8,9 @@ This thesis investigates the feasibility, reproducibility, and reliability of th
 
 \section{Proposed Solution: An agent skill for AI-Assisted Nix Flake Synthesis}\label{chap:solution}
 
-To bridge the gap between complex declarative configurations and educational usability, we propose the use of a custom agent skill that allows an agent to specialize in generating a valid flake.nix file. Rather than forcing instructors or students to master the Nix DSL language, our agent skill delegates the composition, package resolution, and verification of Nix Flakes to an autonomous agent harness.
+To bridge the gap between complex declarative configurations and educational usability, we propose a custom agent skill that specializes an autonomous coding agent in synthesizing and verifying valid \texttt{flake.nix} specifications. Rather than requiring instructors or students to master the Nix expression language, the skill delegates dependency inference, package resolution, and build verification to the user's local agent harness. Although existing wrapper ecosystems such as \texttt{devenv} introduced an AI-assisted \texttt{devenv generate} command in version~1.4, that approach requires the installation of \texttt{devenv} tool and subsequently had its CLI codebase-inference capability removed following privacy concerns over telemetry that uploaded tracked repository files to external servers~\cite{goodingDevenvFacesBacklash2025}. In contrast, our proposed skill operates directly within the local agent harness to produce standard, zero-wrapper \texttt{flake.nix} configurations while inspecting project repositories and course documents locally.
+
+Operating this synthesis pipeline requires a host environment that satisfies three baseline prerequisites. First, the host system must run a POSIX-compatible environment supported by the Nix package manager: Linux (natively or within Docker containers), macOS, or Microsoft Windows via the Windows Subsystem for Linux (WSL2). Second, Nix must be installed with experimental Flake support enabled. When using the official Nix installer, users must explicitly enable flakes by declaring \texttt{experimental-features = nix-command flakes} in either the user-level (\texttt{\textasciitilde/.config/nix/nix.conf}) or system-wide (\texttt{/etc/nix/nix.conf}) configuration file; alternatively, the Determinate Systems Nix installer enables these features by default without manual intervention. Third, a compatible agent harness must be installed to load the skill package and orchestrate tool execution. Because Agent Skills follow an open, modular specification consisting of structured Markdown instructions (\texttt{SKILL.md}), reference templates, and helper scripts~\cite{AgentSkills,lingAgentSkillsDataDriven2026}, our skill is portable across any agent harness that supports the standard skill directory convention and local shell tool invocation.
 
 The end-to-end architecture comprises the following steps (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
 \begin{enumerate}
@@ -58,7 +60,7 @@ In this format, \texttt{track} classifies the curriculum category, \texttt{instr
 
 The experimental synthesis harness was implemented using the Antigravity CLI agent framework. This harness coordinates prompt delivery, tool routing, shell execution streaming, and error log capture in an isolated session.
 
-To assess how model architecture and reasoning scale influence Nix expression synthesis, experiments were conducted across two frontier models: Google Gemini~3.8 Flash and GPT-OSS 120B, both configured with medium reasoning effort. Evaluating models across distinct parameter scales allows us to assess whether smaller, cost-effective models can synthesize functionally equivalent environments when equipped with appropriate contextual scaffolding.
+To assess how model architecture and reasoning scale influence Nix expression synthesis, experiments were conducted across two language models: Google Gemini~3.8 Flash and GPT-OSS 120B, both configured with medium reasoning effort. Evaluating models across different parameter scales allows us to assess whether smaller, cost-effective models can synthesize functionally equivalent environments when equipped with appropriate contextual scaffolding.
 
 To guide the agent and eliminate erratic zero-shot behavior, each agent session integrates our specialized \texttt{course-flake-generator} skill (introduced in Section~\ref{chap:solution}). The internal filetree structure of the custom agent skill follows standardized agentic skill packaging conventions:
 
@@ -77,9 +79,53 @@ To guide the agent and eliminate erratic zero-shot behavior, each agent session 
     ├── detect-project-requirements.py
     ├── extract-document-content.py
     └── validate-flake.py
+
 \end{lstlisting}
 
 The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory stores Python scripts to perform deterministic actions such as extracting text from user submitted documents. According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
+
+\begin{lstlisting}[caption={assets/flake-devshell.template.md template}]
+{
+  description = "{{DESCRIPTION}}";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs =
+    {
+      nixpkgs,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            {{PACKAGES}}
+          ];
+
+          {{ENV_VARS}}
+
+          shellHook = ''
+            {{SHELL_HOOK}}
+          '';
+        };
+
+        formatter = pkgs.nixfmt-rfc-style;
+      }
+    );
+}
+
+\end{lstlisting}
 
 Additionally, we evaluated two distinct package discovery conditions:
 \begin{enumerate}
@@ -110,9 +156,10 @@ where $n$ is the total number of generated candidate samples per task and $c$ is
 
 RQ2 evaluates whether a successful local validation actually transfers to a fresh environment that has none of the authoring host's files, shell configuration, or prior evaluation state. The inputs contain only RQ1 trial artifacts that passed the three-stage local verifier and include both a generated \texttt{flake.nix} and its \texttt{flake.lock}. This design evaluates the reproducibility of the generated flake specification.
 
-\subsection{Isolation Objectives and Threat Model}
+\subsection{Testing on }
 
 On a local development machine, an existing warmed Nix store or globally installed host library may mask missing dependency declarations, creating a false impression of reproducibility. To isolate the environment from authoring host pollution, our protocol mandates that candidate flakes be tested in fresh, ephemeral guest environments where no host directories or store paths are mounted.
+
 
 The harness streams a compressed copy of the trial into the guest environment and extracts it into guest-local temporary storage; no project directory or host Nix store is mounted. The guest instance is discarded when the stage finishes, so no writable state is shared across stages or trials. Network access remains available so that a first-use environment can retrieve its pinned inputs and binary-cache artifacts, and availability failures are recorded separately from configuration failures.
 
@@ -130,13 +177,15 @@ The principal metric is the base OS reproduction rate: the proportion trials tha
 
 \section{Student Onboarding Ergonomics Protocol}\label{sec:rq3-methodology}
 
-RQ3 evaluates the practical ergonomics and setup time delta of Nix Flakes from a student perspective compared to traditional manual installation. To assess human ergonomics and onboarding friction, we conducted a controlled user study involving two undergraduate students and a graduate computer science student. Each participant was tasked with configuring a course development environment using two contrasting methods: traditional imperative instructions from a course syllabus, and single-command activation via \texttt{nix develop} using an AI-generated \texttt{flake.nix} file synthesized via our RQ1 pipeline.
+RQ3 evaluates the practical ergonomics and setup time delta of Nix Flakes from a student perspective compared to traditional manual installation. To assess human ergonomics and onboarding friction, we conducted a controlled user study involving two undergraduate students and a graduate computer science student. Each participant was tasked with configuring a course development environment using two contrasting methods: traditional imperative instructions from a course document, and single-command activation via \texttt{nix develop} using an AI-generated \texttt{flake.nix} file synthesized via our RQ1 pipeline.
 
-Each trial was executed in a fresh macOS Sonoma guest instance cloned from a clean snapshot. We recorded total setup completion time, the time delta between imperative installation and declarative shell activation, the student's personal assessment of which workflow was easier, and qualitative observations regarding cognitive load and environment comprehension.
+Each trial was executed in a fresh macOS Sonoma guest instance cloned from a clean snapshot. We recorded total setup completion time, the time delta between imperative installation and declarative shell activation, the student's personal assessment of which workflow was easier, and qualitative observations regarding cognitive load.
+
+For the declarative shell activation, we only had to create a single document. 
 
 \section{Experimental Testbed and System Infrastructure}\label{sec:testbed-infrastructure}
 
-To ensure consistent, reproducible execution across all evaluation stages, the experimental testbed relies on a standardized host machine and isolated guest virtualization platforms. Table~\ref{tab:host-specifications} summarizes the hardware and system environment of the primary host machine used for synthesis orchestration and local validation.
+To ensure consistent, reproducible execution across all evaluation stages, the experimental testbed relies on a MacOS host machine running an isolated MacOS virtual machine. Table~\ref{tab:host-specifications} summarizes the hardware and system environment of the primary host machine used for synthesis orchestration and local validation.
 
 \begin{table}[htbp]
 	\centering
@@ -168,11 +217,67 @@ This dual-platform infrastructure allows us to systematically evaluate both cont
 
 \section{Flake Synthesis Accuracy and Model Comparison}\label{sec:model-results}
 
-Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and agent access to an MCP server. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely.
+Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and agent access to an MCP server. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely, despite explicitly prompting the model.
 
 With the introduction of the \texttt{course-flake-generator} skill, the model behaved more consistently. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
 
 Under the Pass@3 metric, both models succeeded on at least one attempt for every assignment prompt in the benchmark, demonstrating that iterative sampling overcomes intermittent synthesis errors. However, the models differed noticeably in tool utilization. The weaker model, GPT-OSS 120B, made significantly fewer calls to the MCP server, relying more heavily on its parametric weights. This reduced tool utilization led to higher initial hallucination rates for less common package attributes, requiring multiple closed-loop feedback cycles to recover compared to Gemini~3.8 Flash.
+
+Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accuracy across both models with and without access to the \texttt{mcp-nixos} server, Table~\ref{tab:model-telemetry} reports mean trial duration and token consumption, and Table~\ref{tab:model-bloat} presents package precision and the over-provisioning (bloat) ratio across passing trials. To evaluate partial success, the evaluator extracts all package identifiers declared in \texttt{packages}, \texttt{buildInputs}, and \texttt{nativeBuildInputs} (exempting standard Nix formatters such as \texttt{nixfmt} or \texttt{alejandra} and flake scaffolding attributes) and maps them against the expected CLI tools for each task. \emph{Package precision} measures the fraction of declared packages that directly satisfy an expected tool requirement (penalizing unrequested, extraneous packages), whereas the \emph{over-provisioning ratio} (bloat) computes the ratio of total declared packages to the minimum number of required packages needed to cover the expected tools, capturing both extraneous additions and redundant package declarations.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Flake Synthesis Accuracy Across Models and MCP Conditions}
+	\label{tab:model-synthesis-results}
+	\begin{tabular}{llccc}
+		\toprule
+		\textbf{Model}   & \textbf{Condition} & \textbf{Passed ($c/N$)} & \textbf{Pass@1} & \textbf{Pass@3} \\
+		\midrule
+		Gemini 3.8 Flash & w/ MCP             & 40/42                   & 95.24\%         & 100.00\%        \\
+		Gemini 3.8 Flash & w/o MCP            & 41/42                   & 97.62\%         & 100.00\%        \\
+		\midrule
+		GPT-OSS 120B     & w/ MCP             & 31/42                   & 73.81\%         & 78.57\%         \\
+		GPT-OSS 120B$^*$ & w/o MCP            & 30/42                   & 71.43\%         & 85.71\%         \\
+		\bottomrule
+	\end{tabular}
+	\vspace{0.25em}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Mean Trial Duration and Token Consumption Across Models and MCP Conditions}
+	\label{tab:model-telemetry}
+	\begin{tabular}{llcc}
+		\toprule
+		\textbf{Model}   & \textbf{Condition} & \textbf{Mean Duration} & \textbf{Mean Tokens} \\
+		\midrule
+		Gemini 3.8 Flash & w/ MCP             & 238.41\,s              & 221,295              \\
+		Gemini 3.8 Flash & w/o MCP            & 233.85\,s              & 235,596              \\
+		\midrule
+		GPT-OSS 120B     & w/ MCP             & 180.03\,s              & 26,974               \\
+		GPT-OSS 120B     & w/o MCP            & 89.51\,s               & 38,225               \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{Package Precision and Over-Provisioning Ratio Across Passing Trials}
+	\label{tab:model-bloat}
+	\begin{tabular}{llcc}
+		\toprule
+		\textbf{Model}   & \textbf{Condition} & \textbf{Package Precision} & \textbf{Over-Provisioning Ratio} \\
+		\midrule
+		Gemini 3.8 Flash & w/ MCP             & 93.3\%                     & 1.65$\times$                     \\
+		Gemini 3.8 Flash & w/o MCP            & 91.2\%                     & 1.87$\times$                     \\
+		\midrule
+		GPT-OSS 120B     & w/ MCP             & 93.5\%                     & 1.39$\times$                     \\
+		GPT-OSS 120B     & w/o MCP            & 92.8\%                     & 1.43$\times$                     \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
 
 \section{Tool Invocation and Telemetry Analysis}
 
@@ -180,13 +285,31 @@ The tool-call logs were analyzed to determine how the agent resolved package and
 
 \subsection{Native Nix CLI Discovery versus MCP Retrieval}
 
-Our baseline experiments evaluated whether an agent strictly requires the \texttt{mcp-nixos} server for successful synthesis. In our testing script, we added a flag to run a condition in which the MCP server was not provided to the model. In that condition, the model still produced valid environments for the simple, conventional requirements represented in the dataset. The required toolchains, including standard language runtimes, compilers, and build tools, are widely documented nixpkgs attributes. The observed behavior is therefore consistent with the model recognizing common package conventions from prior exposure.
+Our baseline experiments evaluated whether an agent strictly requires the \texttt{mcp-nixos} server for successful synthesis. In our testing script, we added a flag to run a condition in which the MCP server was withheld from the model. Even without MCP access, the model produced valid environments across the benchmark by combining native Nix CLI discovery with its parametric knowledge of the Nixpkgs derivation schema. Guided by the skill's procedural directive to verify that every resolved package attribute evaluates cleanly prior to finalizing \texttt{flake.nix}, the agent followed a progressive resolution workflow across the trial transcripts.
 
-When the model encountered uncertainty in the no-MCP condition, it used native Nix CLI discovery. Test data shows invocations of commands such as \texttt{nix search}, \texttt{nix-env -qaP}, and help interfaces including \texttt{nix --help} or a subcommand's \texttt{--help} flag. These commands gave the agent sufficient information to inspect available attributes and refine its subsequent commands. In this benchmark, the Nix CLI therefore served as an effective, self-describing retrieval interface when the additional MCP layer was unavailable.
+First, when resolving a target requirement from the prompt, the agent invoked \texttt{nix search} (e.g., \texttt{nix search github:NixOS/nixpkgs/nixos-24.11 dotnet-sdk}) or \texttt{nix-env -qaP} to identify candidate attribute names. Second, because Nixpkgs frequently exposes both unversioned default aliases and version-pinned attributes (such as \texttt{dotnet-sdk} alongside \texttt{dotnet-sdk\_8} and \texttt{dotnet-sdk\_9}), the agent executed targeted \texttt{nix eval} expressions to disambiguate candidates before writing the flake. Specifically, even though the skill documentation did not supply a cheat sheet of derivation attributes, the model leveraged its pre-trained knowledge of Nix idioms to query \texttt{.name} and \texttt{.version} (e.g., \texttt{nix eval github:NixOS/nixpkgs/nixos-24.11\#dotnet-sdk.name} and \texttt{nix eval --expr 'with import <nixpkgs> \{\}; openjdk17.name'}) to confirm concrete upstream versions; \texttt{.passthru.home} and \texttt{.outPath} to resolve store paths for environment variables such as \texttt{JAVA\_HOME} and \texttt{DOTNET\_ROOT}; \texttt{builtins.attrNames} (e.g., \texttt{builtins.attrNames pkgs.vscode-extensions}) to enumerate nested extension sets and test \texttt{vscode-with-extensions.override} expressions; and \texttt{.meta.platforms}, \texttt{.meta.broken}, and \texttt{.meta.license} to diagnose macOS (\texttt{aarch64-darwin}) compatibility for packages such as \texttt{rstudio} and \texttt{mysql-workbench}. In this benchmark, the Nix CLI therefore served as an effective, self-describing retrieval and verification interface when the MCP layer was unavailable.
 
-This result should not be interpreted as evidence that MCP retrieval is generally unnecessary. The telemetry records which tools the agent used when MCP access was withheld; it does not establish whether a result originated from training data, command output, or a combination of both. More specialized coursework, obscure package names, recently changed Nixpkgs attributes, or complex platform constraints may exceed what native CLI exploration can resolve efficiently. In those conditions, the structured and current metadata exposed by \texttt{mcp-nixos} remains a useful capability for reducing package hallucination and configuration drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}. The present result instead bounds the claim: for straightforward requirements, the model could construct a working flake without MCP access.
+Our findings were similar to the findings of \cite{formentScaffoldingMattersMore2026}. The effect that MCP servers introduces when it comes to token usage is inconclusive. It varies between agent harness used and in the case of the agent harness that we used, querying an MCP server resulted in less tokens.
 
-We also compared the token usage between trials with and without querying an MCP server and our results show that querying the MCP server resulted in less token usage.
+This result should not be interpreted as evidence that MCP retrieval is generally unnecessary. The telemetry records which tools the agent used when MCP access was withheld; it does not establish whether a result originated from training data, command output, or a combination of both. mcp-nixos MCP server is better suited for recently recently modified . In those conditions, the structured and current metadata exposed by \texttt{mcp-nixos} remains a useful capability for reducing package hallucination and configuration drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}. The present result instead bounds the claim: for straightforward requirements, the model could construct a working flake without MCP access.
+
+When the \texttt{mcp-nixos} server was provided, the two models exhibited a stark divergence in MCP tool adoption, as summarized in Table~\ref{tab:mcp-invocation-comparison}. Gemini~3.8 Flash invoked \texttt{call\_mcp\_tool} 136 times across all 40 completed trials (100.00\% trial prevalence, averaging 3.40 MCP calls per trial and accounting for 8.41\% of its 1,617 total tool invocations). Furthermore, Gemini~3.8 Flash leveraged the full breadth of the \texttt{mcp-nixos} schema; combining package and program \texttt{search} queries, detailed \texttt{info} lookups, \texttt{channels} verification, and binary \texttt{cache} checks on \texttt{aarch64-darwin}. In contrast, GPT-OSS~120B invoked \texttt{call\_mcp\_tool} only 6 times across just 3 of 41 completed trials (7.32\% trial prevalence, averaging 0.15 MCP calls per trial, or 1.02\% of its 590 total tool calls). Although GPT-OSS~120B probed the MCP server via \texttt{list\_resources} in 24 trials (58.54\%), it bypassed \texttt{call\_mcp\_tool} in over 92\% of trials, restricting its 6 actual MCP queries to basic package searches (\texttt{clang}, \texttt{cmake}, \texttt{make}, \texttt{gnumake}, \texttt{dotnet-sdk}, and \texttt{mysql-workbench}) without ever invoking \texttt{info} or \texttt{cache} actions. This under-utilization directly contributed to GPT-OSS~120B's lower synthesis accuracy on data science tasks, where it relied on stale parametric knowledge and hallucinated deprecated or improperly cased attribute names (such as referencing the removed top-level \texttt{mysql} attribute instead of \texttt{mysql80}/\texttt{mysql84} and lowercase \texttt{r} instead of \texttt{R}).
+
+\begin{table}[htbp]
+	\centering
+	\caption{MCP Tool Invocation Comparison in MCP-Enabled Evaluations}
+	\label{tab:mcp-invocation-comparison}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Model}   & \textbf{MCP Calls} & \textbf{\% of All Tool Calls} & \textbf{Mean Calls / Trial} \\
+		\midrule
+		Gemini 3.8 Flash & 136                & 8.41\% (136 / 1,617)          & 3.40                        \\
+		GPT-OSS 120B     & 6                  & 1.02\% (6 / 590)              & 0.15                        \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Despite providing MCP server access, the GPT-OSS 120B model rarely used the MCP server and instead relied on 
 
 \section{Base OS Reproducibility Results}\label{sec:base-os-results}
 
@@ -196,38 +319,38 @@ Failures encountered during clean replay were categorized into evaluation errors
 
 \section{Student Onboarding Ergonomics Results}\label{sec:rq3-results}
 
-RQ3 evaluates how single-command environment activation via \texttt{nix develop} compares to manual imperative installation in terms of setup time delta and cognitive benefits for students. To assess the human factors of adopting declarative environments, we conducted an onboarding trial with two undergraduate and a graduate computer science student. Each participant was tasked with configuring a development environment for a course project using both conventional imperative setup instructions and its respective AI-generated \texttt{flake.nix} environment from the same document.
+RQ3 evaluates how single-command environment activation via \texttt{nix develop} compares to manual imperative installation in terms of setup time delta and cognitive benefits for students. To assess the human factors of adopting declarative environments, we conducted an onboarding trial with 3 computer science students of differing skills. We shall label them via enumeration of student A, B, and C. Each participant was tasked with configuring a development environment for a course using an imperative installation guide a guide's respective flake.nix devShell generated from our proposed solution. 
 
-Each student was provided a
+Each student was tasked in setting up 3 different development environments. The first task only involved installing the rust compiler. The second task is installing Python with the Jupyter notebook package. Lastly, a full stack development environment of multiple technologies and with configuration
 
-Emma - Rust installation
+\subsection{Installing Rust Compiler}
 
-Imperative (3:21.22)
-- Assumed the \$ was part of the commands
-- Skipped a vital instruction of running the source command, or the
+The first onboarding task evaluated a single-toolchain setup requiring participants to install the Rust compiler toolchain (\texttt{rustup}, \texttt{rustc}, and \texttt{cargo}) and verify its availability in the shell. Table~\ref{tab:rq3-rust-results} summarizes the setup completion times and time deltas across participants for the Rust installation task.
 
-Insight: during imperative installation, students may skip a vital step, causing confusion as to what went wrong
+\begin{table}[htbp]
+	\centering
+	\caption{Onboarding Results for Rust Toolchain Setup}
+	\label{tab:rq3-rust-results}
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Participant} & \textbf{Imperative Time} & \textbf{Declarative Time} & \textbf{Time Delta} \\
+		\midrule
+		Student A            & 3:21.22                  & 4:54.86                   & +1:33.64            \\
+		Student B            & 5:19.95                  & 7:06.64                   & +1:46.69            \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
-Declarative flake (4:54.86)
-- Installing nix took a huge part of the time
-- nix develop shell instantiation also took time
+\subsubsection{Student A}
+During the imperative installation trial, Student~A completed the setup in 3~minutes and 21.22~seconds, but encountered multiple points of procedural friction along the way. Most notably, Student~A initially assumed that the leading shell prompt symbol (\texttt{\$}) printed in the documentation was a literal part of the command string to be executed. Furthermore, Student~A overlooked a critical post-installation instruction requiring them to source the Cargo environment script (\texttt{source "\$HOME/.cargo/env"}), which caused subsequent verification commands (\texttt{rustc --version} and \texttt{cargo --version}) to fail with command-not-found errors and created confusion regarding whether the compiler had actually been installed. This observation highlights a fundamental vulnerability of imperative installation guides: because manual procedures consist of stateful, sequential steps, inadvertently skipping a single environment-configuration step silently breaks downstream verification even when the underlying binaries have been downloaded successfully.
 
-\section{Operational Constraints and Deployment Limitations}\label{sec:operational-constraints}
+In the declarative Nix Flake trial, Student~A completed the setup in 4~minutes and 54.86~seconds, representing an additional 1~minute and 33.64~seconds compared to the imperative workflow. The majority of this wall-clock duration was spent waiting for the one-time installation of the Nix package manager itself and the initial realization of the development shell via \texttt{nix develop}. Despite the longer total wait time, Student~A expressed a clear preference for the declarative Nix Flake method, noting that once Nix was installed, activating the environment required a single deterministic command without having to manually manage shell profiles or troubleshoot missing \texttt{PATH} entries.
 
-Beyond the empirical synthesis, clean-replay, and student onboarding evaluations, deploying Nix Flake environments in live classroom settings introduces theoretical operational constraints and supply-chain considerations documented in prior literature and official Nix specifications. This section examines the upstream availability, package lifecycle maintenance, binary-cache coverage, and trust-boundary limitations that instructors must account for when adopting declarative environments.
+\subsubsection{Student B}
+During the imperative installation trial, Student~B required 5~minutes and 19.95~seconds to complete the Rust setup. Throughout the process, Student~B reported feeling overwhelmed by the dense terminal output emitted by the \texttt{rustup} installer and consequently skimmed past the post-installation instructions printed to the console. As a result, Student~B failed to restart the terminal session or reload the shell configuration as instructed by the installer output, and expressed confusion when presented with system-specific explanations regarding \texttt{PATH} environment variable exports and shell profile files.
 
-\subsection{Operational Availability and Maintenance Conditions}
+In the declarative Nix Flake trial, Student~B completed the environment setup in 7~minutes and 6.64~seconds, an increase of 1~minute and 46.69~seconds over the imperative trial due to the initial Nix installer and \texttt{devShell} realization overhead. Unlike Student~A, however, Student~B preferred the traditional imperative installation method for this single-toolchain task, explaining that the conventional step-by-step installer instructions felt more familiar and conceptually easier to follow than the unfamiliar Nix workflow.
 
-A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students activate a committed lock file rather than invoking \texttt{nix flake update} during a lab. Consequently, classroom readiness within an instructional time budget depends on normal network operation, input-source availability, primary cache availability, and package lifecycle stability.
+\subsection{Jupyter Notebook}
 
-Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
-
-The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
-
-Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. Classroom dependability is therefore shaped by a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than by the syntactic validity of the \texttt{flake.nix} file alone.
-
-\subsection{Security Considerations and Binary Cache Trust Boundaries}
-
-Nix normally realizes a required store path by downloading a signed substitute from a binary cache; when no acceptable substitute is available, it may instead build the path locally from source. This fallback preserves the possibility of realization but can be unsuitable for a classroom when compilation exceeds the time available for a laboratory session. Thus, cache availability is an operational reliability concern rather than merely a performance optimization.
-
-Nix can use additional binary caches, known as substituters, to improve availability. A substitute is accepted only when its signature corresponds to a configured trusted public key. This signature mechanism provides an integrity boundary, but adding an external cache and its key is a supply-chain decision: it authorizes that cache operator to provide binaries that students will execute. A course should therefore use only institutionally approved cache URLs and keys, document them in the course environment, and avoid asking students to trust arbitrary caches~\cite{dolstraNixSafePolicyFree}.
+\subsection{Full Stack Environment}
