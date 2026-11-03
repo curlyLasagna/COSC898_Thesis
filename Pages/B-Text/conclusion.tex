@@ -16,6 +16,28 @@ The empirical findings of this research provide definitive answers to the three 
 	\item \rqthreetitle\ Single-command activation via \texttt{nix develop} reduces cognitive friction during student onboarding compared to manual imperative installation. While declarative setup incurs an initial one-time overhead for installing the Nix package manager and realizing the development shell, imperative multi-step instructions expose students to command-syntax misinterpretations and skipped configuration steps (such as shell profile sourcing) that silently break the environment.
 \end{itemize}
 
+\section{Discussion: Operational Constraints and Deployment Limitations}\label{sec:operational-constraints}
+
+Beyond the empirical synthesis, clean-replay, and student onboarding evaluations, deploying Nix Flake environments in live classroom settings introduces theoretical operational constraints and supply-chain considerations documented in prior literature and official Nix specifications. This section examines the upstream availability, package lifecycle maintenance, binary-cache coverage, and trust-boundary limitations that instructors must account for when adopting declarative environments.
+
+\subsection{Operational Availability and Maintenance Conditions}
+
+A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students activate a committed lock file rather than invoking \texttt{nix flake update} during a lab. Consequently, classroom readiness within an instructional time budget depends on normal network operation, input-source availability, primary cache availability, and package lifecycle stability.
+
+Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
+
+The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression \cite{TrackingPackagesBe}. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
+
+Finally, binary-cache misses turn an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. Classroom dependability is therefore shaped by a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than by the syntactic validity of the \texttt{flake.nix} file alone.
+
+\subsection{Security Considerations and Binary Cache Trust Boundaries}
+
+Determinate Systems is a for profit company that builds tools for the Nix ecosystem. They also build open source tools for secure usage of Nix. 
+
+Nix normally realizes a required store path by downloading a signed substitute from a binary cache; when no acceptable substitute is available, it may instead build the path locally from source. This fallback preserves the possibility of realization but can be unsuitable for a classroom when compilation exceeds the time available for a laboratory session. Thus, cache availability is an operational reliability concern rather than merely a performance optimization.
+
+Nix can use additional binary caches, known as substituters, to improve availability. A substitute is accepted only when its signature corresponds to a configured trusted public key. This signature mechanism provides an integrity boundary, but adding an external cache and its key is a supply-chain decision: it authorizes that cache operator to provide binaries that students will execute. A course should therefore use only institutionally approved cache URLs and keys, document them in the course environment, and avoid asking students to trust arbitrary caches~\cite{dolstraNixSafePolicyFree}.
+
 \section{Limitations and Future Work}
 
 While this work demonstrates the viability of AI-assisted declarative environment synthesis, several avenues remain for ongoing research and refinement. The input data generated for testing was simple enough for Gemini models to succeed in the experiment condition where the Nix MCP server was withheld; it therefore does not establish the value of MCP retrieval for more difficult or less conventional requirements.
@@ -24,6 +46,6 @@ Although flakes guarantee reproducibility, the long-term longevity and upstream 
 
 Second, while the \texttt{mcp-nixos} server provides current package metadata, further research should compare experimenter-controlled MCP access across tasks with obscure, recently changed, or platform-specific dependencies. Such a study could identify when MCP retrieval improves synthesis success or reduces diagnostic iterations relative to native Nix CLI discovery alone.
 
-Third, popular IDEs and text editors, such as JetBrain's offerings and VSCode, often have functionality that depend on programs to be present in path and do not invoke devShells themselves, rendering those . A semester-long experiment on student experiencde with Nix could provide insights as to what.
+Third, popular IDEs and text editors, such as JetBrain's offerings and VSCode, often have functionality that depend on programs to be present in path and do not invoke devShells themselves, having. A semester-long experiment on student experiencde with Nix could provide insights as to the barriers exist.
 
-By bridging artificial intelligence with purely functional development environments, computer science education can bypass the fragility of manual configuration in favor of reliable and deterministic reproducibility.
+By bridging artificial intelligence with purely functional development environments, computer science education can bypass the fragility of manual configuration in favor of declarative development environment.
