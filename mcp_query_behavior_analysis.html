@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empirical Investigation: Model Context Protocol (MCP) Query Degradation in Open-Weight LLMs</title>
+<style>
+  body {
+    font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: #111111;
+    background-color: #ffffff;
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  h1, h2, h3, h4 {
+    color: #000000;
+    font-weight: 600;
+  }
+  h1 {
+    font-size: 26px;
+    border-bottom: 2px solid #222222;
+    padding-bottom: 12px;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  h2 {
+    font-size: 20px;
+    margin-top: 36px;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 6px;
+  }
+  h3 {
+    font-size: 17px;
+    margin-top: 24px;
+  }
+  p, li {
+    text-align: justify;
+  }
+  .meta-box {
+    border: 1px solid #cccccc;
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    background-color: #fafafa;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .meta-box p {
+    margin: 4px 0;
+    text-align: left;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid #bbbbbb;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  blockquote {
+    border-left: 3px solid #555555;
+    margin: 16px 0;
+    padding: 8px 16px;
+    background-color: #f9f9f9;
+    font-style: italic;
+    font-size: 14.5px;
+  }
+  blockquote p {
+    margin: 0;
+    text-align: left;
+  }
+  code {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 13.5px;
+    background-color: #eeeeee;
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+  pre {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 13px;
+    background-color: #f5f5f5;
+    border: 1px solid #dddddd;
+    padding: 12px;
+    overflow-x: auto;
+    line-height: 1.45;
+  }
+  ol, ul {
+    padding-left: 24px;
+  }
+  li {
+    margin-bottom: 8px;
+  }
+  .footnote {
+    font-size: 13px;
+    color: #555555;
+    border-top: 1px solid #cccccc;
+    margin-top: 40px;
+    padding-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Empirical Investigation: Model Context Protocol (MCP) Query Degradation in Open-Weight LLMs</h1>
+
+<div class="meta-box">
+  <p><strong>Evaluation Run Analyzed:</strong> <code>eval_results/20261101_161538</code></p>
+  <p><strong>Evaluated Model:</strong> GPT-OSS 120B (Medium)</p>
+  <p><strong>Baseline Run for Comparison:</strong> <code>eval_results/20260929_001840</code> (Gemini / Default Model)</p>
+  <p><strong>Benchmark Domain:</strong> Deterministic Nix Flake Development Environment Synthesis (14 Tasks, 3 Samples per Task)</p>
+  <p><strong>Date:</strong> November 2026</p>
+</div>
+
+<h2>1. Executive Summary</h2>
+<p>
+Across automated agentic benchmarks for deterministic environment generation (via the <code>course-flake-generator</code> skill), a substantial disparity in tool usage behavior was observed between frontier proprietary models and medium open-weight models. In trial run <code>20261101_161538</code>, the <strong>GPT-OSS 120B</strong> model queried the NixOS Model Context Protocol (MCP) server only <strong>6 times across 3 trials</strong> (out of 41 completed trials), accounting for just <strong>1.02%</strong> of all executed tool calls. By contrast, the proprietary frontier baseline (Gemini) in run <code>20260929_001840</code> executed <strong>146 MCP tool calls across 39 trials</strong> (18.5% of total tool calls).
+</p>
+<p>
+A systematic review of the trajectory step logs and internal chain-of-thought (<code>thinking</code>) transcripts across all 41 samples identified a primary cognitive failure mode: <strong>a semantic false-negative trap caused by protocol primitive confusion between MCP Resources and MCP Tools</strong>. In 58.5% of trials, GPT-OSS attempted to discover server capabilities via <code>list_resources</code>. Because the NixOS server strictly exposes tools (callable RPC functions) and zero static data resources, the harness responded that no resources were present. The model misinterpreted this negative confirmation as an indication that the MCP server itself was offline or empty, subsequently abandoning MCP in favor of native CLI search or memorized package names.
+</p>
+
+<h2>2. Quantitative Telemetry &amp; Comparative Distribution</h2>
+<p>
+The table below compares the high-level tool execution telemetry between the GPT-OSS 120B run and the baseline frontier model run under identical task inputs (14 tasks, $n=3$ samples per task).
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric / Tool Usage Parameter</th>
+      <th>GPT-OSS 120B (20261101_161538)</th>
+      <th>Gemini Baseline (20260929_001840)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Total Completed Trials</strong></td>
+      <td>41 trials</td>
+      <td>42 trials</td>
+    </tr>
+    <tr>
+      <td><strong>Total Tool Calls (All Tools)</strong></td>
+      <td>590 calls</td>
+      <td>789 calls</td>
+    </tr>
+    <tr>
+      <td><strong><code>call_mcp_tool</code> Calls</strong></td>
+      <td><strong>6 calls (1.02%)</strong></td>
+      <td><strong>146 calls (18.50%)</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Trials Executing at Least 1 MCP Call</strong></td>
+      <td><strong>3 / 41 (7.32%)</strong></td>
+      <td><strong>39 / 42 (92.86%)</strong></td>
+    </tr>
+    <tr>
+      <td><strong><code>list_resources</code> Calls</strong></td>
+      <td><strong>24 calls</strong> (across 24 distinct trials)</td>
+      <td><strong>0 calls</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Native Shell Commands (<code>run_command</code>)</strong></td>
+      <td>358 calls (60.68%)</td>
+      <td>442 calls (56.02%)</td>
+    </tr>
+    <tr>
+      <td><strong>Native <code>nix search</code> Commands via Shell</strong></td>
+      <td><strong>81 commands</strong> (across 24 trials)</td>
+      <td><strong>0 commands</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Zero-Search Trials (Pure Parametric Synthesis)</strong></td>
+      <td><strong>14 trials (34.15%)</strong></td>
+      <td><strong>3 trials (7.14%)</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Overall Task Accuracy (pass@1 / pass@3)</strong></td>
+      <td>73.81% / 78.57%</td>
+      <td>95.24% / 100.0%</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Qualitative Root Cause Analysis</h2>
+
+<p>Transcript examination reveals five interconnected factors that suppressed MCP utilization in the weaker model:</p>
+
+<h3>3.1. The Resource False-Negative Trap (Protocol Primitive Confusion)</h3>
+<p>
+The Model Context Protocol specification cleanly differentiates between <em>resources</em> (passive, readable data URIs) and <em>tools</em> (executable actions with schemas). The <code>mcp-nixos</code> server provides package resolution through two executable tools: <code>nix</code> (search, info) and <code>nix_versions</code>. It does not publish any readable resources.
+</p>
+<p>
+In <strong>24 out of 41 trials (58.54%)</strong>, GPT-OSS’s first action was an exploratory probe to verify server presence using the resource discovery endpoint:
+</p>
+<pre>{"name": "list_resources", "args": {"ServerName": "\"nixos\""}}</pre>
+<p>
+The AGY harness returned the standard protocol response:
+</p>
+<pre>MCP server nixos does not have any resources</pre>
+<p>
+Due to weaker reasoning capabilities, the open-weight model conflated the absence of static resources with server non-availability. In transcript after transcript, the model's <code>thinking</code> logs show it immediately deducing that the server was broken or unavailable:
+</p>
+<blockquote>
+  <p><strong>task_12 / sample_01 (Step 3):</strong><br>
+  <em>"According to skill, need to check MCP server for package resolution. List resources shows none. So no mcp-nixos. We'll need to use Nix CLI to search for MySQL package."</em></p>
+</blockquote>
+<blockquote>
+  <p><strong>task_12 / sample_02 (Step 3):</strong><br>
+  <em>"According to skill, we need to determine if mcp-nixos available. We listed resources, none. So need to fallback to Nix CLI search. We'll need to search for mysql packages."</em></p>
+</blockquote>
+<blockquote>
+  <p><strong>task_04 / sample_00 (Step 7):</strong><br>
+  <em>"Use MCP nixos if available; but list_resources showed none, so MCP isn't offering packages directly. Fall back to Nix CLI search."</em></p>
+</blockquote>
+<blockquote>
+  <p><strong>task_00 / sample_01 (Step 3):</strong><br>
+  <em>"Must use mcp-nixos if available; we saw no resources, but that's not needed. We can use Nix CLI via run_command to search for openjdk17 package name..."</em></p>
+</blockquote>
+<p>
+This single false-negative inference accounted for the immediate termination of MCP workflows in over half the benchmark.
+</p>
+
+<h3>3.2. Cognitive Load of Meta-Tool Proxying (<code>call_mcp_tool</code>)</h3>
+<p>
+Frontier systems handle deep JSON nesting and multi-layer tool proxying with ease. In the AGY test harness, MCP tools are not declared as top-level function signatures (e.g. <code>mcp_nixos_nix(...)</code>) due to lazy loading; instead, they require invoking a meta-wrapper:
+</p>
+<pre>call_mcp_tool(
+  ServerName="nixos",
+  ToolName="nix",
+  Arguments="{\"action\":\"search\",\"query\":\"dotnet-sdk\",\"type\":\"packages\",\"channel\":\"stable\",\"limit\":5}"
+)</pre>
+<p>
+This requires the agent to stringify nested JSON inside a structured tool-call object. In the GPT-OSS run, over 80 agent turns resulted in formatting crashes (<code>model output error: model output must contain either output text or tool calls</code>) because the model attempted to write shell commands or raw JSON fragments into its internal chain-of-thought instead of generating valid function call objects.
+</p>
+
+<h3>3.3. Permissive Skill Fallback as an Escape Hatch</h3>
+<p>
+The benchmark instruction set (<code>course-flake-generator</code>) includes an explicit fallback clause in Step 2:
+</p>
+<blockquote>
+  <p><em>"Nix CLI Mode / Fallback: If mcp-nixos is not configured or unavailable... use the native Nix CLI via run_command to discover and verify package attributes (<code>nix search --extra-experimental-features 'nix-command flakes' nixpkgs &lt;candidate_tool&gt;</code>)."</em></p>
+</blockquote>
+<p>
+Because the model had already misdiagnosed the MCP server as absent (Section 3.1), this clause provided a sanctioned alternative. The agent immediately routed its search requirements through <code>run_command</code>, performing 81 CLI searches across 24 trials rather than attempting any recovery of the MCP interface.
+</p>
+
+<h3>3.4. Prompt-Level MCP Disabling in Task 01</h3>
+<p>
+In Task 01 (Flutter SDK development environment), the prompt passed to the agent explicitly included:
+</p>
+<pre>(Note: NixOS MCP server is disabled; use the Nix CLI to discover and verify package attributes.)</pre>
+<p>
+This prompt condition forcibly prevented the agent from attempting any MCP queries in Task 01 (all three samples), resulting in 27 manual <code>nix search</code> invocations through the shell.
+</p>
+
+<h3>3.5. Parametric Memory Bias (Zero-Search Synthesis)</h3>
+<p>
+In 14 trials (34.15% of the run), GPT-OSS executed neither an MCP call nor a native <code>nix search</code> command. For common stacks with standard package naming conventions—such as Node.js LTS (<code>nodejs_20</code>), Python 3.12 (<code>python312</code>), Rust (<code>rustc, cargo</code>), Go (<code>go_1_22</code>), and GCC (<code>gcc</code>)—the model relied entirely on its internal pre-training weights and the skill's template (<code>flake-devshell.template.nix</code>), bypassing external verification entirely.
+</p>
+
+<h2>4. Examination of the Three Outlier Trials</h2>
+<p>
+In only 3 trials did GPT-OSS 120B successfully issue calls to <code>call_mcp_tool</code>. Analyzing how these trials bypassed the typical failure modes provides valuable insight:
+</p>
+<ol>
+  <li>
+    <strong><code>task_13 / sample_00</code> (MySQL Workbench):</strong>
+    At Step 1, the model did not attempt any reconnaissance with <code>list_resources</code>. Instead, recognizing that GUI packages in Nixpkgs often have non-standard names, it immediately formulated a direct search query via <code>call_mcp_tool</code> (<code>query: "mysql-workbench"</code>).
+  </li>
+  <li>
+    <strong><code>task_08 / sample_01</code> (.NET SDK):</strong>
+    At Step 3, the model called <code>list_resources</code> and received the empty response. Unlike other samples, its chain of thought explicitly reasoned through the protocol distinction:
+    <blockquote>
+      <p><em>"We need to check if mcp-nixos is available; the config shows nixos server, but resources list empty. Still we can use MCP tool? There is no tool schemas listed but the mcp server has lazy tools 'nix' and 'nix_versions'. So we can call them via call_mcp_tool."</em></p>
+    </blockquote>
+    It immediately called <code>call_mcp_tool</code> for <code>dotnet-sdk</code> at Step 5.
+  </li>
+  <li>
+    <strong><code>task_04 / sample_02</code> (Clang / CMake / Make):</strong>
+    The model initially fell into the <code>list_resources</code> trap at Step 7 and attempted manual git and shell commands. However, around Step 30, it encountered ambiguity regarding whether <code>clang++</code> was part of <code>clang</code> or a separate package, and re-read the skill documentation. Over Steps 33–43, it executed 4 sequential MCP package searches (<code>clang</code>, <code>cmake</code>, <code>make</code>, and <code>gnumake</code>).
+  </li>
+</ol>
+
+<h2>5. Architectural Recommendations for Benchmark &amp; Harness Design</h2>
+<p>
+To ensure consistent evaluation of tool-augmented agents—especially open-weight models that exhibit lower tolerance for multi-layered indirection—the following harness and prompt modifications are recommended:
+</p>
+<ul>
+  <li><strong>First-Class Function Declarations:</strong> Avoid nesting lazy MCP tools inside generic proxy dispatchers (<code>call_mcp_tool</code> with stringified JSON). Inject tools directly into the model's function calling schema (e.g. <code>mcp_nixos_search</code>).</li>
+  <li><strong>Informative Protocol Responses:</strong> When an agent calls <code>list_resources</code> on a server that only registers tools, the harness response should clarify capability status: e.g., <em>"Server 'nixos' publishes no resources, but exposes the following tools: ['nix', 'nix_versions']."</em></li>
+  <li><strong>Refined Skill Guardrails:</strong> Revise skill instructions from <em>"Check if .agents/mcp_config.json is present and tools are available"</em> to explicit instructions on invoking the tool directly, avoiding ambiguity between resource inspection and tool invocation.</li>
+</ul>
+
+<div class="footnote">
+  <p>Generated for inclusion in Dissertation Evaluation Chapter &bull; Reference artifact: <code>eval_results/20261101_161538</code></p>
+</div>
+
+</body>
+</html>
