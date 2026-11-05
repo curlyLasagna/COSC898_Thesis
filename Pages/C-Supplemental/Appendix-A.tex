@@ -1,20 +1,30 @@
-\chapter{Appendix Title Here}\label{apd:a}
+\chapter{Disclosure of Generative AI Use}\label{apd:a}
 
-\section{Disclosure of LLM use}
+Generative AI, specifically Gemini models from Google, was extensively used not only for the experiments conducted, but also the creation of the scripts that performed the experiment and analysis of the results.
 
-Agent harnesses, specifically Antigravity CLI was extensively used not only for the experiments conducted, but also the creation of the scripts that performed the experiment and present the results.
+In the process of writing this thesis, generative AI tools were used to draft out paragraphs from bulleted lists of ideas.  
 
-In the process of writing the paper, generative AI tools were used to draft paragraphs from bulleted lists of thoughts. 
+The following agent skills were utilized to assist in writing prose:
+\begin{itemize}
+	\item \texttt{zotero-cli}: \url{https://github.com/bahayonghang/zotero-cli}
+	\item \texttt{thesis-writing-guide}: \url{https://www.skillsdirectory.com/skills/brycewang-stanford-thesis-writing-guide}
+\end{itemize}
+
+zoteri-cli was used to confirm the validity of the source that I referenced
+
+thesis-writing-guide skill was used to provide iterative constructive feedback 
 
 \subsection{AI-Generated Artifacts}
 
-The following student onboarding guide for activating a nix environment (\texttt{nix\_installation\_guide.pdf}) was generated with AI assistance and provided during the benchmark and student onboarding evaluations .
+The following student onboarding guide for activating a nix environment (\texttt{nix\_installation\_guide.pdf}) was generated with AI assistance during the student onboarding evaluations.
 
 \includepdf[pages=-,scale=0.82,pagecommand={\thispagestyle{myheadings}}]{Figures/nix_installation_guide.pdf}
 
-\subsection{AI-Generated Input}
+\subsection{AI-Generated Input for RQ1}
 
 The following benchmark dataset of synthetic natural language assignment instructions and expected dependency assertions was generated with AI assistance to evaluate RQ1 across the Software Development and Data Science curriculum tracks.
+
+The dataset is based on the author's personal experience and knowledge on various computer science courses/tutorials.
 
 \begin{lstlisting}[caption={Natural Language Instruction Benchmark Inputs}, label={lst:nl-instruction-inputs}]
 {"track":"computer science","instruction":"Install Java JDK 17 (includes the JRE). Set JAVA_HOME to the JDK install directory (not a separate JRE folder) and add $JAVA_HOME/bin to your PATH. Install Visual Studio Code, then install the Java extension pack (Language Support for Java by Red Hat, Debugger for Java, Java Test Runner, Maven for Java). Restart VS Code and verify with `java -version` and `javac -version`.","dependency_list":["java","javac","code"]}
