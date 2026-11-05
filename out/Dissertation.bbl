@@ -201,6 +201,11 @@ S.~Gooding. Devenv {{Faces Backlash Over AI-Driven Telemetry}} in {{Version}} 1.
 Nix is faster than {{Docker}} build. Dwarves Memo. [Online]. Available: \url{https://memo.d.foundation/topics/devbox/research/nix-is-faster-than-docker-build}
 \BIBentrySTDinterwordspacing
 
+\bibitem{Docling}
+\BIBentryALTinterwordspacing
+{IBM Research}. (2024) Docling: Get your documents ready for gen ai. [Online]. Available: \url{https://github.com/DS4SD/docling}
+\BIBentrySTDinterwordspacing
+
 \bibitem{straubUnderstandingTechnologyAdoption2009}
 \BIBentryALTinterwordspacing
 E.~T. Straub, ``Understanding {{Technology Adoption}}: {{Theory}} and {{Future Directions}} for {{Informal Learning}},'' vol.~79, no.~2, pp. 625--649. [Online]. Available: \url{https://doi.org/10.3102/0034654308325896}
@@ -214,6 +219,16 @@ E.~T. Straub, ``Understanding {{Technology Adoption}}: {{Theory}} and {{Future D
 \bibitem{TrackingPackagesBe}
 \BIBentryALTinterwordspacing
 Tracking: {{Packages}} to be orphaned (please consider adopting) · {{Issue}} \#576945 · {{NixOS}}/nixpkgs. GitHub. [Online]. Available: \url{https://github.com/NixOS/nixpkgs/issues/576945}
+\BIBentrySTDinterwordspacing
+
+\bibitem{przymusWolvesRepositorySoftware2025}
+\BIBentryALTinterwordspacing
+P.~Przymus and T.~Durieux. Wolves in the {{Repository}}: {{A Software Engineering Analysis}} of the {{XZ Utils Supply Chain Attack}}. [Online]. Available: \url{http://arxiv.org/abs/2504.17473}
+\BIBentrySTDinterwordspacing
+
+\bibitem{christensenIntroducingNixpkgsCooldowns2026}
+\BIBentryALTinterwordspacing
+G.~Christensen. Introducing {{Nixpkgs}} cooldowns. Determinate Systems. [Online]. Available: \url{https://determinate.systems/blog/nixpkgs-cooldown/}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}
