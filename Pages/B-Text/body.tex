@@ -10,7 +10,7 @@ To evaluate these questions systematically, we formulate four corresponding work
 \begin{itemize}
 	\item \textbf{H\textsubscript{1a}:} Providing structured procedural scaffolding (\texttt{course-flake-generator}) and closed-loop evaluation (\texttt{nix flake check}) will enable both frontier (\texttt{Gemini 3.8 Flash}) and smaller open-weight (\texttt{GPT-OSS 120B}) models to reliably synthesize valid \texttt{flake.nix} environments, narrowing the synthesis accuracy gap between model tiers.
 	\item \textbf{H\textsubscript{1b}:} Augmenting the agent with real time data (\texttt{mcp-nixos}) will reduce package hallucinations and improve first-attempt synthesis accuracy (Pass@1) and package precision compared to relying on training data knowledge and native Nix CLI commands alone.
-	\item \textbf{H\textsubscript{2}:} Nix Flake environments that pass the three-stage host validation pipeline with a pinned \texttt{flake.lock} will deterministically reproduce and support headless coursework execution in clean, unmounted Linux containers and macOS virtual machines, with any residual failures isolated to undeclared native build inputs or platform-specific package availability.
+	\item \textbf{H\textsubscript{2}:} Nix Flake environments that pass the host validation pipeline with a pinned \texttt{flake.lock} will deterministically reproduce and support coursework execution in clean, unmounted Linux containers and macOS virtual machines, with any residual failures isolated to platform-specific package availability.
 	\item \textbf{H\textsubscript{3}:} Single-command activation via \texttt{nix develop} will reduce procedural errors and cognitive friction compared to manual imperative installation.
 \end{itemize}
 
@@ -20,49 +20,67 @@ To bridge the gap between complex declarative configurations and educational usa
 
 Operating this synthesis pipeline requires a host environment that satisfies three baseline prerequisites. First, the host system must run a POSIX-compatible environment supported by the Nix package manager: Linux (natively or within Docker containers), macOS, or Microsoft Windows via the Windows Subsystem for Linux (WSL2). Second, Nix must be installed with experimental Flake support enabled. When using the official Nix installer, users must explicitly enable flakes by declaring \texttt{experimental-features = nix-command flakes} in either the user-level (\texttt{\textasciitilde/.config/nix/nix.conf}) or system-wide (\texttt{/etc/nix/nix.conf}) configuration file; alternatively, the Determinate Systems Nix installer enables these features by default without manual intervention. Third, a compatible agent harness must be installed to load the skill package and orchestrate tool execution. Because Agent Skills follow an open, modular specification consisting of structured Markdown instructions (\texttt{SKILL.md}), reference templates, and helper scripts~\cite{AgentSkills,lingAgentSkillsDataDriven2026}, our skill is portable across any agent harness that supports the standard skill directory convention and local shell tool invocation.
 
-The end-to-end architecture comprises the following steps (illustrated at a high level in Figure~\ref{fig:pipeline-overview}):
+Operating through the instructor's local agent harness, the custom agent skill guides an assignment-to-flake workflow (illustrated at a high level in Figure~\ref{fig:pipeline-overview}) across six sequential stages:
 \begin{enumerate}
-	\item \textbf{Requirement Ingestion:} Specifications from natural language, existing codebases, or instructional documents on setting up compute environments are analyzed to extract inferred toolchains, language runtimes, and system-level libraries. To accurately retrieve requirements from unstructured course documents, a Python script is bundled alongside the skill that leverages the Docling \cite{Docling} package to parse out text for the agent to use as context.
-	\item \textbf{Specialized Agent Skill Scaffolding and Live Package Retrieval:} The custom agent skill provides domain-specific prompting, curated templates, and reference schemas. The skill also provides the agent the proper command to query a Model Context Protocol (MCP) server that reaches out to real time nix search indices.
-	\item \textbf{Deterministic Closed-Loop Verification:} Generated \texttt{flake.nix} files are evaluated via native Nix commands such as \texttt{nix flake check}, which statically checks the generated flake configuration. If syntax or dependency errors occur, the compiler diagnostics are fed back into the agent harness for iterative self-correction.
-	\item \textbf{Output Artifacts and Runtime Deployment:} A cryptographically pinned \texttt{flake.lock} file is generated from \texttt{nix flake check}, allowing students to activate a reproducible developer shell.
+	\item \textbf{Assignment document:} The instructor supplies existing coursework materials (such as an assignment handout in PDF, DOCX, HTML, or Markdown format, natural language instructions, or an unconfigured starter codebase) without needing to manually compose Nix expressions.
+	\item \textbf{Requirement extraction:} The agent extracts required compilers, language runtimes, build tools, and system libraries from the provided materials. This capability is driven by the custom skill's bundled scripts: a document extraction script to parse unstructured assignment handouts, alongside a project detector that scans repository files and manifests for declared dependencies.
+	\item \textbf{Flake generation:} Guided by the \texttt{course-flake-generator} skill's multi-architecture templates and reference heuristics, the agent synthesizes a declarative \texttt{flake.nix} specification. To resolve required package attributes deterministically, the skill primarily queries the \texttt{mcp-nixos} server against real-time Nixpkgs search indices, falling back to native Nix CLI inspection commands when the MCP server is not present.
+	\item \textbf{Validation:} The candidate \texttt{flake.nix} is evaluated through closed-loop verification, executing \texttt{nix flake check} and ephemeral shell realization checks to detect syntax errors or missing executables. If failures occur, compiler diagnostics are returned to the agent harness for automated self-correction until validation passes and generates a pinned \texttt{flake.lock}.
+	\item \textbf{Instructor approval:} The instructor reviews the synthesized \texttt{flake.nix} and cryptographically pinned \texttt{flake.lock} file and commits them to the assignment repository, establishing a verified, frozen dependency closure for the course.
+	\item \textbf{Student activation:} Students clone the assignment repository onto their personal devices and run \texttt{nix develop} to enter the reproducible development shell, avoiding manual installation troubleshooting and working directly on the assignment.
 \end{enumerate}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth,keepaspectratio]{Figures/high-level-process.pdf}
-	\caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis Pipeline}
+	\caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis Pipeline
+		\href{https://www.flaticon.com/free-icons/professor}{Icons created by Magnific - Flaticon}
+	}
 	\label{fig:pipeline-overview}
 \end{figure}
 
 
 \chapter{Experimental Methodology and Test Setup}\label{chap:testing}
 
-This chapter details the empirical methodology and experimental design developed to evaluate the three primary research questions of this thesis. Section~\ref{sec:rq1-methodology} outlines the agentic flake synthesis evaluation protocol, including dataset curation, model harnesses, and the multi-stage Pass@$k$ validation metric (RQ1). Section~\ref{sec:rq2-methodology} formalizes the clean-environment replay designed to assess host-independent reproducibility of the generated flake across Linux containers and macOS virtual machines (RQ2). Section~\ref{sec:rq3-methodology} describes the user study protocol examining student setup time delta and cognitive ergonomics when onboarding with \texttt{nix develop} versus imperative instructions (RQ3). Finally, Section~\ref{sec:testbed-infrastructure} consolidates the experimental testbed infrastructure, documenting host hardware specifications and guest virtualization environments.
+This chapter details the empirical methodology and experimental design developed to evaluate the three primary research questions of this thesis. Section~\ref{sec:rq1-methodology} outlines the agentic flake generation test protocol, including dataset curation, and the multi-stage Pass@$k$ validation metric. Section~\ref{sec:rq2-methodology} formalizes the clean-environment replay designed to assess host-independent reproducibility of the generated flake across Linux containers and macOS virtual machines. Section~\ref{sec:rq3-methodology} describes the user study protocol examining student setup time delta and cognitive ergonomics when onboarding with \texttt{nix develop} versus imperative instructions (RQ3). Finally, Section~\ref{sec:testbed-infrastructure} consolidates the experimental testbed infrastructure, documenting host hardware specifications and guest virtualization environments.
 
 \section{Agentic Flake Synthesis Evaluation Protocol}\label{sec:rq1-methodology}
 
 To investigate whether modern autonomous agents can reliably synthesize declarative Nix development environments from informal natural language requirements (RQ1), we established a benchmark evaluation protocol. This protocol couples structured curriculum task suites with an automated verification pipeline to measure synthesis accuracy, dependency resolution, and runtime execution determinism.
 
-\subsection{Benchmark Dataset Curation and Curriculum Tracks}\label{subsec:dataset-curation}
+\subsection{Benchmark Dataset Curation and Evaluation Suites}\label{subsec:dataset-curation}
 
-Because standardized benchmark datasets for declarative Nix environments did not previously exist, we constructed an evaluation benchmark representing standard computer science coursework requirements. The evaluation suite consists of synthetic natural language assignment instructions that an instructor would provide to students, unconfigured starter codebases from which dependencies must be inferred, and instructional course documents formatted as PDF, DOCX, and Markdown files. The evaluation tasks are organized across two distinct curriculum tracks:
+Because standardized benchmark datasets for declarative Nix environments did not previously exist, we constructed an evaluation benchmark representing standard computer science coursework requirements across three distinct instructional modalities:
+
 \begin{enumerate}
-	\item \textbf{Software Development Track:} Curated assignments focusing on systems programming, compiler toolchains, and web engineering. These tasks require native compilers, build systems, and runtime interpreters, including C/C++ (GCC, Clang, CMake, GNU Make), Rust (Cargo, \texttt{rustc}), and full-stack environments (Python, Node.js).
-	\item \textbf{Data Science Track:} Curated coursework requiring complex scientific computing stacks, numeric routines, and specialized packages, including Python (NumPy, SciPy, Pandas, PyTorch), R statistical environments, and Jupyter notebook kernels.
+	\item \textbf{Natural Language Specification Prompts:} Curated prompts representing informal assignments provided by instructors across two curriculum tracks:
+	      \begin{itemize}
+		      \item \emph{Software Development Track:} Assignments focusing on systems programming, compiler toolchains, and web engineering. These tasks require native compilers, build systems, and runtime interpreters, including C/C++ (GCC, Clang, CMake, GNU Make), Rust (Cargo, \texttt{rustc}), and full-stack environments (Python, Node.js).
+		      \item \emph{Data Science Track:} Coursework requiring complex scientific computing stacks, numeric routines, and specialized packages, including Python (NumPy, SciPy, Pandas, PyTorch), R statistical environments, and Jupyter notebook kernels.
+	      \end{itemize}
+	      The prompt benchmark is serialized as a \texttt{jsonl} file, where each record specifies the curriculum track, the natural language prompt, and the asserted dependency list (Listing~\ref{lst:input-data-format}).
+
+	\item \textbf{Existing Coursework Codebases:} A collection of project repositories collected from computer science coursework (\texttt{input/code\_bases/}) spanning artificial intelligence assignments, object-oriented Java laboratories, data structures projects, mobile app development, neural network coursework, and network programming. For these tasks, the agent cannot rely on explicit textual package lists; instead, the skill instructs the agent to run \texttt{detect-project-requirements.py} to inspect file contents, repository structures, and build manifests (such as \texttt{pom.xml}, \texttt{build.gradle}, and \texttt{pyproject.toml}) to infer necessary runtimes.
+
+	\item \textbf{Instructional Course Documents:} A collection of course documents and laboratory setup guides (\texttt{input/docs/}) formatted as PDF, Microsoft Word (\texttt{.docx}), HTML, and Markdown files. To process these unstructured documents without manual keyword pre-mapping, the skill executes \texttt{extract-document-content.py} to parse layout structures into clean text for agent requirement extraction.
 \end{enumerate}
 
-The benchmark dataset is serialized as a \texttt{jsonl} file, where each record specifies the curriculum track, the natural language prompt or project path, and the set of required dependencies asserted for verification:
+To establish an objective evaluation standard across all three modalities, each task is paired with an evaluation schema defining ground-truth requirements. While synthetic prompt benchmarks are serialized as a unified \texttt{jsonl} file, each codebase directory and instructional document is paired with an individual companion metadata \texttt{.json} file (Listing~\ref{lst:input-data-format}). This metadata serves as the authoritative ground truth, manually verified by a human evaluator to establish the passing criteria for the assignment environment.
 
-\begin{lstlisting}[caption={Input Data Format}, label={lst:input-data-format}]
-  {
-    "track": "...",
-    "instruction": "...",
-    "dependency": "...",
-  }
+\begin{lstlisting}[caption={Evaluation Metadata Format and Ground-Truth Schema}, label={lst:input-data-format}]
+{
+  "title": "AI Assignments - Artificial Intelligence Course",
+  "track": "computer science",
+  "instruction": "Set up a Nix flake development environment...",
+  "dependency_list": [
+    "python3",
+    "jupyter",
+    "git"
+  ]
+}
 \end{lstlisting}
 
-In this format, \texttt{track} classifies the curriculum category, \texttt{instruction} represents the natural language prompt or specification provided to the agent, and the \texttt{dependency} field specifies the list of packages or executables that must be present in \texttt{PATH} when \texttt{nix develop} is invoked to evaluate agent performance.
+In this schema, \texttt{track} classifies the curriculum domain, \texttt{title} and \texttt{instruction} provide contextual task descriptions, and \texttt{dependency\_list} designates the ground-truth executables that must resolve inside the ephemeral \texttt{nix develop} shell. The automated evaluation harness evaluates these human-verified assertions to determine whether candidate flakes satisfy the Pass@$k$ criteria and to compute package precision and over-provisioning metrics.
 
 \subsection{Agent Harness, Model Configurations, and Tooling Conditions}\label{subsec:agent-harness}
 
@@ -180,7 +198,7 @@ The artifacts generated within each benchmark run serve distinct functions for p
 	\item \texttt{tool\_call\_frequency.csv}: Records the overall frequency, trial prevalence, and average invocations of every agent tool call. It quantifies how agent tool usage shifts between different model and grounding conditions.
 	\item \texttt{tool\_call\_frequency\_by\_task.csv} and \texttt{tool\_call\_frequency\_by\_trial.csv}: Break down tool invocation distributions across specific tasks and individual trial samples. These matrices highlight task-specific variance and individual trial behavioral anomalies.
 	\item \texttt{run\_command\_frequency.csv} and \texttt{run\_command\_base\_frequency.csv}: Tabulate exact and base shell commands executed through the agent harness. They reveal the CLI inspection patterns and build utilities invoked during synthesis.
-	\item \texttt{run\_command\_log.csv}: Logs a complete, timestamped chronological trace of every shell command executed, its working directory, and associated metadata. 	
+	\item \texttt{run\_command\_log.csv}: Logs a complete, timestamped chronological trace of every shell command executed, its working directory, and associated metadata.
 	\item \texttt{mcp\_tool\_frequency.csv} and \texttt{mcp\_tool\_log.csv}: Capture all registry search queries, filter arguments, and actions dispatched to the mcp server, if applicable.
 	\item \texttt{agent\_response.md}: Preserves the final conversational completion message and instructions returned by the agent. It allows evaluators to verify the clarity and correctness of the agent's onboarding guidance.
 	\item \texttt{flake.lock}: Pins exact cryptographic source hashes and input commits generated during local validation. It guarantees reproducible, deterministic evaluation across clean guest environments.
@@ -275,9 +293,9 @@ For guest-level replay and ergonomics testing, the testbed configures two distin
 
 Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and agent access to an MCP server. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely, despite explicitly prompting the model.
 
-With the introduction of the \texttt{course-flake-generator} skill, the model behaved more consistently. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates. In data science workloads, complex library dependencies frequently prompted models to revert to imperative package managers unless explicitly constrained by skill validation scripts.
+With the introduction of the \texttt{course-flake-generator} skill, the model behaved more consistently. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates. Rather than invoking imperative language package managers (such as \texttt{pip} or \texttt{opam}), idiomatic Nix expressions manage language-specific libraries through Nixpkgs' built-in language support infrastructures (e.g., \texttt{python3.withPackages}, \texttt{rWrapper}, or \texttt{ocamlPackages})~\cite{NixpkgsManual}.
 
-Under the Pass@3 metric, Gemini~3.8 Flash succeeded on at least one attempt for every assignment prompt in the benchmark (100.00\% Pass@3), whereas GPT-OSS~120B achieved 78.57\% Pass@3 with MCP access and 85.71\% without MCP access. These results partially support Hypothesis~\textbf{H\textsubscript{1a}}: structured procedural scaffolding and closed-loop validation enabled both the frontier model and the smaller open-weight model to synthesize functional environments across the majority of coursework prompts, though a performance gap persisted between model tiers. As detailed in Section~\ref{sec:telemetry-analysis}, this residual gap stemmed primarily from differences in tool utilization: GPT-OSS~120B made significantly fewer calls to the MCP server and relied more heavily on its parametric weights, leading to higher initial hallucination rates for less common package attributes.
+Under the Pass@3 metric, Gemini~3.8 Flash succeeded on at least one attempt for every assignment prompt in the benchmark (100.00\% Pass@3), whereas GPT-OSS~120B achieved 78.57\% Pass@3 with MCP access and 85.71\% without MCP access. These results partially support Hypothesis~\textbf{H\textsubscript{1a}}: structured procedural scaffolding and closed-loop validation enabled both the frontier model and the smaller open-weight model to synthesize functional environments across the majority of coursework prompts, though a performance gap persisted between model tiers. As detailed in Section~\ref{sec:telemetry-analysis}, this residual gap stemmed primarily from differences in tool utilization: GPT-OSS~120B made significantly fewer calls to the MCP server and relied more heavily and confidently on its parametric weights without calling the search command, leading to higher initial hallucination rates for less common package attributes.
 
 Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accuracy across both models with and without access to the \texttt{mcp-nixos} server, Table~\ref{tab:model-telemetry} reports mean trial duration and token consumption, and Table~\ref{tab:model-bloat} presents package precision and the over-provisioning (bloat) ratio across passing trials. To evaluate partial success, the evaluator extracts all package identifiers declared in \texttt{packages}, \texttt{buildInputs}, and \texttt{nativeBuildInputs} (exempting standard Nix formatters such as \texttt{nixfmt} or \texttt{alejandra} and flake scaffolding attributes) and maps them against the expected CLI tools for each task. \emph{Package precision} measures the fraction of declared packages that directly satisfy an expected tool requirement (penalizing unrequested, extraneous packages), whereas the \emph{over-provisioning ratio} (bloat) computes the ratio of total declared packages to the minimum number of required packages needed to cover the expected tools, capturing both extraneous additions and redundant package declarations.
 
@@ -318,6 +336,7 @@ Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accurac
 
 \begin{table}[htbp]
 	\centering
+	\small
 	\caption{Package Precision and Over-Provisioning Ratio Across Passing Trials}
 	\label{tab:model-bloat}
 	\begin{tabular}{llcc}
@@ -333,7 +352,55 @@ Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accurac
 	\end{tabular}
 \end{table}
 
+\subsection{Codebase-Inferred and Document-Based Flake Synthesis}\label{subsec:codebase-doc-results}
 
+To evaluate whether the \texttt{course-flake-generator} skill scales beyond synthetic natural language prompts to real-world educational materials, we evaluated its accuracy across six existing coursework repositories and nine instructional setup documents described in Section~\ref{subsec:dataset-curation}. Both Gemini~3.8 Flash and GPT-OSS~120B were evaluated across these modalities under identical skill scaffolding and closed-loop verification conditions. Table~\ref{tab:codebase-results} presents the comparative synthesis performance and execution telemetry on existing coursework repositories (6 tasks, 18 total trials), while Table~\ref{tab:doc-results} reports the corresponding evaluation metrics on instructional setup documents (9 tasks, 27 total trials).
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Synthesis Performance on Existing Coursework Codebases (6 Tasks, 18 Trials)}
+	\label{tab:codebase-results}
+	\begin{tabular}{lccccc}
+		\toprule
+		\textbf{Model}   & \textbf{Passed ($c/N$)} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Precision} & \textbf{Over-Prov.} \\
+		\midrule
+		Gemini 3.8 Flash & 18/18                   & 100.00\%        & 100.00\%        & 42.2\%             & 3.73$\times$        \\
+		GPT-OSS 120B     & 5/18                    & 27.78\%         & 66.67\%         & 87.1\%             & 1.80$\times$        \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Synthesis Performance on Instructional Course Documents (9 Tasks, 27 Trials)}
+	\label{tab:doc-results}
+	\begin{tabular}{lccccc}
+		\toprule
+		\textbf{Model}   & \textbf{Passed ($c/N$)} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Precision} & \textbf{Over-Prov.} \\
+		\midrule
+		Gemini 3.8 Flash & 27/27                   & 100.00\%        & 100.00\%        & 49.6\%             & 2.90$\times$        \\
+		GPT-OSS 120B     & 17/27                   & 62.96\%         & 77.78\%         & 58.6\%             & 2.89$\times$        \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+As shown in Table~\ref{tab:codebase-results} and Table~\ref{tab:doc-results}, Gemini~3.8 Flash achieved a flawless 100.00\% Pass@1 and Pass@3 across all 18 codebase trials and all 27 document trials. In contrast, GPT-OSS~120B attained 27.78\% Pass@1 (5/18) and 66.67\% Pass@3 (4/6 tasks) on existing codebases, and 62.96\% Pass@1 (17/27) and 77.78\% Pass@3 (7/9 tasks) on instructional course documents. A qualitative review of each trial's execution event stream (\texttt{transcript.jsonl}) and trial metadata revealed distinct failure modalities, behavioral patterns, and architectural differences between the two models:
+
+\begin{enumerate}
+	\item \textbf{Monorepo and Multi-Module Incompletion:} On brownfield coursework repositories with nested submodules (such as \texttt{COSC236\_Labs} comprising 10 separate laboratory subdirectories, and \texttt{COSC336-Assignments} containing 8 assignment folders), Gemini~3.8 Flash systematically iterated across every directory or authored module-specific flakes as required. In contrast, GPT-OSS~120B suffered from premature task termination. In \texttt{COSC236\_Labs} (Trial~2), the model authored flakes for \texttt{Lab1} and \texttt{Lab2}, emitted a conversational status message listing ``Next steps'', and concluded execution after only 26.8\,s, omitting Labs~3 through~10. Similarly, in Trial~3 of the same task, it generated flakes for Labs~1 through~9 but skipped \texttt{Lab10}. In \texttt{COSC336-Assignments} (Trial~1), it authored flakes for Assignments~1 through~6 but failed to process Assignments~7 and~8.
+	\item \textbf{Directory Hierarchy and Flake Misplacement:} In the \texttt{Mobile Assignment} project, all three GPT-OSS~120B trials failed (0/3 Pass) because the model discovered project source files inside an \texttt{Assignment1/} subdirectory and placed \texttt{flake.nix} inside \texttt{Assignment1/flake.nix} rather than at the repository root. Because the automated test harness evaluates the root workspace, the missing root configuration resulted in immediate verification failure, despite the synthesized flake itself being syntactically valid.
+	\item \textbf{Package Hallucination and Language Ecosystem Idioms:} When analyzing brownfield Python projects without explicit requirements manifests (\texttt{AI-Assignments}, Trial~3), GPT-OSS~120B fell back to treating language-level libraries as top-level Nixpkgs derivations, declaring \texttt{pkgs.pandas} and \texttt{pkgs.matplotlib} in \texttt{packages} rather than constructing an idiomatic \texttt{python3.withPackages} environment. This triggered immediate Nix evaluation failure: \textit{"error: attribute 'pandas' in selection path 'pkgs.pandas' not found. Did you mean pandoc?"}. In contrast, Gemini~3.8 Flash leveraged the skill's reference guides to properly structure Python environments using \texttt{python3.withPackages (ps: with ps; [ pandas matplotlib ])}.
+	\item \textbf{Indiscriminate Over-Provisioning and Activation Timeouts:} In \texttt{COSC336-Assignments} (Trial~2), GPT-OSS~120B observed LaTeX assignment documentation alongside Java source files and added \texttt{pkgs.texliveFull} to \texttt{nativeBuildInputs}. Because \texttt{texliveFull} comprises an expansive multi-gigabyte closure, downloading and substituting store paths exceeded the test harness's 60-second activation threshold, triggering an activation timeout failure.
+	\item \textbf{Harness Interaction and Empty Output Errors:} In several document-grounded trials (such as Task~4 Trial~3 and Task~8 Trial~1), GPT-OSS~120B generated empty conversational responses between background tool calls, triggering harness runtime errors (\textit{"model output error: model output must contain either output text or tool calls"}) and exiting prior to generating \texttt{flake.nix}.
+	\item \textbf{Naming Drift on Deprecated Packages:} On the database setup guide (\texttt{Itec 451 Mcguire1}), all three GPT-OSS~120B trials failed because the model repeatedly declared \texttt{pkgs.mysql}, which has been removed and replaced by \texttt{mariadb} and versioned attributes (\texttt{mysql80}) in Nixpkgs~24.11. Because the model withheld MCP search calls and relied exclusively on parametric weights, it was unable to detect and recover from attribute renaming.
+	\item \textbf{Nix Identifier Syntax Violations:} In the full-stack Elixir task (\texttt{Fullstack Elixir Sqlite Evaluation}, Trial~2), GPT-OSS~120B attempted to declare Node.js via \texttt{nodejs-20\_x}. In Nix syntax, unquoted hyphens in attribute identifiers are evaluated as subtraction operators, causing Nix to fail with \textit{"error: undefined variable 'nodejs-20\_x'"}.
+\end{enumerate}
+
+Interestingly, on passing trials, GPT-OSS~120B achieved a higher package precision (87.1\% vs. 42.2\%) and a lower over-provisioning ratio (1.80$\times$ vs. 3.73$\times$) than Gemini~3.8 Flash on existing codebases. Transcript inspection explains this apparent paradox: when GPT-OSS~120B succeeded, it generated strictly minimalist flakes containing only the core compilers explicitly tested by the verifier (such as \texttt{openjdk17} or \texttt{pythonEnv}). Conversely, Gemini~3.8 Flash proactively inferred and provisioned comprehensive developer tooling suites detected within project files, including version control (\texttt{git}), build automation tools (\texttt{gradle}, \texttt{just}), and data science libraries (\texttt{torch}, \texttt{torchvision}, \texttt{scikit-learn}, and Jupyter kernels). While these auxiliary packages were penalized as extraneous under the strict CLI assertion baseline, they reflect a more complete, production-ready developer environment for students.
+
+Finally, the execution telemetry reported in Tables~\ref{tab:codebase-results} and~\ref{tab:doc-results} reveals a substantial divergence in execution characteristics. GPT-OSS~120B operated significantly faster than Gemini~3.8 Flash (averaging 77.31\,s vs. 324.58\,s on codebases, and 48.79\,s vs. 232.38\,s on documents) and consumed nearly an order of magnitude fewer tokens (38,459 vs. 261,714 on codebases, and 30,873 vs. 202,707 on documents). However, this speed stemmed from a lack of iterative self-verification: while Gemini~3.8 Flash utilized multi-turn validation cycles to execute helper scripts, inspect file contents, and verify candidate flakes via \texttt{nix flake check}, GPT-OSS~120B predominantly attempted single-turn generation, making minimal use of the NixOS MCP server (only 7 calls across 18 codebase trials and 2 calls across 27 document trials) and frequently defaulting to parametric assumptions.
 
 \section{Tool Invocation and Telemetry Analysis}\label{sec:telemetry-analysis}
 
@@ -362,7 +429,7 @@ nix search nixpkgs ripgrep
 
 Second, because Nixpkgs frequently exposes both unversioned default aliases and version-pinned attributes (such as \texttt{dotnet-sdk} alongside \texttt{dotnet-sdk\_8} and \texttt{dotnet-sdk\_9}), the agent executed targeted \texttt{nix eval} expressions to disambiguate candidates before writing the flake. Specifically, even though the skill documentation did not supply a cheat sheet of derivation attributes, the model leveraged its pre-trained knowledge of Nix idioms to query \texttt{.name} and \texttt{.version} (e.g., \texttt{nix eval github:NixOS/nixpkgs/nixos-24.11\#dotnet-sdk.name} and \texttt{nix eval --expr 'with import <nixpkgs> \{\}; openjdk17.name'}) to confirm concrete upstream versions; \texttt{.passthru.home} and \texttt{.outPath} to resolve store paths for environment variables such as \texttt{JAVA\_HOME} and \texttt{DOTNET\_ROOT}; \texttt{builtins.attrNames} (e.g., \texttt{builtins.attrNames pkgs.vscode-extensions}) to enumerate nested extension sets and test \texttt{vscode-with-extensions.override} expressions; and \texttt{.meta.platforms}, \texttt{.meta.broken}, and \texttt{.meta.license} to diagnose macOS (\texttt{aarch64-darwin}) compatibility for packages such as \texttt{rstudio} and \texttt{mysql-workbench}. In this benchmark, the Nix CLI therefore served as an effective, self-describing retrieval and verification interface when the MCP layer was unavailable.
 
-Our findings were similar to the findings of \cite{formentScaffoldingMattersMore2026}. The effect that MCP servers introduces when it comes to token usage is inconclusive. It varies between agent harness used and in the case Antigravity CLI, querying an MCP server resulted in less tokens.
+Our findings were similar to the findings of \cite{formentScaffoldingMattersMore2026}. The effect that MCP servers introduces when it comes to token usage is inconclusive. It varies between agent harness used and in the case Antigravity CLI, querying an MCP server resulted in less tokens. The output of the MCP server is another variable to consider.
 
 This result should not be interpreted as evidence that MCP retrieval is generally unnecessary. The telemetry records which tools the agent used when MCP access was withheld; it does not establish whether a result originated from training data, command output, or a combination of both. mcp-nixos MCP server is better suited for recently recently modified . In those conditions, the structured and current metadata exposed by \texttt{mcp-nixos} remains a useful capability for reducing package hallucination and configuration drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}. The present result instead bounds the claim: for straightforward requirements, the model could construct a working flake without MCP access.
 
@@ -460,7 +527,7 @@ In the declarative Nix Flake trial, Student~B completed the environment setup in
 		\textbf{Participant} & \textbf{Imperative Time} & \textbf{Declarative Time} & \textbf{Time Delta} \\
 		\midrule
 		Student A            & 4:59.33                  & 3:42.04                   & -1:17.29            \\
-		Student B            & 8:59.18                  & 10:27.73                  & +1:28.55            \\
+		Student B            & 7:21.44                  & 8:41.60                   & +1:20.16            \\
 		Student C            & 8:37.12                  & 9:22.12                   & +0:45.00            \\
 		\bottomrule
 	\end{tabular}
@@ -468,7 +535,7 @@ In the declarative Nix Flake trial, Student~B completed the environment setup in
 
 \subsection{Full Stack Environment}
 
-The final onboarding task evaluated a full-stack web development environment combining multiple language runtimes, package managers, database tools, and post-installation configuration steps. Specifically, the setup guide required initializing the Hex package manager for the Elixir language (\texttt{mix local.hex}), the Rebar3 build tool (\texttt{mix local.rebar}), and the Phoenix application generator archive (\texttt{phx\_new}), alongside a Node.js (LTS v20+) and \texttt{npm} frontend asset pipeline, the SQLite~3 relational database engine (\texttt{sqlite3}), and optionally, (\texttt{sqlitebrowser}) for graphical database inspection. 
+The final onboarding task evaluated a full-stack web development environment combining multiple language runtimes, package managers, database tools, and post-installation configuration steps. Specifically, the setup guide required initializing the Hex package manager for the Elixir language (\texttt{mix local.hex}), the Rebar3 build tool (\texttt{mix local.rebar}), and the Phoenix application generator archive (\texttt{phx\_new}), alongside a Node.js (LTS v20+) and \texttt{npm} frontend asset pipeline, the SQLite~3 relational database engine (\texttt{sqlite3}), and optionally, (\texttt{sqlitebrowser}) for graphical database inspection.
 
 In the imperative workflow, participants had to install brew and each system package individually, manually link the pinned Node.js formula (\texttt{brew link node@20}), execute the sequential \texttt{mix} bootstrap commands, and verify the stack by scaffolding a SQLite-backed Phoenix project (\texttt{mix phx.new}), running Ecto database migrations (\texttt{mix ecto.setup}), and launching the local development server (\texttt{mix phx.server}). Table~\ref{tab:rq3-fullstack-results} summarizes the setup completion times and time deltas for the full-stack environment task.
 
@@ -501,8 +568,8 @@ In the imperative workflow, participants had to install brew and each system pac
 	\label{fig:rq3-avg-time-delta}
 \end{figure}
 
-As illustrated in Figure~\ref{fig:rq3-onboarding-results} and Figure~\ref{fig:rq3-avg-time-delta}, \texttt{nix develop} ended up costing more time than the imperative installation across most trials (averaging +1:03.30 for Rust, +0:18.75 for Jupyter Notebook, and +2:09.21 for the Full Stack environment), as each clean virtual machine trial included the one-time installation of the Nix package manager and the initial realization of store paths from the binary cache.
+As illustrated in Figure~\ref{fig:rq3-onboarding-results} and Figure~\ref{fig:rq3-avg-time-delta}, \texttt{nix develop} ended up costing more time than the imperative installation across most trials (averaging +1:03.30 for Rust, +0:15.96 for Jupyter Notebook, and +2:09.21 for the Full Stack environment), as each clean virtual machine trial included the one-time installation of the Nix package manager and the initial realization of store paths from the binary cache.
 
-Nevertheless, comparing the single-toolchain Rust setup (Table~\ref{tab:rq3-rust-results}) against the Jupyter Notebook (Table~\ref{tab:rq3-jupyter-results}) and multi-component Full Stack setups (Table~\ref{tab:rq3-fullstack-results}) partially supports Hypothesis~\textbf{H\textsubscript{3}}. As environment complexity increased from Rust to Full Stack, the declarative time overhead narrowed from +1:33.64 to +0:40.27 for Student~A and from +1:46.69 to +1:28.55 for Student~B (with Student~C completing the Rust trial 10.43~seconds faster and Student~A completing the Jupyter trial 1~minute and 17.29~seconds faster using \texttt{nix develop}). 
+Nevertheless, comparing the single-toolchain Rust setup against the Jupyter Notebook and multi-component Full Stack setups partially supports Hypothesis~\textbf{H\textsubscript{3}}. As environment complexity increased from Rust to Full Stack, the declarative time overhead narrowed from +1:33.64 to +0:40.27 for Student~A and from +1:46.69 to +1:28.55 for Student~B (with Student~C completing the Rust trial 10.43~seconds faster and Student~A completing the Jupyter trial 1~minute and 17.29~seconds faster using \texttt{nix develop}).
 
 Both student A and B preferred the imperative method. Student A didn't like how black box \texttt{nix develop} felt. Student A reasoned that if something were to go wrong with their setup, they wouldn't be able to backtrack and fix the issue themselves.
