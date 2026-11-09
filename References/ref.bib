@@ -1,6 +1,7 @@
 @inreference{2025PresentGlobal2026,
   title = {2025–Present Global Memory Supply Shortage},
   booktitle = {Wikipedia},
+  author = {{Wikipedia contributors}},
   date = {2026-09-10T01:17:22Z},
   url = {https://en.wikipedia.org/w/index.php?title=2025%E2%80%93present_global_memory_supply_shortage&oldid=1374129906},
   urldate = {2026-09-16},
@@ -10,7 +11,9 @@
 }
 
 @online{5BuildingReproducible,
-  title = {(5) {{Building Reproducible}}, {{Interactive C}}++ {{Learning Environments}} with {{Nix Flakes}} and {{Pixi}} | {{LinkedIn}}},
+  title = {Building {{Reproducible}}, {{Interactive C}}++ {{Learning Environments}} with {{Nix Flakes}} and {{Pixi}}},
+  author = {Hasanović, Haris},
+  date = {2025},
   url = {https://www.linkedin.com/pulse/building-reproducible-interactive-c-learning-nix-flakes-hasanovi%C4%87-tol9e/},
   urldate = {2026-03-12},
   file = {/Users/luis/Zotero/storage/EUGKPE23/building-reproducible-interactive-c-learning-nix-flakes-hasanović-tol9e.html}
@@ -18,6 +21,8 @@
 
 @online{AgentSkills,
   title = {Agent {{Skills}}},
+  author = {{Anthropic}},
+  date = {2025},
   url = {https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview},
   urldate = {2026-09-10},
   abstract = {Agent Skills are modular capabilities that extend Claude's functionality. Each Skill packages instructions, metadata, and optional resources (scripts, templates) that Claude uses automatically when relevant.},
@@ -58,6 +63,8 @@
 
 @online{BinaryCacheOfficial,
   title = {Binary {{Cache}} - {{Official NixOS Wiki}}},
+  author = {{NixOS Wiki contributors}},
+  date = {2026},
   url = {https://wiki.nixos.org/wiki/Binary_Cache#Using_a_binary_cache},
   urldate = {2026-10-04},
   file = {/Users/luis/Zotero/storage/UJN3GYAI/Binary_Cache.html}
@@ -111,6 +118,8 @@
 
 @online{ConstructionAnalysisBuild,
   title = {Construction and Analysis of the Build and Runtime Dependency Graph of Nixpkgs},
+  author = {{Tweag}},
+  date = {2022-09-13},
   url = {https://tweag.io/blog/2022-09-13-nixpkgs-graph/},
   urldate = {2026-01-26},
   abstract = {A nixpkgs content database with graph building!},
@@ -120,6 +129,8 @@
 
 @online{ContentAddressingFileSystem,
   title = {Content-{{Addressing File System Objects}} - {{Nix}} 2.35.2 {{Reference Manual}}},
+  author = {{NixOS Foundation}},
+  date = {2026},
   url = {https://nix.dev/manual/nix/2.35/store/file-system-object/content-address#serial-nix-archive},
   urldate = {2026-10-06},
   file = {/Users/luis/Zotero/storage/AZ8G5IJM/content-address.html}
@@ -146,18 +157,25 @@
 
 @article{dolstraNixSafePolicyFree,
   title = {Nix: {{A Safe}} and {{Policy-Free System}} for {{Software Deployment}}},
-  author = {Eelco, Dolstra},
+  author = {Dolstra, Eelco and De Jonge, Merijn and Visser, Eelco},
+  date = {2004},
+  journaltitle = {Proceedings of the 18th USENIX Conference on System Administration (LISA '04)},
+  pages = {79--92},
+  publisher = {USENIX Association},
   abstract = {Existing systems for software deployment are neither safe nor sufficiently flexible. Primary safety issues are the inability to enforce reliable specification of component dependencies, and the lack of support for multiple versions or variants of a component. This renders deployment operations such as upgrading or deleting components dangerous and unpredictable. A deployment system must also be flexible (i.e., policy-free) enough to support both centralised and local package management, and to allow a variety of mechanisms for transferring components. In this paper we present Nix, a deployment system that addresses these issues through a simple technique of using cryptographic hashes to compute unique paths for component instances.},
   langid = {english},
-  file = {/Users/luis/Zotero/storage/LIU2DDNY/Eelco - Nix A Safe and Policy-Free System for Software Deployment.pdf}
+  file = {/Users/luis/Zotero/storage/LIU2DDNY/Dolstra et al. - 2004 - Nix A Safe and Policy-Free System for Software Deployment.pdf}
 }
 
 @article{dolstraPurelyFunctionalSystema,
-  title = {Purely {{Functional System Conﬁguration Management}}},
+  title = {Purely {{Functional System Configuration Management}}},
   author = {Dolstra, Eelco and Hemel, Armijn},
+  date = {2007},
+  journaltitle = {Proceedings of the 11th USENIX Workshop on Hot Topics in Operating Systems (HotOS XI)},
+  publisher = {USENIX Association},
   abstract = {System configuration management is difficult because systems evolve in an undisciplined way: packages are upgraded, configuration files are edited, and so on. The management of existing operating systems is strongly imperative in nature, since software packages and configuration data (e.g., /bin and /etc in Unix) can be seen as imperative data structures: they are updated in-place by system administration actions. In this paper we present an alternative approach to system configuration management: a purely functional method, analogous to languages like Haskell. In this approach, the static parts of a configuration — software packages, configuration files, control scripts — are built from pure functions, i.e., the results depend solely on the specified inputs of the function and are immutable. As a result, realising a system configuration becomes deterministic and reproducible. Upgrading to a new configuration is mostly atomic and doesn’t overwrite anything of the old configuration, thus enabling rollbacks. We have implemented the purely functional model in a small but realistic Linuxbased operating system distribution called NixOS.},
   langid = {english},
-  file = {/Users/luis/Zotero/storage/RH643B6X/Dolstra and Hemel - Purely Functional System Conﬁguration Management.pdf}
+  file = {/Users/luis/Zotero/storage/RH643B6X/Dolstra and Hemel - 2007 - Purely Functional System Configuration Management.pdf}
 }
 
 @online{duNixRescueReproducible2026a,
@@ -179,13 +197,18 @@
 @article{endresDeclarativeVsImperative,
   title = {Declarative vs. {{Imperative}}: {{Two Modeling Patterns}} for the {{Automated Deployment}} of {{Applications}}},
   author = {Endres, Christian and Breitenbucher, Uwe and Falkenthal, Michael and Kopp, Oliver and Leymann, Frank and Wettinger, Johannes},
+  date = {2017},
+  journaltitle = {Proceedings of the Ninth International Conferences on Pervasive Patterns and Applications (PATTERNS 2017)},
+  pages = {22--27},
   abstract = {In the field of cloud computing, the automated deployment of applications is of vital importance and supported by diverse management technologies. However, currently there is no systematic knowledge collection that points out commonalities, capabilities, and differences of these approaches. This paper aims at identifying common modeling principles employed by technologies to create automatically executable models that describe the deployment of applications. We discuss two fundamental approaches for modeling the automated deployment of applications: imperative procedural models and declarative models. For these two approaches, we identified (i) basic pattern primitives and (ii) documented these approaches as patterns that point out frequently occurring problems in certain contexts including proven modeling solutions. The introduced patterns foster the understanding of common application deployment concepts, are validated regarding their occurrence in established state-of-theart technologies, and enable the transfer of that knowledge.},
   langid = {english},
-  file = {/Users/luis/Zotero/storage/W4DK7BBE/Endres et al. - Declarative vs. Imperative Two Modeling Patterns for the Automated Deployment of Applications.pdf}
+  file = {/Users/luis/Zotero/storage/W4DK7BBE/Endres et al. - 2017 - Declarative vs. Imperative Two Modeling Patterns for the Automated Deployment of Applications.pdf}
 }
 
 @online{FAQFrequentlyAsked,
   title = {{{FAQ}} ({{Frequently Asked Questions}})},
+  author = {{Homebrew contributors}},
+  date = {2026},
   url = {https://docs.brew.sh/FAQ},
   urldate = {2026-11-03},
   abstract = {Documentation for the package manager for everywhere.},
@@ -215,7 +238,7 @@
   title = {The Purely Functional Software Deployment Model},
   author = {Dolstra, Eelco},
   date = {2006},
-  publisher = {s.n.},
+  publisher = {Utrecht University},
   location = {S.l.},
   isbn = {978-90-393-4130-8},
   langid = {english},
@@ -225,6 +248,8 @@
 @online{GarnixBlogStop,
   title = {Garnix {{Blog}}: {{Stop}} Trusting {{Nix}} Caches},
   shorttitle = {Garnix {{Blog}}},
+  author = {{Garnix}},
+  date = {2024},
   url = {https://garnix.io/blog/stop-trusting-nix-caches/},
   urldate = {2026-10-04},
   abstract = {With most caches, you are giving a lot of people a lot of access},
@@ -233,6 +258,8 @@
 
 @online{Gemini38Flash,
   title = {Gemini 3.8 {{Flash}} - {{Model Card}}},
+  author = {{Google DeepMind}},
+  date = {2026},
   url = {https://deepmind.google/models/model-cards/gemini-3-8-flash/},
   urldate = {2026-10-06},
   abstract = {Google DeepMind},
@@ -332,7 +359,9 @@
 
 @online{ImportingPhantomsMeasuring,
   title = {Importing {{Phantoms}}: {{Measuring LLM Package Hallucination Vulnerabilities}}},
-  url = {https://arxiv.org/html/2501.19012v1},
+  author = {Krishna, Pratik},
+  date = {2025-01},
+  url = {https://arxiv.org/abs/2501.19012},
   urldate = {2026-03-04},
   file = {/Users/luis/Zotero/storage/AVB7MYEL/2501.html}
 }
@@ -340,17 +369,21 @@
 @article{kateGenerativeAIInfrastructure,
   title = {Generative {{AI}} for {{Infrastructure}} as {{Code}} ({{IaC}}): {{Automating DevOps Configuration}}, {{Scripting}}, and {{Workflow Management}} with {{LLMs}}},
   author = {Kate, Austin},
+  date = {2024},
+  journaltitle = {ResearchGate Preprint},
   abstract = {This paper examines the application of generative AI in Infrastructure as Code (IaC), focusing on automating DevOps configuration, scripting, and workflow management using large language models (LLMs). As organizations embrace IaC to streamline infrastructure management, the complexity of configuration scripts often poses challenges. Generative AI can simplify and enhance these processes by automatically generating code snippets, optimizing configurations, and managing workflows. This study outlines the framework for integrating generative AI into IaC practices, highlighting its potential to improve efficiency, reduce errors, and accelerate deployment cycles. The findings suggest that leveraging LLMs in IaC significantly enhances productivity and fosters more resilient infrastructure management.},
   langid = {english},
-  file = {/Users/luis/Zotero/storage/ESSQLYT7/Kate - Generative AI for Infrastructure as Code (IaC) Automating DevOps Configuration, Scripting, and Work.pdf}
+  file = {/Users/luis/Zotero/storage/ESSQLYT7/Kate - 2024 - Generative AI for Infrastructure as Code (IaC) Automating DevOps Configuration, Scripting, and Work.pdf}
 }
 
 @article{konIaCEvalCodeGeneration,
   title = {{{IaC-Eval}}: {{A Code Generation Benchmark}} for {{Cloud Infrastructure}}-as-{{Code Programs}}},
   author = {Kon, Patrick Tser Jern and Liu, Jiachen and Qiu, Yiming and Fan, Weijun and He, Ting and Lin, Lei and Zhang, Haoran and Park, Owen M and Elengikal, George S and Kang, Yuxin and Chen, Ang and Chowdhury, Mosharaf and Lee, Myungjin and Wang, Xinyu},
+  date = {2024},
+  journaltitle = {Advances in Neural Information Processing Systems (NeurIPS)},
   abstract = {Infrastructure-as-Code (IaC), an important component of cloud computing, allows the definition of cloud infrastructure in high-level programs. However, developing IaC programs is challenging, complicated by factors that include the burgeoning complexity of the cloud ecosystem (e.g., diversity of cloud services and workloads), and the relative scarcity of IaC-specific code examples and public repositories. While large language models (LLMs) have shown promise in general code generation and could potentially aid in IaC development, no benchmarks currently exist for evaluating their ability to generate IaC code. We present IaC-Eval, a first step in this research direction. IaC-Eval’s dataset includes 458 human-curated scenarios covering a wide range of popular AWS services, at varying difficulty levels. Each scenario mainly comprises a natural language IaC problem description and an infrastructure intent specification. The former is fed as user input to the LLM, while the latter is a general notion used to verify if the generated IaC program conforms to the user’s intent; by making explicit the problem’s requirements that can encompass various cloud services, resources and internal infrastructure details. Our in-depth evaluation shows that contemporary LLMs perform poorly on IaC-Eval, with the top-performing model, GPT-4, obtaining a pass@1 accuracy of 19.36\%. In contrast, it scores 86.6\% on EvalPlus, a popular Python code generation benchmark, highlighting a need for advancements in this domain. We open-source the IaC-Eval dataset and evaluation framework at https://github.com/autoiac-project/iac-eval to enable future research on LLM-based IaC code generation.},
   langid = {english},
-  file = {/Users/luis/Zotero/storage/HB4ICWRL/Kon et al. - IaC-Eval A Code Generation Benchmark for Cloud Infrastructure-as-Code Programs.pdf}
+  file = {/Users/luis/Zotero/storage/HB4ICWRL/Kon et al. - 2024 - IaC-Eval A Code Generation Benchmark for Cloud Infrastructure-as-Code Programs.pdf}
 }
 
 @online{lingAgentSkillsDataDriven2026,
@@ -444,6 +477,8 @@
 
 @online{MemoryPriceIncrease,
   title = {Memory Price Increase Timeline {{QoQ}} in 2026 | {{Sourceability}}},
+  author = {{Sourceability}},
+  date = {2026},
   url = {https://sourceability.com/post/tracking-memory-price-increases-across-the-last-several-quarters},
   urldate = {2026-09-16},
   abstract = {DRAM and NAND prices have surged across multiple quarters, with increases exceeding 200\% in some segments. Here’s how the memory crunch escalated.},
@@ -469,9 +504,10 @@
 }
 
 @online{ModularityLazyEvaluation,
-  title = {Modularity and {{Lazy Evaluation}} in {{Nixos}}: {{A Functional Approach}} to {{Operating System Configuration}}},
+  title = {Modularity and {{Lazy Evaluation}} in {{NixOS}}: {{A Functional Approach}} to {{Operating System Configuration}}},
   shorttitle = {Modularity and {{Lazy Evaluation}} in {{Nixos}}},
-  url = {https://ieeexplore.ieee.org/abstract/document/10991248?casa_token=SRx031-v1FkAAAAA:nqGmgm6Rbw4Um5tOoherapYaYndJ8JH5xvF-M0wRX4RuwscLFky9oG5f5RfFGh5UmHQfOPx633eWlQ},
+  date = {2025},
+  url = {https://ieeexplore.ieee.org/document/10991248},
   urldate = {2026-03-02},
   abstract = {In contrast to traditional imperative models the Linux distribution known as NixOS takes a purely functional declarative approach to system configuration. Two important facets of NixOS that are essential to its distinctive design are examined in this work: modularity and lazy evaluation. Users can create reusable and adaptable modules by utilizing NixOS's modularity which enables a clear division of responsibilities in system configuration. A defining characteristic of functional programming is lazy evaluation which guarantees that only essential components are assessed resulting in effective resource management. These features provide substantial advantages in practical situations especially with regard to the systems repeatability dependability and maintainability. NixOS offers a deterministic and atomic method of software deployment for sectors that depend on massive dispersed systems like cloud infrastructure and continuous integration sectors. Reproducibility across environments is ensured allowing for reliable rollback procedures and downtime-free upgrades. This work also shows via real-world experience how the NixOS module system abstracts complicated configuration sets facilitating quick setups and streamlining the administration of complex systems. NixOS is very configurable for both development and production environments because configurations are arranged into readily accessible modules that allow users to quickly adapt to a variety of environments without requiring manual intervention. Through real-world use cases this work explores the architectural ideas underlying NixOS's modular and lazy configuration model. It also looks at how current industry issues like scalable infrastructure management continuous deployment pipelines and repeatable builds can be addressed by NixOS's functional design.},
   langid = {american}
@@ -479,6 +515,7 @@
 
 @online{NixBetterDocker2024,
   title = {Nix Is a Better {{Docker}} Image Builder than {{Docker}}'s Image Builder},
+  author = {Iaso, Xe},
   date = {2024-03-15},
   url = {https://xeiaso.net/talks/2024/nix-docker-build/},
   urldate = {2026-01-26},
@@ -489,6 +526,8 @@
 
 @online{NixFasterDocker,
   title = {Nix Is Faster than {{Docker}} Build},
+  author = {{Dwarves Foundation}},
+  date = {2024},
   url = {https://memo.d.foundation/topics/devbox/research/nix-is-faster-than-docker-build},
   urldate = {2026-01-26},
   abstract = {An exploration of how Nix outperforms Docker in building images, leveraging its deep understanding of package dependencies and content-addressable storage},
@@ -497,8 +536,16 @@
   file = {/Users/luis/Zotero/storage/GIAZWY9Q/nix-is-faster-than-docker-build.html}
 }
 
+@online{NixpkgsManual,
+  title = {Nixpkgs {{Manual}}},
+  url = {https://nixos.org/manual/nixpkgs/unstable/#chap-language-support},
+  urldate = {2026-11-08},
+  file = {/Users/luis/Zotero/storage/G65ZYFM8/unstable.html}
+}
+
 @online{OSCodeMy2024,
   title = {{{OS}} as {{Code}} - {{My Experience}} of {{NixOS}}},
+  author = {Yin, Ryan},
   date = {2024-02-21T16:26:21+08:00},
   url = {https://thiscute.world/en/posts/my-experience-of-nixos/},
   urldate = {2026-05-21},
@@ -526,19 +573,49 @@
   file = {/Users/luis/Zotero/storage/T2TGPQ6E/Przymus and Durieux - 2025 - Wolves in the Repository A Software Engineering Analysis of the XZ Utils Supply Chain Attack.pdf;/Users/luis/Zotero/storage/KX5RELGI/2504.html}
 }
 
+@misc{researchDoclingGetYour2024,
+  title = {Docling: {{Get}} Your Documents Ready for Gen {{AI}}},
+  author = {{IBM Research}},
+  date = {2024},
+  url = {https://github.com/DS4SD/docling}
+}
+
 @online{ReviewProcessNix,
   title = {Review {{Process}} - {{Nix Docs}}},
+  author = {{Nix Docs}},
+  date = {2026},
   url = {https://zemdregon.github.io/nix-docs/06-nixpkgs/contribution/review-process/#human-review-and-merge},
   urldate = {2026-09-23},
   file = {/Users/luis/Zotero/storage/E7VMAIKK/review-process.html}
 }
 
-@article{srivatsaSurveyUsingLarge,
+@inproceedings{schwaighoferVibenixAIAssistant2026,
+  title = {Vibenix: {{An AI Assistant}} for {{Software Packaging}} with {{Nix}}},
+  shorttitle = {Vibenix},
+  booktitle = {Proceedings 2026 {{Workshop}} on {{LLM Assisted Security}} and {{Trust Exploration}}},
+  author = {Schwaighofer, Martin and Monis, Martim and Saavedra, Nuno and Ferreira, João F. and Mayrhofer, Rene},
+  date = {2026},
+  publisher = {Internet Society},
+  location = {San Diego, CA, USA},
+  doi = {10.14722/last-x.2026.23035},
+  url = {https://www.ndss-symposium.org/wp-content/uploads/lastx2026-35.pdf},
+  urldate = {2026-11-08},
+  abstract = {Implicit and floating dependencies, uncontrolled network access, and other impurities in build environments create intransparent supply chains. Discovering the identity and chain of custody of every dependency that could have affected the output of a build process is an error-prone forensic and reverse engineering task. Hermetically isolated build steps, linked by hashes of their inputs and outputs, make functional package management a principled alternative, which ensures that software depends only and exactly on declared inputs listed in a reproducible build recipe. Generating build recipes, which satisfy these additional constraints, however, is a complex and time-consuming task, creating a barrier to adoption. We present Vibenix, an AIpowered assistant that automatically generates such recipes as Nix expressions. Vibenix employs an agentic architecture that leverages a large language model (LLM) to iteratively refine a build recipe based on build outcomes, guided by deterministic rules and a structured feedback loop. We evaluated Vibenix on a dataset of 472 packaging tasks from the Nixpkgs repository. Vibenix successfully builds 424 of the 472 tasks (89.8\%). Manual validation of a subset of 48 packages showed that 45.8\% of Vibenix-built packages are functionally correct. Vibenix’s postbuild refinement process, based on the evaluator–optimizer pattern and leveraging a VM environment for runtime testing, results in an additional 37.5\% increase in functionally correct packages, demonstrating that this refinement mechanism is a promising and important contribution to automated software packaging. Vibenix demonstrates how LLMs, as an unreliable building block, can be leveraged to generate rigorously defined, complete, and easy to audit dependency trees, for real-world software projects.},
+  eventtitle = {Workshop on {{LLM Assisted Security}} and {{Trust Exploration}}},
+  isbn = {978-1-970672-05-3},
+  langid = {english},
+  file = {/Users/luis/Zotero/storage/5WZ28HE6/Schwaighofer et al. - 2026 - Vibenix An AI Assistant for Software Packaging with Nix.pdf}
+}
+
+@unpublished{srivatsaSurveyUsingLarge,
   title = {A {{Survey}} of Using {{Large Language Models}} for {{Generating Infrastructure}} as {{Code}}},
   author = {Srivatsa, Kalahasti Ganesh and Mukhopadhyay, Sabyasachi and Katrapati, Ganesh and Shrivastava, Manish},
+  date = {2023},
+  eprint = {2311.09579},
+  eprinttype = {arXiv},
   abstract = {Infrastructure as Code (IaC) is a revolutionary approach which has gained significant prominence in the Industry. IaC manages and provisions IT infrastructure using machinereadable code by enabling automation, consistency across the environments, reproducibility, version control, error reduction and enhancement in scalability. However, IaC orchestration is often a painstaking effort which requires specialised skills as well as a lot of manual effort. Automation of IaC is a necessity in the present conditions of the Industry and in this survey, we study the feasibility of applying Large Language Models (LLM) to address this problem. LLMs are large neural network-based models which have demonstrated significant language processing abilities and shown to be capable of following a range of instructions within a broad scope. Recently, they have also been adapted for code understanding and generation tasks successfully, which makes them a promising choice for the automatic generation of IaC configurations. In this survey, we delve into the details of IaC, usage of IaC in different platforms, their challenges, LLMs in terms of code-generation aspects and the importance of LLMs in IaC along with our own experiments. Finally, we conclude by presenting the challenges in this area and highlighting the scope for future research.},
   langid = {english},
-  file = {/Users/luis/Zotero/storage/6F9ML5LJ/Srivatsa et al. - A Survey of using Large Language Models for Generating Infrastructure as Code.pdf}
+  file = {/Users/luis/Zotero/storage/6F9ML5LJ/Srivatsa et al. - 2023 - A Survey of using Large Language Models for Generating Infrastructure as Code.pdf}
 }
 
 @inproceedings{stokerUsingVirtualMachines2013,
@@ -546,6 +623,7 @@
   author = {Stoker, Geoff and Arnold, Todd and Maxwell, Paul},
   date = {2013-10-02},
   pages = {91--96},
+  publisher = {ACM},
   doi = {10.1145/2512276.2512287},
   abstract = {Information technology courses often require the use of software and hardware to support classroom learning. These systems can assist in achieving the learning objectives for a course through classroom problems and laboratory exercises. The procurement and maintenance of these systems can be a challenge even for well resourced organizations. In this paper we discuss how virtual machines can relieve organizations of some of their resource burdens while effectively achieving course learning objectives and provide examples of how that is currently done at the United States Military Academy.},
   file = {/Users/luis/Zotero/storage/QD26FMQA/Stoker et al. - 2013 - Using virtual machines to improve learning and save resources in an introductory IT course.pdf}
@@ -573,14 +651,20 @@
 @article{suAutoBashImprovingConfiguration,
   title = {{{AutoBash}}: {{Improving}} Configuration Management with Operating System Causality Analysis},
   author = {Su, Ya-Yunn and Attariyan, Mona and Flinn, Jason},
+  date = {2007},
+  journaltitle = {Proceedings of the 21st ACM SIGOPS Symposium on Operating Systems Principles (SOSP '07)},
+  pages = {237--250},
+  publisher = {ACM},
   abstract = {AutoBash is a set of interactive tools that helps users and system administrators manage configurations. AutoBash leverages causal tracking support implemented within our modified Linux kernel to understand the inputs (causal dependencies) and outputs (causal effects) of configuration actions. It uses OS-level speculative execution to try possible actions, examine their effects, and roll them back when necessary. AutoBash automates many of the tedious parts of trying to fix a misconfiguration, including searching through possible solutions, testing whether a particular solution fixes a problem, and undoing changes to persistent and transient state when a solution fails. Our results show that AutoBash correctly identifies the solution to several CVS, gcc crosscompiler, and Apache configuration errors. We also show that causal analysis reduces AutoBash’s search time by an average of 35\% and solution verification time by an average of 70\%.},
   langid = {english},
-  file = {/Users/luis/Zotero/storage/Z2LPBDJW/Su et al. - AutoBash Improving conﬁguration management with operating system causality analysis.pdf}
+  file = {/Users/luis/Zotero/storage/Z2LPBDJW/Su et al. - 2007 - AutoBash Improving configuration management with operating system causality analysis.pdf}
 }
 
 @online{TrackingPackagesBe,
   title = {Tracking: {{Packages}} to Be Orphaned (Please Consider Adopting) · {{Issue}} \#576945 · {{NixOS}}/Nixpkgs},
   shorttitle = {Tracking},
+  author = {{NixOS Contributors}},
+  date = {2026-11},
   url = {https://github.com/NixOS/nixpkgs/issues/576945},
   urldate = {2026-11-02},
   abstract = {Packages whose only maintainer is one of the inactive maintainers listed in \#576595 (packages with any other maintainer or a team are excluded). If you use one of these, please consider adopting it...},
@@ -610,6 +694,8 @@
 
 @online{VirtualizeMacOSMac,
   title = {Virtualize {{macOS}} on a {{Mac}}},
+  author = {{Apple Inc.}},
+  date = {2026},
   url = {https://developer.apple.com/documentation/virtualization/virtualize-macos-on-a-mac},
   urldate = {2026-10-15},
   abstract = {Configure and run macOS guests on Apple silicon.},
@@ -650,12 +736,3 @@
   keywords = {Artificial Intelligence (cs.AI),Computation and Language (cs.CL),FOS: Computer and information sciences,Software Engineering (cs.SE)},
   file = {/Users/luis/Zotero/storage/K5WEA69G/Zhang et al. - 2025 - Deployability-Centric Infrastructure-as-Code Generation Fail, Learn, Refine, and Succeed through LL.pdf}
 }
-
-@online{Docling,
-  author = {{IBM Research}},
-  title = {Docling: Get your documents ready for gen AI},
-  year = {2024},
-  url = {https://github.com/DS4SD/docling},
-  urldate = {2026-11-04}
-}
-
