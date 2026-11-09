@@ -40,8 +40,8 @@ raw_records = [
     # Jupyter Notebook
     ("Jupyter Notebook", "rq3-jupyter-results", "Student A", "Imperative", "4:59.33"),
     ("Jupyter Notebook", "rq3-jupyter-results", "Student A", "Declarative (nix develop)", "3:42.04"),
-    ("Jupyter Notebook", "rq3-jupyter-results", "Student B", "Imperative", "8:59.18"),
-    ("Jupyter Notebook", "rq3-jupyter-results", "Student B", "Declarative (nix develop)", "10:27.73"),
+    ("Jupyter Notebook", "rq3-jupyter-results", "Student B", "Imperative", "7:21.44"),
+    ("Jupyter Notebook", "rq3-jupyter-results", "Student B", "Declarative (nix develop)", "8:41.60"),
     ("Jupyter Notebook", "rq3-jupyter-results", "Student C", "Imperative", "8:37.12"),
     ("Jupyter Notebook", "rq3-jupyter-results", "Student C", "Declarative (nix develop)", "9:22.12"),
     # Full Stack Environment
@@ -134,13 +134,91 @@ combined_chart = (
     .configure_view(strokeWidth=0.5, stroke="#CCCCCC")
 )
 
+combined_png = figures_dir / "rq3-onboarding-results.png"
 combined_pdf = figures_dir / "rq3-onboarding-results.pdf"
 combined_svg = figures_dir / "rq3-onboarding-results.svg"
+combined_chart.save(str(combined_png), scale_factor=2.0)
 combined_chart.save(str(combined_pdf))
 combined_chart.save(str(combined_svg))
-print(f"Saved {combined_pdf} and {combined_svg}")
+print(f"Saved {combined_png}, {combined_pdf}, and {combined_svg}")
 
-# 2. Average Time Delta per Subsection (Declarative - Imperative)
+# 2. Individual charts per task
+task_y_domains = {
+    "Installation of the Rust Compiler": 8,
+    "Jupyter Notebook": 12,
+    "Full Stack Environment": 19,
+}
+
+for sub in subsection_order:
+    sub_df = df[df["Subsection"] == sub]
+    slug = sub_df["Slug"].iloc[0]
+    max_y = task_y_domains.get(sub, 18)
+
+    single_base = alt.Chart(sub_df).encode(
+        x=alt.X(
+            "Participant:N",
+            title="Participant",
+            scale=alt.Scale(paddingInner=0.26, paddingOuter=0.15),
+            axis=alt.Axis(labelAngle=0, labelFontSize=11, titleFontWeight="bold"),
+        ),
+        xOffset=alt.XOffset(
+            "Method:N",
+            sort=method_order,
+            scale=alt.Scale(paddingInner=0.14),
+        ),
+        y=alt.Y(
+            "Minutes:Q",
+            title="Completion Time (Minutes)",
+            scale=alt.Scale(domain=[0, max_y]),
+            axis=alt.Axis(titleFontWeight="bold", labelFontSize=11, titleFontSize=12, grid=True),
+        ),
+        color=alt.Color(
+            "Method:N",
+            sort=method_order,
+            scale=color_scale,
+            title="Onboarding Workflow",
+            legend=alt.Legend(
+                orient="top",
+                titleFontWeight="bold",
+                labelFontSize=11,
+                titleFontSize=11,
+            ),
+        ),
+    )
+    single_bars = single_base.mark_bar(cornerRadiusTopLeft=2, cornerRadiusTopRight=2)
+    single_labels = single_base.mark_text(
+        dy=-7,
+        fontSize=9.5,
+        fontWeight="bold",
+    ).encode(
+        text="TimeLabel:N",
+        color=alt.Color("Method:N", sort=method_order, scale=color_scale, legend=None),
+    )
+
+    single_chart = (
+        (single_bars + single_labels)
+        .properties(
+            title=alt.TitleParams(
+                text=sub,
+                fontSize=13,
+                fontWeight="bold",
+                anchor="middle",
+            ),
+            width=340,
+            height=220,
+        )
+        .configure_view(strokeWidth=0)
+    )
+
+    task_png = figures_dir / f"{slug}.png"
+    task_pdf = figures_dir / f"{slug}.pdf"
+    task_svg = figures_dir / f"{slug}.svg"
+    single_chart.save(str(task_png), scale_factor=2.0)
+    single_chart.save(str(task_pdf))
+    single_chart.save(str(task_svg))
+    print(f"Saved {task_png}, {task_pdf}, and {task_svg}")
+
+# 3. Average Time Delta per Subsection (Declarative - Imperative)
 pivoted = df.pivot(index=["Subsection", "Participant"], columns="Method", values="Seconds").reset_index()
 pivoted["DeltaSeconds"] = pivoted["Declarative (nix develop)"] - pivoted["Imperative"]
 
@@ -207,8 +285,10 @@ delta_chart = (
     .configure_view(strokeWidth=0)
 )
 
+delta_png = figures_dir / "rq3-avg-time-delta.png"
 delta_pdf = figures_dir / "rq3-avg-time-delta.pdf"
 delta_svg = figures_dir / "rq3-avg-time-delta.svg"
+delta_chart.save(str(delta_png), scale_factor=2.0)
 delta_chart.save(str(delta_pdf))
 delta_chart.save(str(delta_svg))
-print(f"Saved {delta_pdf} and {delta_svg}")
+print(f"Saved {delta_png}, {delta_pdf}, and {delta_svg}")
