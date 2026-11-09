@@ -1,30 +1,102 @@
-direction: down
+grid-columns: 2
+grid-gap: 50
 
-prompt: |md
-  Natural language instruction 
-  > "This assignment uses Python 3.12..."
-|
+spec: "1. Specification & Autonomous Synthesis" {
+  direction: down
+  style: {
+    fill: "#F7F8FE"
+    stroke: "#0D32B2"
+    stroke-dash: 3
+  }
 
-codebase: {
-  icon: ./source-code.png
+  prof: Instructor {
+    icon: ./professor.png
+    shape: image
+  }
+
+  junction: "Any combination of" {
+    shape: diamond
+    style: {
+      fill: "#E3E9FD"
+      stroke: "#0D32B2"
+    }
+  }
+
+  codebase: Source Code {
+    icon: ./source-code.png
+    shape: image
+  }
+
+  document: Instruction Guide {
+    icon: ./word-document.png
+    shape: image
+  }
+
+  prompt: |md
+    Natural language instruction 
+    > "This assignment uses Python 3.12..."
+  |
+
+  harness: Agent Harness {
+    LLM
+    skill: Course Flake Generator
+    LLM -> skill: /call-skill
+  }
+
+  MCP: nixos-mcp
+
+  prof -> junction: Provides
+  junction -> codebase
+  junction -> document
+  junction -> prompt
+  prompt -> harness
+  codebase -> harness
+  document -> harness
+  harness -> MCP: \{action="search", query="javac"\}
+  MCP -> harness: Package info
 }
 
-document: Instruction Guide {
-  icon: ./word-document.png
+dist: "2. Verification & Distribution" {
+  direction: down
+  style: {
+    fill: "#F7F8FE"
+    stroke: "#0D32B2"
+    stroke-dash: 3
+  }
+
+  output: Assignment Folder {
+    flake: flake.nix {
+      icon: ./nix_snowflake.svg
+    }
+  }
+
+  verify: Instructor Verification {
+    icon: ./professor.png
+    style: {
+      fill: "#E3E9FD"
+      stroke: "#0D32B2"
+    }
+  }
+
+  cms: Course Management System/Online Repository {
+    shape: cloud
+    style.fill: "#E3E9FD"
+  }
+
+  student: Student {
+    icon: ./student.png
+    shape: image
+  }
+
+  output -> verify: 3. Activates & verifies
+  verify -> cms: 4. Publishes to
+  cms -> student: 5. Downloads assignment folder\n& activates flake.nix dev shell
 }
 
-harness: Agent Harness
-harness.LLM
-harness.skill: Course Flake Generator
-MCP: nixos-mcp
-output: flake.nix {
-  icon: ./nix_snowflake.svg
+spec -> dist: {
+  style: {
+    stroke: "#0D32B2"
+    stroke-width: 2
+    bold: true
+  }
 }
-
-prompt -> harness
-codebase -> harness
-document -> harness
-harness.LLM -> harness.skill: /call-skill
-harness -> MCP: \{action="search", query="javac"\}
-MCP -> harness: Package information
-harness -> output: Synthesize
