@@ -8,9 +8,9 @@ Standardizing student development environments has remained a persistent pedagog
 
 Historically, institutions attempted to resolve configuration discrepancies by deploying centralized compute clusters or multi-user Linux servers accessible via SSH or remote desktop protocols~\cite{malanContainerizingCS50Standardizing2024}. Both Valstar et~al.~\cite{valstarUsingDevContainersStandardize2020} and Malan~\cite{malanContainerizingCS50Standardizing2024} critically analyze the friction inherent in these pre-configured central servers, noting that because instructors lack administrative privileges to install applications, they must continually coordinate with central IT personnel who manage infrastructure across disparate academic departments. To bypass these restrictions, Malan~\cite{malanContainerizingCS50Standardizing2024} notes that instructors often had to resort to compiling programs from source into shared course directories. This administrative bottleneck results in sluggish response times when course toolchains require updates during active semesters, with Valstar et~al.~\cite{valstarUsingDevContainersStandardize2020} observing multi-week reconfiguration delays that left laboratory software versions up to five years out of date.
 
-Furthermore, centralized remote architectures impose rigid network requirements~\cite{valstarUsingDevContainersStandardize2020}. Students must maintain persistent, low-latency network connections, either on campus or connecting to an institution-provided VPN. Unstable internet connections introduce substantial input latency and unexpected disconnects, especially near assignment deadlines, severely disrupting the student learning experience during programming assignments and interactive debugging sessions~\cite{valstarUsingDevContainersStandardize2020}. To alleviate these network and administrative dependencies, educators started incorporating virtual machines into their courses~\cite{harvieUsingVirtualMachines2019,stokerUsingVirtualMachines2013}. Virtual machines provide strong isolation and ensure uniform guest environments regardless of the underlying host platform. Virtual machines also allowed instructors to quickly reset or change a machine's state via snapshots without IT personnel present~\cite{stokerUsingVirtualMachines2013,harvieUsingVirtualMachines2019}. However, distributing multi-gigabyte virtual disk images imposes steep download times, slow boot sequences, and heavy compute demands on student laptops~\cite{malanContainerizingCS50Standardizing2024,stokerUsingVirtualMachines2013}.
+Furthermore, centralized remote architectures impose rigid network requirements~\cite{valstarUsingDevContainersStandardize2020}. Students must maintain persistent, low-latency network connections, either on campus or connecting to an institution-provided VPN. Unstable internet connections introduce substantial input latency and unexpected disconnects, severely disrupting the student learning experience during programming assignments and interactive debugging sessions~\cite{valstarUsingDevContainersStandardize2020}. To alleviate these network and administrative dependencies, educators started incorporating virtual machines into their courses~\cite{harvieUsingVirtualMachines2019,stokerUsingVirtualMachines2013}. Virtual machines provide strong isolation and ensure uniform guest environments regardless of the underlying host platform. Virtual machines also allowed instructors to quickly reset or change a machine's state via snapshots without IT personnel present~\cite{stokerUsingVirtualMachines2013,harvieUsingVirtualMachines2019}. However, distributing multi-gigabyte virtual disk images imposes steep download times, slow boot sequences, and heavy compute demands on student laptops~\cite{malanContainerizingCS50Standardizing2024,stokerUsingVirtualMachines2013}.
 
-To reduce this virtualization overhead, educators shifted toward client-side and cloud-backed docker containerization to provide students with a complete development environment~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}. DevContainers leverage Docker to package compilers, runtimes, and editor extensions into a version-controlled container specification, ensuring that every enrolled student executes code in an identical software sandbox matching the course autograder~\cite{valstarUsingDevContainersStandardize2020}. Containers were also faster for staff to develop and for students to launch, starting in seconds rather than the minutes required to boot a full guest operating system~\cite{malanContainerizingCS50Standardizing2024,valstarUsingDevContainersStandardize2020}. However, this approach still incurs computational and storage overhead on client machines, requiring a background Linux virtual machine on Windows and macOS hosts and consuming significant disk space and working memory~\cite{valstarUsingDevContainersStandardize2020}.
+To reduce this virtualization overhead, educators shifted toward client-side and cloud-backed docker containerization to provide students with a complete development environment~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}. DevContainers leverage Docker to package compilers, runtimes, and text editor configurations into a version-controlled container specification, ensuring that every enrolled student executes code in an identical software sandbox~\cite{valstarUsingDevContainersStandardize2020}. Containers were also faster for staff to develop and for students to launch, starting in seconds rather than the minutes required to boot a full guest operating system~\cite{malanContainerizingCS50Standardizing2024,valstarUsingDevContainersStandardize2020}. However, this approach still incurs computational and storage overhead on client machines, requiring a background Linux virtual machine on Windows and macOS hosts and consuming significant disk space and working memory~\cite{valstarUsingDevContainersStandardize2020}.
 
 \subsection{Learning Opportunity Provided from Managing Systems}
 
@@ -38,7 +38,7 @@ Integrating standardized tool protocols further strengthens agentic workflows. I
 
 \section{Nix Foundations}\label{sec:nix-foundations}
 
-Having reviewed existing approaches and the emerging role of declarative tooling, this section establishes the fundamental Nix concepts required to understand its architectural advantages and operational limitations. 
+Having reviewed existing approaches and the emerging role of declarative tooling, this section establishes the fundamental Nix concepts required to understand its architectural advantages and operational limitations.
 
 Nix is both a package manager and a purely functional domain-specific language for describing how software dependencies and runtime environments are constructed. Unlike an imperative installation procedure, which modifies a shared system state step by step, a Nix expression describes the inputs from which a package or environment should be produced. Nix then evaluates that description and creates an immutable derivation. This distinction is central to the thesis: an agent generates a declarative specification rather than a sequence of host-specific installation commands.
 
@@ -46,7 +46,7 @@ Nix is both a package manager and a purely functional domain-specific language f
 
 In Nix, a \emph{derivation} is a build specification for a package. It identifies the builder, its source inputs, build and run-time dependencies, configuration arguments, and expected outputs. Nix evaluates derivations as part of a dependency graph, allowing a package to depend on specific versions of compilers, libraries, and build tools rather than on whichever versions happen to be installed globally. The functional model aims to make a build result a function of its declared inputs, thereby avoiding hidden dependencies on mutable global directories~\cite{dolstraNixSafePolicyFree,dolstraPurelyFunctionalSystema}.
 
-The collection of such package definitions is a repository called nixpkgs. It exposes packages as named attributes, such as \texttt{python3}, \texttt{cmake}, or \texttt{rustc}, and parameterizes many definitions by the target platform. A generated development environment therefore does not install packages by conventional system mutation; it selects attributes from a particular Nixpkgs revision and composes them into a shell or package output. This is why an invalid attribute name, a deprecated package, or a package unavailable on the target platform can prevent an otherwise plausible environment from evaluating. RQ1 evaluates whether the agent can make these selections correctly.
+The collection of such package definitions is a repository called nixpkgs. It exposes packages as named attributes, such as \texttt{python3}, \texttt{cmake}, or \texttt{rustc}, and parameterizes many definitions by the target platform. Beyond standalone system binaries, Nixpkgs also provides dedicated language-specific packaging frameworks and attribute sets, allowing language libraries to be composed declaratively alongside system compilers without mutating user-space package directories~\cite{NixpkgsManual}. A generated development environment therefore does not install packages by conventional system mutation; it selects attributes from a particular Nixpkgs revision and composes them into a shell or package output. This is why an invalid attribute name, a deprecated package, or a package unavailable on the target platform can prevent an otherwise plausible environment from evaluating. RQ1 evaluates whether the agent can make these selections correctly.
 
 \subsection{The Nix Store and Dependency Closures}
 
@@ -148,58 +148,58 @@ Although modern LLMs excel at general-purpose code synthesis~\cite{chenEvaluatin
 	\setlist[itemize]{leftmargin=1.2em, labelsep=0.4em, labelindent=0pt, topsep=0pt, partopsep=0pt, itemsep=1pt, parsep=0pt}
 	\begin{tabularx}{\textwidth}{@{}l >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}X@{}}
 		\toprule
-		\textbf{Approach} & \textbf{Advantages}                                                                                                                        & \textbf{Disadvantages} \\
+		\textbf{Approach} & \textbf{Advantages}                                                                                                                                  & \textbf{Disadvantages} \\
 		\midrule
 		Institution-Hosted Server
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Single environment maintained in one place where all the software used is configured~\cite{valstarUsingDevContainersStandardize2020}
-			                    \item Instructor and IT control over resources and access
-		                    \end{itemize}\vspace{-0.5\baselineskip}
+			                                              \item Single environment maintained in one place where all the software used is configured~\cite{valstarUsingDevContainersStandardize2020}
+			                                              \item Instructor and IT control over resources and access
+		                                              \end{itemize}\vspace{-0.5\baselineskip}
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Requires a persistent, low-latency network or VPN~\cite{valstarUsingDevContainersStandardize2020}
-			                    \item Depends on central IT for setup and toolchain updates~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}
-			                    \item Server outage affects the entire class~\cite{malanContainerizingCS50Standardizing2024}
-		                    \end{itemize}\vspace{-0.5\baselineskip}                                                              \\
+			                                              \item Requires a persistent, low-latency network or VPN~\cite{valstarUsingDevContainersStandardize2020}
+			                                              \item Depends on central IT for setup and toolchain updates~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}
+			                                              \item Server outage affects the entire class~\cite{malanContainerizingCS50Standardizing2024}
+		                                              \end{itemize}\vspace{-0.5\baselineskip} \\
 		\midrule
 		Virtual Machines
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Strong isolation from the host~\cite{stokerUsingVirtualMachines2013,harvieUsingVirtualMachines2019}
-			                    \item Complete, uniform operating system for all students~\cite{stokerUsingVirtualMachines2013}
-			                    \item Supports any guest OS and toolchain~\cite{stokerUsingVirtualMachines2013}
-		                    \end{itemize}\vspace{-0.5\baselineskip}
+			                                              \item Strong isolation from the host~\cite{stokerUsingVirtualMachines2013,harvieUsingVirtualMachines2019}
+			                                              \item Complete, uniform operating system for all students~\cite{stokerUsingVirtualMachines2013}
+			                                              \item Supports any guest OS and toolchain~\cite{stokerUsingVirtualMachines2013}
+		                                              \end{itemize}\vspace{-0.5\baselineskip}
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Multi-gigabyte images to distribute and store~\cite{stokerUsingVirtualMachines2013,malanContainerizingCS50Standardizing2024}
-			                    \item High CPU, memory, and disk overhead~\cite{malanContainerizingCS50Standardizing2024,valstarUsingDevContainersStandardize2020}
-			                    \item Slow startup; hardware virtualization required~\cite{malanContainerizingCS50Standardizing2024,valstarUsingDevContainersStandardize2020}
-			                    \item Imperative installation
-		                    \end{itemize}\vspace{-0.5\baselineskip}                                                                                                     \\
+			                                              \item Multi-gigabyte images to distribute and store~\cite{stokerUsingVirtualMachines2013,malanContainerizingCS50Standardizing2024}
+			                                              \item High CPU, memory, and disk overhead~\cite{malanContainerizingCS50Standardizing2024,valstarUsingDevContainersStandardize2020}
+			                                              \item Slow startup; hardware virtualization required~\cite{malanContainerizingCS50Standardizing2024,valstarUsingDevContainersStandardize2020}
+			                                              \item Imperative installation
+		                                              \end{itemize}\vspace{-0.5\baselineskip}        \\
 		\midrule
 		DevContainers
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Environment described in a version-controlled specification~\cite{valstarUsingDevContainersStandardize2020}
-			                    \item Lighter than full VMs; shares the host kernel~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}
-			                    \item Editor integration (e.g., VS Code)~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}
-		                    \end{itemize}\vspace{-0.5\baselineskip}
+			                                              \item Environment described in a version-controlled specification~\cite{valstarUsingDevContainersStandardize2020}
+			                                              \item Lighter than full VMs; shares the host kernel~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}
+			                                              \item Editor integration (e.g., VS Code)~\cite{valstarUsingDevContainersStandardize2020,malanContainerizingCS50Standardizing2024}
+		                                              \end{itemize}\vspace{-0.5\baselineskip}
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Docker daemon on macOS and Windows requires a background Linux VM~\cite{valstarUsingDevContainersStandardize2020}
-			                    \item Docker images may take significant amount of storage~\cite{valstarUsingDevContainersStandardize2020}
-			                    \item Slower file I/O on macOS and Windows~\cite{valstarUsingDevContainersStandardize2020}
-			                    \item Rebuilds are not guaranteed bit-for-bit reproducibility~\cite{duNixRescueReproducible2026a,NixBetterDocker2024}
-		                    \end{itemize}\vspace{-0.5\baselineskip}                                              \\
+			                                              \item Docker daemon on macOS and Windows requires a background Linux VM~\cite{valstarUsingDevContainersStandardize2020}
+			                                              \item Docker images may take significant amount of storage~\cite{valstarUsingDevContainersStandardize2020}
+			                                              \item Slower file I/O on macOS and Windows~\cite{valstarUsingDevContainersStandardize2020}
+			                                              \item Rebuilds are not guaranteed bit-for-bit reproducibility~\cite{duNixRescueReproducible2026a,NixBetterDocker2024}
+		                                              \end{itemize}\vspace{-0.5\baselineskip}                              \\
 		\midrule
 		Nix Flakes
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Declarative, pinned inputs via \texttt{flake.lock}~\cite{duNixRescueReproducible2026a,OSCodeMy2024}
-			                    \item Native performance
-			                    \item Shared store avoids duplicated dependencies~\cite{dolstraNixOSPurelyFunctional2010,NixFasterDocker}
-			                    \item No root privileges needed for activation~\cite{duNixRescueReproducible2026a}
-		                    \end{itemize}\vspace{-0.5\baselineskip}
+			                                              \item Declarative, pinned inputs via \texttt{flake.lock}~\cite{duNixRescueReproducible2026a,OSCodeMy2024}
+			                                              \item Native performance
+			                                              \item Shared store avoids duplicated dependencies~\cite{dolstraNixOSPurelyFunctional2010,NixFasterDocker}
+			                                              \item No root privileges needed for activation~\cite{duNixRescueReproducible2026a}
+		                                              \end{itemize}\vspace{-0.5\baselineskip}
 		                  & \vspace{-0.5\baselineskip}\begin{itemize}
-			                    \item Steep learning curve of the Nix language~\cite{duNixRescueReproducible2026a,OSCodeMy2024}
-			                    \item Experimental, breaking changes are possible
-			                    \item Weaker isolation than VMs or containers
-			                    \item Requires network or binary cache for first use~\cite{malkaDoesFunctionalPackage2025}
-		                    \end{itemize}\vspace{-0.5\baselineskip}                                                                                                     \\
+			                                              \item Steep learning curve of the Nix language~\cite{duNixRescueReproducible2026a,OSCodeMy2024}
+			                                              \item Experimental, breaking changes are possible
+			                                              \item Weaker isolation than VMs or containers
+			                                              \item Requires network or binary cache for first use~\cite{malkaDoesFunctionalPackage2025}
+		                                              \end{itemize}\vspace{-0.5\baselineskip}                                                      \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
