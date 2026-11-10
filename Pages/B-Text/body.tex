@@ -354,12 +354,12 @@ Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accurac
 
 \subsection{Codebase-Inferred and Document-Based Flake Synthesis}\label{subsec:codebase-doc-results}
 
-To evaluate whether the \texttt{course-flake-generator} skill scales beyond synthetic natural language prompts to real-world educational materials, we evaluated its accuracy across six existing coursework repositories and nine instructional setup documents described in Section~\ref{subsec:dataset-curation}. Both Gemini~3.8 Flash and GPT-OSS~120B were evaluated across these modalities under identical skill scaffolding and closed-loop verification conditions. Table~\ref{tab:codebase-results} presents the comparative synthesis performance and execution telemetry on existing coursework repositories (6 tasks, 18 total trials), while Table~\ref{tab:doc-results} reports the corresponding evaluation metrics on instructional setup documents (9 tasks, 27 total trials).
+To evaluate whether the \texttt{course-flake-generator} skill scales beyond synthetic natural language prompts to real-world educational materials, we evaluated its accuracy across six existing coursework repositories and nine instructional setup documents described in Subsection~\ref{subsec:dataset-curation}. Both Gemini~3.8 Flash and GPT-OSS~120B were evaluated across these modalities under identical skill scaffolding and closed-loop verification conditions. Table~\ref{tab:codebase-results} presents the comparative synthesis performance and execution telemetry on existing coursework repositories (6 tasks, 18 total trials), while Table~\ref{tab:doc-results} reports the corresponding evaluation metrics on instructional setup documents (9 tasks, 27 total trials).
 
 \begin{table}[htbp]
 	\centering
 	\small
-	\caption{Synthesis Performance on Existing Coursework Codebases (6 Tasks, 18 Trials)}
+	\caption{Synthesis Performance on Existing Coursework Codebases}
 	\label{tab:codebase-results}
 	\begin{tabular}{lccccc}
 		\toprule
@@ -374,7 +374,7 @@ To evaluate whether the \texttt{course-flake-generator} skill scales beyond synt
 \begin{table}[htbp]
 	\centering
 	\small
-	\caption{Synthesis Performance on Instructional Course Documents (9 Tasks, 27 Trials)}
+	\caption{Synthesis Performance on Instructional Course Documents}
 	\label{tab:doc-results}
 	\begin{tabular}{lccccc}
 		\toprule
@@ -390,7 +390,7 @@ As shown in Table~\ref{tab:codebase-results} and Table~\ref{tab:doc-results}, Ge
 
 \begin{enumerate}
 	\item \textbf{Multi-Module Incompletion:} On coursework repositories with nested submodules, Gemini~3.8 Flash systematically iterated across every directory or authored module-specific flakes as required. In contrast, GPT-OSS~120B suffered from premature task termination. In \texttt{COSC236\_Labs} (Trial~2), the model authored flakes for \texttt{Lab1} and \texttt{Lab2}, emitted a conversational status message listing ``Next steps'', and concluded execution after only 26.8\,s, omitting Labs~3 through~10. Similarly, in Trial~3 of the same task, it generated flakes for Labs~1 through~9 but skipped \texttt{Lab10}. In \texttt{COSC336-Assignments} (Trial~1), it authored flakes for Assignments~1 through~6 but failed to process Assignments~7 and~8.
-	\item \textbf{Package Hallucination:} When analyzing Python projects without explicit requirements manifests (\texttt{AI-Assignments}, Trial~3), GPT-OSS~120B fell back to treating language-level libraries as top-level Nixpkgs derivations, declaring \texttt{pkgs.pandas} and \texttt{pkgs.matplotlib} in \texttt{packages} rather than constructing an idiomatic \texttt{python3.withPackages} environment. This triggered immediate Nix evaluation failure: \textit{"error: attribute 'pandas' in selection path 'pkgs.pandas' not found. Did you mean pandoc?"}. In contrast, Gemini~3.8 Flash leveraged the skill's reference guides to properly structure Python environments using \texttt{python3.withPackages (ps: with ps; [ pandas matplotlib ])}.
+	\item \textbf{Package Hallucination:} When analyzing Python projects without explicit requirements manifests (\texttt{AI-Assignments}, Trial~3), GPT-OSS~120B fell back to treating language-level libraries as top-level Nixpkgs derivations, declaring \texttt{pkgs.pandas} and \texttt{pkgs.matplotlib} in \texttt{packages} rather than constructing an idiomatic \texttt{python3.withPackages} environment. This triggered immediate Nix evaluation failure: \textit{"error: attribute 'pandas' in selection path 'pkgs.pandas' not found. Did you mean pandoc?"}. In contrast, Gemini~3.8 Flash leveraged the skill's reference guides use the Python package set using \texttt{python3.withPackages (ps: with ps; [ pandas matplotlib ])}.
 	\item \textbf{Indiscriminate Over-Provisioning and Activation Timeouts:} In \texttt{COSC336-Assignments} (Trial~2), GPT-OSS~120B observed LaTeX assignment documentation alongside Java source files and added \texttt{pkgs.texliveFull} to \texttt{nativeBuildInputs}. Because \texttt{texliveFull} is about a 7gb package, downloading and substituting store paths exceeded the test harness's 60-second activation threshold, triggering an activation timeout failure.
 	\item \textbf{Empty Output Errors:} In several document-grounded trials (such as Task~4 Trial~3 and Task~8 Trial~1), GPT-OSS~120B generated empty conversational responses between background tool calls, triggering harness runtime errors (\textit{"model output error: model output must contain either output text or tool calls"}) and exiting prior to generating \texttt{flake.nix}.
 	\item \textbf{Naming Drift on Deprecated Packages:} On the database setup guide (\texttt{Itec 451 Mcguire1}), all three GPT-OSS~120B trials failed because the model repeatedly declared \texttt{pkgs.mysql}, which has been removed and replaced by \texttt{mariadb} and versioned attributes (\texttt{mysql80}) in Nixpkgs~24.11. Because the model withheld MCP search calls and relied exclusively on parametric weights, it was unable to detect and recover from attribute renaming.

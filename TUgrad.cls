@@ -51,9 +51,9 @@
 \RequirePackage[english]{babel}
 %%% -----------------------------------------------------------------------
 \renewcommand{\thechapter}{\Roman{chapter}}
-\renewcommand{\thesection}{\Alph{section}.}
-\renewcommand{\thesubsection}{\arabic{subsection})}
-\renewcommand{\thesubsubsection}{\alph{subsubsection})}
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\alph{subsubsection}}
 %%% -----------------------------------------------------------------------
 \RequirePackage{titlesec}
 \titlespacing*{\chapter}{0pt}{-30pt}{24pt}
@@ -73,13 +73,13 @@
 {\normalsize\scshape}
 \titleformat{\section}
 {\normalfont\normalsize}
-{\textit\thesection}{0.5em}{\textit}
+{\textit{\thesection.}}{0.5em}{\textit}
 \titleformat{\subsection}[runin]
 {\normalfont\normalsize}
-{\textit\thesubsection}{0.5em}{\textit}[: \quad]
+{\textit{\thesubsection)}}{0.5em}{\textit}[: \quad]
 \titleformat{\subsubsection}[runin]
 {\normalfont\normalsize}
-{\textit\thesubsubsection}{0.5em}{\textit}[: \quad]
+{\textit{\thesubsubsection)}}{0.5em}{\textit}[: \quad]
 %%% -----------------------------------------------------------------------
 % Define the page heading to be page number only.
 \newcommand{\properpagestyle}{
@@ -445,6 +445,9 @@
 %%% -----------------------------------------------------------------------
 \renewcommand\cftchappresnum{Chapter~}
 \renewcommand\cftchapaftersnum{.}
+\renewcommand\cftsecaftersnum{.}
+\renewcommand\cftsubsecaftersnum{)}
+\renewcommand\cftsubsubsecaftersnum{)}
 \settowidth{\cftchapnumwidth}{Chapter~999}
 \setlength{\cftbeforechapskip}{0pt}
 \setlength{\cftbeforesecskip}{0pt}
