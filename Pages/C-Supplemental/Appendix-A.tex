@@ -1,31 +1,26 @@
 \chapter{Disclosure of Generative AI Use}\label{apd:a}
 
 \section{AI-Assistance}
-Generative AI, specifically Gemini models from Google, was extensively used not only for the experiments conducted, but also the creation of the scripts that performed the experiment and analysis of the results.
 
-In the process of writing this thesis, generative AI tools were used to draft out paragraphs from bulleted lists of ideas. The generated paragraphs are then reviewed and corrected by hand.
+Generative AI, specifically Gemini models from Google, was extensively used throughout this research. In addition to powering the autonomous agent evaluated in our synthesis benchmark, AI tools assisted in developing experimental test harnesses, analyzing telemetry logs, and drafting initial prose from outlines. All drafted paragraphs were subsequently reviewed, verified, and edited by hand to ensure factual accuracy and academic integrity.
 
-The following agent skills were utilized to assist in writing prose:
+The following agent skills were utilized to support writing and literature verification. Each tool provided automated capabilities within the author's agentic development environment:
 \begin{itemize}
 	\item \texttt{zotero-cli}: \url{https://github.com/bahayonghang/zotero-cli}
 	\item \texttt{thesis-writing-guide}: \url{https://www.skillsdirectory.com/skills/brycewang-stanford-thesis-writing-guide}
 \end{itemize}
 
-The zoteri-cli skill was used to confirm the validity of the sources that I referenced by invoking zotero cli commands to read the contents of the sources.
-
-The thesis-writing-guide skill was used to provide iterative constructive feedback.
+The \texttt{zotero-cli} skill was used to inspect literature directly from the author's reference library, verifying that source citations accurately represented cited findings. In addition, the \texttt{thesis-writing-guide} skill provided structured feedback on chapter organization, academic tone, and university formatting compliance.
 
 \section{AI-Generated Artifacts}
 
-The following student onboarding guide for activating a nix environment (\texttt{nix\_installation\_guide.pdf}) was generated with AI assistance during the student onboarding evaluations.
+The student onboarding guide presented below (\texttt{nix\_installation\_guide.pdf}) was generated with AI assistance to support the onboarding evaluations. It provides step-by-step instructions for installing the Nix package manager and activating coursework development shells via \texttt{nix develop}:
 
 \includepdf[pages=-,scale=0.82,pagecommand={\thispagestyle{myheadings}}]{Figures/nix_installation_guide.pdf}
 
 \subsection{AI-Generated Input for RQ1}
 
-The following benchmark dataset of synthetic natural language assignment instructions and expected dependency assertions was generated with AI assistance to evaluate RQ1 across the Software Development and Data Science curriculum tracks.
-
-The dataset is based on the author's personal experience and knowledge on various computer science courses/tutorials.
+The synthetic natural language benchmark instructions (Listing~\ref{lst:nl-instruction-inputs}) were generated with AI assistance to evaluate RQ1 across the Software Development and Data Science curriculum tracks. These prompts are grounded in the author's practical experience across university computer science courses, establishing realistic requirement statements paired with expected CLI dependency assertions.
 
 \begin{lstlisting}[caption={Natural Language Instruction Benchmark Inputs}, label={lst:nl-instruction-inputs}]
 {"track":"computer science","instruction":"Install Java JDK 17 (includes the JRE). Set JAVA_HOME to the JDK install directory (not a separate JRE folder) and add $JAVA_HOME/bin to your PATH. Install Visual Studio Code, then install the Java extension pack (Language Support for Java by Red Hat, Debugger for Java, Java Test Runner, Maven for Java). Restart VS Code and verify with `java -version` and `javac -version`.","dependency_list":["java","javac","code"]}
