@@ -2,6 +2,8 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #   "altair>=5.4.0",
+#   "matplotlib>=3.8.0",
+#   "numpy>=1.26.0",
 #   "pandas>=2.2.0",
 #   "vl-convert-python>=1.6.0",
 # ]
@@ -9,6 +11,9 @@
 
 from pathlib import Path
 import altair as alt
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import numpy as np
 import pandas as pd
 
 
@@ -218,77 +223,102 @@ for sub in subsection_order:
     single_chart.save(str(task_svg))
     print(f"Saved {task_png}, {task_pdf}, and {task_svg}")
 
-# 3. Average Time Delta per Subsection (Declarative - Imperative)
+# 3. Average Time Delta per Subsection (Clean bar graph)
 pivoted = df.pivot(index=["Subsection", "Participant"], columns="Method", values="Seconds").reset_index()
 pivoted["DeltaSeconds"] = pivoted["Declarative (nix develop)"] - pivoted["Imperative"]
+pivoted["DeltaMinutes"] = pivoted["DeltaSeconds"] / 60.0
 
-avg_delta_rows = []
-for sub in subsection_order:
-    sub_deltas = pivoted[pivoted["Subsection"] == sub]["DeltaSeconds"]
-    mean_sec = float(sub_deltas.mean())
-    avg_delta_rows.append(
-        {
-            "Subsection": sub,
-            "MeanDeltaSeconds": round(mean_sec, 2),
-            "MeanDeltaMinutes": round(mean_sec / 60.0, 3),
-            "DeltaLabel": f"{format_seconds_mmss(mean_sec)} ({mean_sec:+.1f}s)",
-        }
+# Styling configuration matching publication standards
+plt.rcParams.update({
+    "font.family": "serif",
+    "font.size": 10.5,
+    "axes.labelsize": 11.5,
+    "axes.titlesize": 12,
+    "xtick.labelsize": 11,
+    "ytick.labelsize": 10.5,
+    "figure.titlesize": 13,
+})
+
+fig, ax = plt.subplots(figsize=(7.5, 4.0), dpi=300)
+
+x_indices = np.arange(len(subsection_order))
+bar_width = 0.48
+
+# Palette: distinct elegant muted tones matching the thesis
+bar_colors = ["#4C78A8", "#72B7B2", "#F58518"]
+bar_edges = ["#2b527d", "#4b8782", "#b85d09"]
+
+for i, sub in enumerate(subsection_order):
+    sub_df = pivoted[pivoted["Subsection"] == sub]
+    mean_sec = float(sub_df["DeltaSeconds"].mean())
+    mean_min = float(sub_df["DeltaMinutes"].mean())
+
+    # Plot bar
+    ax.bar(
+        x_indices[i],
+        mean_min,
+        width=bar_width,
+        color=bar_colors[i],
+        edgecolor=bar_edges[i],
+        linewidth=1.2,
+        zorder=3,
     )
 
-avg_delta_df = pd.DataFrame(avg_delta_rows)
-
-delta_base = alt.Chart(avg_delta_df).encode(
-    x=alt.X(
-        "Subsection:N",
-        sort=subsection_order,
-        title="Coursework Environment Task",
-        scale=alt.Scale(paddingInner=0.4, paddingOuter=0.25),
-        axis=alt.Axis(labelAngle=0, titleFontWeight="bold", labelFontSize=11, titleFontSize=12, labelLimit=220),
-    ),
-    y=alt.Y(
-        "MeanDeltaMinutes:Q",
-        title="Mean Time Delta (Minutes, Declarative − Imperative)",
-        scale=alt.Scale(domain=[0, 2.6]),
-        axis=alt.Axis(titleFontWeight="bold", labelFontSize=11, titleFontSize=12, grid=True),
-    ),
-    color=alt.Color(
-        "Subsection:N",
-        sort=subsection_order,
-        scale=alt.Scale(
-            domain=subsection_order,
-            range=["#4C78A8", "#72B7B2", "#F58518"],
-        ),
-        legend=None,
-    ),
-)
-
-delta_bars = delta_base.mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
-delta_labels = delta_base.mark_text(
-    dy=-9,
-    fontSize=10.5,
-    fontWeight="bold",
-    color="#222222",
-).encode(text="DeltaLabel:N")
-
-delta_chart = (
-    (delta_bars + delta_labels)
-    .properties(
-        title=alt.TitleParams(
-            text="Average Onboarding Time Delta by Environment Task (Declarative − Imperative)",
-            fontSize=13,
-            fontWeight="bold",
-            anchor="middle",
-        ),
-        width=520,
-        height=240,
+    # Format text label above each bar
+    sign = "+" if mean_sec > 0 else "-"
+    abs_s = abs(mean_sec)
+    mm = int(abs_s // 60)
+    ss = abs_s - mm * 60
+    time_str = f"{sign}{mm}:{ss:05.2f} ({mean_sec:+.1f}s)"
+    ax.text(
+        x_indices[i],
+        mean_min + 0.08,
+        time_str,
+        ha="center",
+        va="bottom",
+        fontsize=10.0,
+        fontweight="bold",
+        color="#222222",
+        zorder=5,
     )
-    .configure_view(strokeWidth=0)
-)
+
+# Baseline
+ax.axhline(0, color="#333333", linestyle="-", linewidth=1.0, zorder=4)
+
+# Gridlines
+ax.grid(axis="y", color="#e0e0e0", linestyle="--", linewidth=0.7, zorder=1)
+ax.set_axisbelow(True)
+
+# Y-axis styling
+ax.set_ylabel("Mean Time Delta (Minutes, Declarative − Imperative)", fontweight="bold", labelpad=8)
+ax.set_ylim(0, 2.6)
+y_ticks = np.arange(0, 2.6, 0.5)
+ax.set_yticks(y_ticks)
+
+def format_ytick(val, pos):
+    mins = int(val)
+    secs = int(round((val - mins) * 60))
+    return f"{mins}:{secs:02d}"
+
+ax.yaxis.set_major_formatter(FuncFormatter(format_ytick))
+
+# X-axis styling
+ax.set_xticks(x_indices)
+ax.set_xticklabels(subsection_order, fontweight="bold")
+ax.set_xlabel("Coursework Environment Task", fontweight="bold", labelpad=8)
+
+# Spines cleanup
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.spines["left"].set_color("#666666")
+ax.spines["bottom"].set_color("#666666")
+
+fig.tight_layout()
 
 delta_png = figures_dir / "rq3-avg-time-delta.png"
 delta_pdf = figures_dir / "rq3-avg-time-delta.pdf"
 delta_svg = figures_dir / "rq3-avg-time-delta.svg"
-delta_chart.save(str(delta_png), scale_factor=2.0)
-delta_chart.save(str(delta_pdf))
-delta_chart.save(str(delta_svg))
+fig.savefig(delta_png, dpi=300)
+fig.savefig(delta_pdf)
+fig.savefig(delta_svg)
 print(f"Saved {delta_png}, {delta_pdf}, and {delta_svg}")
