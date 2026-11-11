@@ -2,16 +2,12 @@
 
 \section{Research Questions and Hypotheses}\label{sec:rqs}
 
-This thesis investigates the feasibility, reproducibility, and reliability of automated declarative environment generation for computer science education. To guide empirical inquiry, three central Research Questions (RQs) are formulated:
-
-\rqlist
-
-To evaluate these questions systematically, we formulate four corresponding working hypotheses. These hypotheses guide our empirical investigation into agentic flake generation, host-independent reproducibility, and student activation ergonomics:
+Building on the three research questions introduced in Chapter~\ref{chap:intro} and the technical foundations established in Chapter~\ref{chap:litreview}, this section defines the working hypotheses used to test each question. Specifically, we map automated flake synthesis (\textbf{RQ1}), cross-platform clean-environment reproducibility (\textbf{RQ2}), and student onboarding ergonomics (\textbf{RQ3}) to four testable hypotheses that guide our empirical evaluation:
 \begin{itemize}
-	\item \textbf{H\textsubscript{1a}:} Providing structured procedural scaffolding (\texttt{course-flake-generator}) and closed-loop evaluation (\texttt{nix flake check}) will enable both frontier (\texttt{Gemini 3.8 Flash}) and smaller open-weight (\texttt{GPT-OSS 120B}) models to reliably synthesize valid \texttt{flake.nix} environments, narrowing the synthesis accuracy gap between model tiers.
-	\item \textbf{H\textsubscript{1b}:} Augmenting the agent with real time data (\texttt{mcp-nixos}) will reduce package hallucinations and improve first-attempt synthesis accuracy (Pass@1) and package precision compared to relying on training data knowledge and native Nix CLI commands alone.
-	\item \textbf{H\textsubscript{2}:} Nix Flake environments that pass the host validation pipeline with a pinned \texttt{flake.lock} will deterministically reproduce and support coursework execution in clean, unmounted Linux containers and macOS virtual machines, with any residual failures isolated to platform-specific package availability.
-	\item \textbf{H\textsubscript{3}:} Single-command activation via \texttt{nix develop} will reduce procedural errors and cognitive friction compared to manual imperative installation.
+	\item \textbf{H\textsubscript{1a} (RQ1):} Providing structured procedural scaffolding (\texttt{course-flake-generator}) and closed-loop evaluation (\texttt{nix flake check}) will enable both frontier (\texttt{Gemini 3.8 Flash}) and smaller open-weight (\texttt{GPT-OSS 120B}) models to reliably synthesize valid \texttt{flake.nix} environments, narrowing the synthesis accuracy gap between model tiers.
+	\item \textbf{H\textsubscript{1b} (RQ1):} Augmenting the agent with real-time package data (\texttt{mcp-nixos}) will reduce package hallucinations and improve first-attempt synthesis accuracy (Pass@1) and package precision compared to relying on training data knowledge and native Nix CLI commands alone.
+	\item \textbf{H\textsubscript{2} (RQ2):} Nix Flake environments that pass the host validation pipeline with a pinned \texttt{flake.lock} will deterministically reproduce and support coursework execution in clean, unmounted Linux containers and macOS virtual machines, with any residual failures isolated to platform-specific package availability.
+	\item \textbf{H\textsubscript{3} (RQ3):} Single-command activation via \texttt{nix develop} will reduce procedural errors and cognitive friction compared to manual imperative installation.
 \end{itemize}
 
 \section{Proposed Solution: An agent skill for AI-Assisted Nix Flake Synthesis}\label{chap:solution}
@@ -50,7 +46,7 @@ To investigate whether modern autonomous agents can reliably synthesize declarat
 
 \subsection{Benchmark Dataset Curation and Evaluation Suites}\label{subsec:dataset-curation}
 
-Because standardized benchmark datasets for declarative Nix environments did not previously exist, we constructed an evaluation benchmark representing standard computer science coursework requirements across three distinct instructional modalities. These modalities span informal prompt instructions, complete student project repositories, and unformatted assignment handouts to capture various inputs:
+Because standardized benchmark datasets for declarative Nix environments did not previously exist, we constructed an evaluation benchmark representing standard computer science coursework requirements across three distinct instructional modalities. These modalities span informal prompt instructions, existing assignment repositories, and unformatted assignment handouts to capture various inputs:
 
 \begin{enumerate}
 	\item \textbf{Natural Language Specification Prompts:} Curated prompts representing informal assignments provided by instructors across two curriculum tracks:
@@ -60,7 +56,7 @@ Because standardized benchmark datasets for declarative Nix environments did not
 	      \end{itemize}
 	      The prompt benchmark is serialized as a \texttt{jsonl} file, where each record specifies the curriculum track, the natural language prompt, and the asserted dependency list (Listing~\ref{lst:input-data-format}).
 
-	\item \textbf{Existing Coursework Codebases:} A collection of project repositories collected from computer science coursework spanning artificial intelligence assignments, object-oriented Java laboratories, data structures projects, mobile app development, neural network coursework, and network programming. For these tasks, the agent cannot rely on explicit textual package lists; instead, the skill instructs the agent to run \texttt{detect-project-requirements.py} to inspect file contents, repository structures, and build manifests (such as \texttt{pom.xml}, \texttt{build.gradle}, and \texttt{pyproject.toml}) to infer necessary runtimes.
+	\item \textbf{Existing Coursework Codebases:} A collection of assignment codebases from computer science courses spanning artificial intelligence, object-oriented Java, data structures, mobile app development, neural networks, and network programming. For these tasks, the agent cannot rely on explicit textual package lists; instead, the skill instructs the agent to run \texttt{detect-project-requirements.py} to inspect file contents, repository structures, and build manifests (such as \texttt{pom.xml}, \texttt{build.gradle}, and \texttt{pyproject.toml}) to infer necessary runtimes.
 
 	\item \textbf{Instructional Course Documents:} A collection of course documents and laboratory setup guides formatted as PDF, Microsoft Word (\texttt{.docx}), HTML, and Markdown files. To process these unstructured documents without manual keyword pre-mapping, the skill executes \texttt{extract-document-content.py} to parse layout structures into clean text for agent requirement extraction.
 \end{enumerate}
@@ -204,7 +200,6 @@ The artifacts generated within each benchmark run serve distinct functions for p
 	\item \texttt{agent\_response.md}: Preserves the final conversational completion message and instructions returned by the agent. It allows evaluators to verify the clarity and correctness of the agent's onboarding guidance.
 	\item \texttt{flake.lock}: Pins exact cryptographic source hashes and input commits generated during local validation. It guarantees reproducible, deterministic evaluation across clean guest environments.
 	\item \texttt{flake.nix}: Defines the declarative \texttt{devShell} environment and package inputs synthesized by the agent. It is the primary artifact tested against the three-stage validation pipeline.
-	\item \texttt{jupyter\_install.html}: Contains the localized assignment specification or handout provided to the agent in document-grounded tasks. Isolating this input guarantees a self-contained trial workspace.
 	\item \texttt{raw\_output.log}: Captures unbuffered standard output and standard error streams from the agent harness execution. It assists with post-mortem debugging whenever an execution hangs or crashes unexpectedly.
 	\item \texttt{transcript.jsonl}: Stores the comprehensive turn-by-turn event stream, including internal reasoning traces, tool parameters, and raw tool responses. It provides full behavioral provenance for qualitative evaluation.
 	\item \texttt{trial\_meta.json}: Records structured trial execution metrics, including pass/fail status, validation stages completed, latency, token usage, and dependency precision. It supplies the ground-truth values used to calculate Pass@$k$ and bloat statistics.
@@ -398,8 +393,6 @@ As shown in Table~\ref{tab:codebase-results} and Table~\ref{tab:doc-results}, Ge
 Interestingly, on passing trials, GPT-OSS~120B achieved a higher package precision (87.1\% vs. 42.2\%) and a lower over-provisioning ratio (1.80$\times$ vs. 3.73$\times$) than Gemini~3.8 Flash on existing codebases. Transcript inspection explains this apparent paradox: when GPT-OSS~120B succeeded, it generated strictly minimalist flakes containing only the core compilers explicitly tested by the verifier (such as \texttt{openjdk17} or \texttt{pythonEnv}). Conversely, Gemini~3.8 Flash proactively inferred and provisioned comprehensive developer tooling suites detected within project files, including version control (\texttt{git}), build automation tools (\texttt{gradle}, \texttt{just}), and data science libraries (\texttt{torch}, \texttt{torchvision}, \texttt{scikit-learn}, and Jupyter kernels). While these auxiliary packages were penalized as extraneous under the strict CLI assertion baseline, they reflect a more complete, production-ready developer environment for students.
 
 This tension between minimal specification adherence and unprompted over-generation is well documented in automated infrastructure synthesis. In their benchmark evaluation on Infrastructure as Code, Kon et~al.~\cite{konIaCEvalCodeGeneration} demonstrated that over 50\% of configurations that successfully passed compiler checks violated user intent specifications by provisioning unrequested, extraneous cloud resources and services. Similarly, Zhang et~al.~\cite{zhangDeployabilityCentricInfrastructureasCodeGeneration2025} observed that fewer than 26\% of synthesized deployment templates adhered to user-intended resource and attribute boundaries without inserting self-defined properties or unneeded substitutions. In our educational setting, however, qualitative analysis reveals an important distinction: whereas prior benchmarks observed unprompted resources arising from model hallucination or prompt divergence, Gemini~3.8 Flash's over-provisioning stemmed from proactive contextual inference. By scanning repository manifests for unstated but practical workflow requirements, the agent prioritized classroom deployability over minimal ground-truth precision.
-
-Finally, the execution telemetry reported in Tables~\ref{tab:codebase-results} and~\ref{tab:doc-results} reveals a substantial divergence in execution characteristics. GPT-OSS~120B operated significantly faster than Gemini~3.8 Flash (averaging 77.31\,s vs. 324.58\,s on codebases, and 48.79\,s vs. 232.38\,s on documents) and consumed nearly an order of magnitude fewer tokens (38,459 vs. 261,714 on codebases, and 30,873 vs. 202,707 on documents).
 
 \section{Tool Invocation and Telemetry Analysis}\label{sec:telemetry-analysis}
 

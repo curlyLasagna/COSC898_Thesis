@@ -1,7 +1,7 @@
 grid-columns: 2
 grid-gap: 50
 
-spec: "1. Specification & Autonomous Synthesis" {
+spec: "Specification & Autonomous Synthesis" {
   direction: down
   style: {
     fill: "#F7F8FE"
@@ -56,7 +56,7 @@ spec: "1. Specification & Autonomous Synthesis" {
   MCP -> harness: Package info
 }
 
-dist: "2. Verification & Distribution" {
+dist: "Verification & Distribution" {
   direction: down
   style: {
     fill: "#F7F8FE"
@@ -88,9 +88,9 @@ dist: "2. Verification & Distribution" {
     shape: image
   }
 
-  output -> verify: 3. Activates & verifies
-  verify -> cms: 4. Publishes to
-  cms -> student: 5. Downloads assignment folder\n& activates flake.nix dev shell
+  output -> verify: Activates & verifies
+  verify -> cms: Publishes to
+  cms -> student: Downloads assignment folder\n& activates flake.nix dev shell
 }
 
 spec -> dist: {
