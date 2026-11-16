@@ -5,7 +5,7 @@
 Building on the three research questions introduced in Chapter~\ref{chap:intro} and the technical foundations established in Chapter~\ref{chap:litreview}, this section defines the working hypotheses used to test each question. Specifically, we map automated flake synthesis (\textbf{RQ1}), cross-platform clean-environment reproducibility (\textbf{RQ2}), and student onboarding ergonomics (\textbf{RQ3}) to four testable hypotheses that guide our empirical evaluation:
 \begin{itemize}
 	\item \textbf{H\textsubscript{1a} (RQ1):} Providing our custom agent skill (\texttt{course-flake-generator}) and closed-loop evaluation (\texttt{nix flake check}) will enable both frontier (\texttt{Gemini 3.8 Flash}) and smaller open-weight (\texttt{GPT-OSS 120B}) models to reliably synthesize valid \texttt{flake.nix} environments, narrowing the synthesis accuracy gap between model tiers.
-	\item \textbf{H\textsubscript{1b} (RQ1):} Augmenting the agent with structured package lookup via the \texttt{mcp-nixos} MCP server will reduce package hallucinations and improve first-attempt synthesis accuracy (Pass@1) and package precision compared to relying on training data knowledge and native Nix CLI commands alone.
+	\item \textbf{H\textsubscript{1b} (RQ1):} Augmenting the agent with structured package lookup via the \texttt{mcp-nixos} MCP server will improve package precision, reduce unnecessary dependencies, and assist in resolving complex package definitions compared to relying on parametric training data and native Nix CLI commands alone.
 	\item \textbf{H\textsubscript{2} (RQ2):} Nix Flake environments that pass the host validation pipeline with a pinned \texttt{flake.lock} will deterministically reproduce and support coursework execution in clean, unmounted Linux containers and macOS virtual machines, with any residual failures isolated to platform-specific package availability.
 	\item \textbf{H\textsubscript{3} (RQ3):} Single-command activation via \texttt{nix develop} will reduce procedural errors and cognitive friction compared to manual imperative installation.
 \end{itemize}
@@ -72,11 +72,40 @@ To establish an objective evaluation standard across all three modalities, each 
     "python3",
     "jupyter",
     "git"
-  ]
+  ],
+  "verification_command": "python3 -m compileall -q ."
 }
 \end{lstlisting}
 
-In this schema, \texttt{track} classifies the curriculum domain, \texttt{title} and \texttt{instruction} provide contextual task descriptions, and \texttt{dependency\_list} designates the ground-truth executables that must resolve inside the ephemeral \texttt{nix develop} shell. The automated evaluation harness evaluates these human-verified assertions to determine whether candidate flakes satisfy the Pass@$k$ criteria and to compute package precision and over-provisioning metrics.
+In this schema, \texttt{track} classifies the curriculum domain, \texttt{title} and \texttt{instruction} provide contextual task descriptions, \texttt{dependency\_list} designates the ground-truth executables that must resolve inside the ephemeral \texttt{nix develop} shell, and \texttt{verification\_command} specifies the shell command used to verify that project source files compile or interpret cleanly within the synthesized environment. The automated evaluation harness evaluates these human-verified assertions to determine whether candidate flakes satisfy the Pass@$k$ criteria and to compute package precision and over-provisioning metrics. Table~\ref{tab:coursework-codebases} details the complete suite of curated coursework codebases evaluated under this schema alongside their descriptions and dependencies.
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Curated Coursework Codebases, Descriptions, and Dependencies}
+	\label{tab:coursework-codebases}
+	\begin{tabularx}{\textwidth}{@{}l >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}p{3.4cm}@{}}
+		\toprule
+		\textbf{Codebase}                & \textbf{Description}                                                                                                                                                  & \textbf{Dependencies}                                         \\
+		\midrule
+		\texttt{AI-Assignments}          & AI coursework featuring machine learning models, and optimization algorithms executed in Jupyter notebooks.                                                           & \texttt{python3}, \texttt{jupyter}, \texttt{git}              \\
+		\addlinespace
+		\texttt{COSC 439 (OS)}           & Operating systems assignments implementing thread synchronization, semaphores, client-server socket IPC, and scheduling simulations in C and Python.                  & \texttt{gcc}, \texttt{make}, \texttt{python3}, \texttt{git}   \\
+		\addlinespace
+		\texttt{COSC236\_Labs}           & Programming labs in Java covering basic data structures, and algorithms.                                                                                              & \texttt{java}, \texttt{javac}, \texttt{git}                   \\
+		\addlinespace
+		\texttt{COSC336-Assignments}     & Advanced data structures and algorithm analysis coursework in Java.                                                                                                   & \texttt{java}, \texttt{javac}, \texttt{git}                   \\
+		\addlinespace
+		\texttt{Mobile Assignment}       & Native iOS mobile application project developed with Swift and SwiftUI.                                                                                               & \texttt{swift}, \texttt{git}                                  \\
+		\addlinespace
+		\texttt{Neural\_Network\_Course} & Deep learning and neural networks coursework implementing convolutional and recurrent neural networks in Python using \texttt{uv} as the runtime and package manager. & \texttt{python3}, \texttt{jupyter}, \texttt{uv}, \texttt{git} \\
+		\addlinespace
+		\texttt{ProgrammingLang}         & Programming languages assignment implementing an abstract syntax tree interpreter, variable environment store, and expression evaluation using Emacs Lisp.            & \texttt{emacs}                                                \\
+		\addlinespace
+		\texttt{Socket Programming}      & Multithreaded TCP client-server socket networking project in Java with build automation tasks orchestrated via \texttt{just}.                                         & \texttt{java}, \texttt{javac}, \texttt{just}, \texttt{git}    \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
 
 \subsection{Agent Harness, Model Configurations, and Tooling Conditions}\label{subsec:agent-harness}
 
@@ -104,7 +133,7 @@ To guide the agent and eliminate erratic zero-shot behavior, each agent session 
 
 \end{lstlisting}
 
-The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory stores Python scripts to perform deterministic actions such as extracting text from user submitted documents. According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates and clear reference bounds significantly improves behavioral consistency and task adherence in autonomous agents.
+The \texttt{assets/} directory bundles validated boilerplate templates for \texttt{devShells} across multi-architecture systems. Similar to the templates evaluated by Schwaighofer et~al.~\cite{schwaighoferVibenixAIAssistant2026}, placeholder values are indicated by \texttt{\{\{\}\}}, adopting Jinja2 templating notation. The \texttt{references/} directory supplies documentation outlining common Nix idiomatic patterns and troubleshooting heuristics. The \texttt{scripts/} directory stores Python scripts to perform deterministic actions such as extracting text from user submitted documents. According to Ling et~al.~\cite{lingAgentSkillsDataDriven2026}, providing modular templates significantly improves behavioral consistency and task adherence in autonomous agents.
 
 \begin{lstlisting}[caption={assets/flake-devshell.template.md template}]
 {
@@ -345,6 +374,8 @@ Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accurac
 	\end{tabular}
 \end{table}
 
+As shown in Table~\ref{tab:model-synthesis-results}, access to the MCP server did not consistently alter overall synthesis success. For Gemini~3.8 Flash, Pass@1 was marginally higher in the absence of MCP (97.62\% vs. 95.24\%), whereas GPT-OSS~120B demonstrated a minor improvement with MCP (73.81\% vs. 71.43\%). Because these differences are minimal, MCP availability is not a primary driver of overall flake synthesis success on standard coursework prompts. Instead, the clear benefit of MCP retrieval appears in package selection and dependency minimization (Table~\ref{tab:model-bloat}): live registry lookups consistently increased package precision (improving to 93.3\% for Gemini~3.8 Flash and 93.5\% for GPT-OSS~120B) and reduced unnecessary dependency over-provisioning across both evaluated models.
+
 \subsection{Codebase-Inferred and Document-Based Flake Synthesis}\label{subsec:codebase-doc-results}
 
 To evaluate whether the \texttt{course-flake-generator} skill scales beyond synthetic natural language prompts to real-world educational materials, we evaluated its accuracy across six existing coursework repositories and nine instructional setup documents described in Subsection~\ref{subsec:dataset-curation}. Both Gemini~3.8 Flash and GPT-OSS~120B were evaluated across these modalities using the same agent skill and closed-loop verification conditions. Table~\ref{tab:codebase-results} presents the comparative synthesis performance and execution telemetry on existing coursework repositories (6 tasks, 18 total trials), while Table~\ref{tab:doc-results} reports the corresponding evaluation metrics on instructional setup documents (9 tasks, 27 total trials).
@@ -387,7 +418,7 @@ As shown in Table~\ref{tab:codebase-results} and Table~\ref{tab:doc-results}, Ge
 	\item \textbf{Indiscriminate Over-Provisioning and Activation Timeouts:} In \texttt{COSC336-Assignments} (Trial~2), GPT-OSS~120B observed LaTeX assignment documentation alongside Java source files and added \texttt{pkgs.texliveFull} to \texttt{nativeBuildInputs}. Because \texttt{texliveFull} is approximately a 7\,GB package, downloading and substituting store paths exceeded the test harness's 60-second activation threshold, triggering an activation timeout failure.
 	\item \textbf{Empty Output Errors:} In several document-grounded trials (such as Task~4 Trial~3 and Task~8 Trial~1), GPT-OSS~120B generated empty conversational responses between background tool calls, triggering harness runtime errors (\textit{"model output error: model output must contain either output text or tool calls"}) and exiting prior to generating \texttt{flake.nix}.
 	\item \textbf{Naming Drift on Deprecated Packages:} On the database setup guide (\texttt{Itec 451 Mcguire1}), all three GPT-OSS~120B trials failed because the model repeatedly declared \texttt{pkgs.mysql}, which has been removed and replaced by \texttt{mariadb} and versioned attributes (\texttt{mysql80}) in Nixpkgs~24.11. Because the model withheld MCP search calls and relied exclusively on parametric weights, it was unable to detect and recover from attribute renaming.
-	\item \textbf{Nix Identifier Syntax Violations:} In the full-stack Elixir task (\texttt{Fullstack Elixir Sqlite Evaluation}, Trial~2), GPT-OSS~120B attempted to declare Node.js via \texttt{nodejs-20\_x}. In Nix syntax, unquoted hyphens in attribute identifiers are evaluated as subtraction operators, causing Nix to fail with \textit{"error: undefined variable 'nodejs-20\_x'"}.
+	\item \textbf{Cross-Ecosystem Naming Conflation:} In the full-stack Elixir task (\texttt{Fullstack Elixir Sqlite Evaluation}, Trial~2), GPT-OSS~120B attempted to declare Node.js via \texttt{nodejs-20\_x}, conflating Nixpkgs attribute naming with external NodeSource repository conventions. Because Nixpkgs defines versioned attributes as \texttt{nodejs\_20} rather than using an \texttt{-x} suffix, Nix could not resolve the attribute within \texttt{with pkgs;}, terminating evaluation with \textit{"error: undefined variable 'nodejs-20\_x'"}.
 \end{enumerate}
 
 Interestingly, on passing trials, GPT-OSS~120B achieved a higher package precision (87.1\% vs. 42.2\%) and a lower over-provisioning ratio (1.80$\times$ vs. 3.73$\times$) than Gemini~3.8 Flash on existing codebases. Transcript inspection explains this apparent paradox: when GPT-OSS~120B succeeded, it generated strictly minimalist flakes containing only the core compilers explicitly tested by the verifier (such as \texttt{openjdk17} or \texttt{pythonEnv}). Conversely, Gemini~3.8 Flash proactively inferred and provisioned comprehensive developer tooling suites detected within project files, including version control (\texttt{git}), build automation tools (\texttt{gradle}, \texttt{just}), and data science libraries (\texttt{torch}, \texttt{torchvision}, \texttt{scikit-learn}, and Jupyter kernels). While these auxiliary packages were penalized as extraneous under the strict CLI assertion baseline, they reflect a more complete, production-ready developer environment for students.
@@ -458,7 +489,7 @@ The fact that models can fallback to native Nix CLI commands raises an essential
 
 Furthermore, GPT-OSS~120B exhibited strong overconfidence in its parametric weights, which predated breaking changes introduced in Nixpkgs~24.11. Because the model assumed it already knew the correct package names, it did not invoke \texttt{nix search} before authoring the flake. Consequently, it directly emitted deprecated or improperly cased attribute names, such as specifying the removed top-level \texttt{mysql} attribute instead of \texttt{mysql80}/\texttt{mysql84} or lowercase \texttt{r} instead of \texttt{R}. When Nix evaluation failed, printing explicit compiler hints to the terminal (e.g., \textit{"Did you mean one of R, h, hr, ir or j?"} or \textit{"error: 'mysql' has been renamed to/replaced by 'mariadb'"}), GPT-OSS~120B failed to parse the diagnostic output or launch follow-up discovery commands to remediate the attribute name. In addition, when confronted with unfree licensing and platform restrictions on macOS (such as Android SDK licenses for Flutter or Darwin compatibility for \texttt{rstudio} and \texttt{mysql-workbench}), GPT-OSS~120B failed to set \texttt{config.allowUnfree = true} or evaluate \texttt{.meta.platforms}, triggering fatal activation aborts.
 
-Taken together, the synthesis accuracy and telemetry findings offer a nuanced verdict on Hypothesis~\textbf{H\textsubscript{1b}}. While access to \texttt{mcp-nixos} consistently improved package precision (from 91.2\% to 93.3\% for Gemini~3.8 Flash and from 92.8\% to 93.5\% for GPT-OSS~120B) and reduced package over-provisioning (Table~\ref{tab:model-bloat}), live MCP retrieval was not strictly required to maximize first-attempt Pass@1 accuracy on well-established coursework packages because a capable model could substitute native Nix CLI introspection (\texttt{nix search} and \texttt{nix eval}). However, external registry grounding remains indispensable for open-weight models that exhibit rigid parametric priors and lack proactive closed-loop error recovery.
+Taken together, the synthesis accuracy and telemetry findings provide a clear verdict on Hypothesis~\textbf{H\textsubscript{1b}}. The experimental results demonstrate that access to the MCP server does not consistently improve overall synthesis success. For Gemini~3.8 Flash, Pass@1 was actually marginally higher without MCP (97.62\% vs. 95.24\%), whereas GPT-OSS~120B observed only a slight improvement with MCP (73.81\% vs. 71.43\%). Because these differences are very small, access to an MCP server cannot be claimed to consistently improve raw generation accuracy. Instead, the genuine value of \texttt{mcp-nixos} lies in improved package selection: it consistently raised package precision across both models (from 91.2\% to 93.3\% for Gemini~3.8 Flash and from 92.8\% to 93.5\% for GPT-OSS~120B) and reduced unnecessary dependency over-provisioning (Table~\ref{tab:model-bloat}). Furthermore, as demonstrated in complex tasks like RStudio and R, MCP retrieval provides an essential constraint boundary that helps the agent resolve complex, wrapper-heavy packages without escalating into runaway troubleshooting loops.
 
 \section{Base OS Reproducibility Results}\label{sec:base-os-results}
 
