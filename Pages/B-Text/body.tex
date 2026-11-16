@@ -313,17 +313,21 @@ For guest-level replay and ergonomics testing, the testbed configures two distin
 
 \section{Flake Synthesis Accuracy and Model Comparison}\label{sec:model-results}
 
-Our experimental evaluation revealed notable variations across model architectures, curriculum domains, and agent access to an MCP server. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely, despite explicitly prompting the model.
+Our experimental evaluation revealed notable variations across model architectures, curriculum domains, input modalities, and agent access to an MCP server. In our initial evaluations conducted without the custom agent skill, general-purpose LLMs exhibited a strong tendency toward imperative fallbacks. Specifically, when operating on a macOS test host, models frequently attempted to install missing packages imperatively via Homebrew (\texttt{brew install}), failing to produce a declarative \texttt{flake.nix} file entirely, despite explicitly prompting the model.
 
-With the introduction of the \texttt{course-flake-generator} skill, the model behaved more consistently. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates.
+To evaluate both synthesis reliability and specification conciseness across the three input modalities introduced in Subsection~\ref{subsec:dataset-curation} (natural language prompts, instructional course documents, and existing coursework codebases), we measured Pass@$k$ alongside package precision and over-provisioning. To evaluate partial success and dependency conciseness, the evaluator extracts all package identifiers declared in \texttt{packages}, \texttt{buildInputs}, and \texttt{nativeBuildInputs} (exempting standard Nix formatters such as \texttt{nixfmt} or \texttt{alejandra}) and maps them against the expected CLI tools for each task. \emph{Package precision} measures the fraction of declared packages that directly satisfy an expected tool requirement (penalizing unrequested, extraneous packages), whereas the \emph{over-provisioning ratio} (bloat) computes the ratio of total declared packages to the minimum number of required packages needed to cover the expected tools, capturing both extraneous additions and redundant package declarations. Evaluating these metrics is critical because language models frequently introduce unrequested dependencies and extraneous configurations when generating declarative specifications~\cite{konIaCEvalCodeGeneration,zhangDeployabilityCentricInfrastructureasCodeGeneration2025,ImportingPhantomsMeasuring}.
 
-Under the Pass@3 metric, Gemini~3.8 Flash succeeded on at least one attempt for every assignment prompt in the benchmark (100.00\% Pass@3), whereas GPT-OSS~120B achieved 78.57\% Pass@3 with MCP access and 85.71\% without MCP access. These results partially support Hypothesis~\textbf{H\textsubscript{1a}}: the \texttt{course-flake-generator} skill and closed-loop validation enabled both the frontier model and the smaller open-weight model to synthesize functional environments across the majority of coursework prompts, though a performance gap persisted between model tiers. As detailed in Section~\ref{sec:telemetry-analysis}, this residual gap stemmed primarily from differences in tool utilization: GPT-OSS~120B made significantly fewer calls to the MCP server and relied more heavily and confidently on its training data without calling the native Nix CLI search command, leading to higher initial hallucination rates for less common package attributes.
+\subsection{Natural Language Specification Prompts}\label{subsec:nl-results}
 
-Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accuracy across both models with and without access to the \texttt{mcp-nixos} server, Table~\ref{tab:model-telemetry} reports mean trial duration and token consumption, and Table~\ref{tab:model-bloat} presents package precision and the over-provisioning (bloat) ratio across passing trials. To evaluate partial success, the evaluator extracts all package identifiers declared in \texttt{packages}, \texttt{buildInputs}, and \texttt{nativeBuildInputs} (exempting standard Nix formatters such as \texttt{nixfmt} or \texttt{alejandra}) and maps them against the expected CLI tools for each task. \emph{Package precision} measures the fraction of declared packages that directly satisfy an expected tool requirement (penalizing unrequested, extraneous packages), whereas the \emph{over-provisioning ratio} (bloat) computes the ratio of total declared packages to the minimum number of required packages needed to cover the expected tools, capturing both extraneous additions and redundant package declarations. Evaluating these metrics is critical because language models frequently introduce unrequested dependencies and extraneous configurations when generating declarative specifications~\cite{konIaCEvalCodeGeneration,zhangDeployabilityCentricInfrastructureasCodeGeneration2025,ImportingPhantomsMeasuring}.
+With the introduction of the \texttt{course-flake-generator} skill, model behavior on natural language specification prompts stabilized substantially. The agent successfully adhered to the declarative flake pattern for over 85\% of standard software development prompts. However, curriculum domain complexity strongly influenced outcomes. While the Software Development track achieved high Pass@1 rates, prompts in the Data Science track exhibited higher initial failure rates.
+
+Under the Pass@3 metric, Gemini~3.8 Flash succeeded on at least one attempt for every assignment prompt in the natural language benchmark (100.00\% Pass@3), whereas GPT-OSS~120B achieved 78.57\% Pass@3 with MCP access and 85.71\% without MCP access. These results partially support Hypothesis~\textbf{H\textsubscript{1a}}: the \texttt{course-flake-generator} skill and closed-loop validation enabled both the frontier model and the smaller open-weight model to synthesize functional environments across the majority of coursework prompts, though a performance gap persisted between model tiers. As detailed in Section~\ref{sec:telemetry-analysis}, this residual gap stemmed primarily from differences in tool utilization: GPT-OSS~120B made significantly fewer calls to the MCP server and relied more heavily and confidently on its training data without calling the native Nix CLI search command, leading to higher initial hallucination rates for less common package attributes.
+
+Table~\ref{tab:model-synthesis-results} summarizes the synthesis accuracy on natural language prompts across both models with and without access to the \texttt{mcp-nixos} server, Table~\ref{tab:model-telemetry} reports mean trial duration and token consumption, and Table~\ref{tab:model-bloat} presents package precision and the over-provisioning (bloat) ratio across passing trials. Together, these metrics capture both functional correctness and dependency conciseness on natural language specifications.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Flake Synthesis Accuracy Across Models and MCP Conditions}
+	\caption{Flake Synthesis Accuracy on Natural Language Prompts Across Models and MCP Conditions}
 	\label{tab:model-synthesis-results}
 	\begin{tabular}{llccc}
 		\toprule
@@ -359,7 +363,7 @@ Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accurac
 \begin{table}[htbp]
 	\centering
 	\small
-	\caption{Package Precision and Over-Provisioning Ratio Across Passing Trials}
+	\caption{Package Precision and Over-Provisioning Ratio Across Passing Natural Language Trials}
 	\label{tab:model-bloat}
 	\begin{tabular}{llcc}
 		\toprule
@@ -374,26 +378,11 @@ Table~\ref{tab:model-synthesis-results} summarizes the overall synthesis accurac
 	\end{tabular}
 \end{table}
 
-As shown in Table~\ref{tab:model-synthesis-results}, access to the MCP server did not consistently alter overall synthesis success. For Gemini~3.8 Flash, Pass@1 was marginally higher in the absence of MCP (97.62\% vs. 95.24\%), whereas GPT-OSS~120B demonstrated a minor improvement with MCP (73.81\% vs. 71.43\%). Because these differences are minimal, MCP availability is not a primary driver of overall flake synthesis success on standard coursework prompts. Instead, the clear benefit of MCP retrieval appears in package selection and dependency minimization (Table~\ref{tab:model-bloat}): live registry lookups consistently increased package precision (improving to 93.3\% for Gemini~3.8 Flash and 93.5\% for GPT-OSS~120B) and reduced unnecessary dependency over-provisioning across both evaluated models.
+As shown in Table~\ref{tab:model-synthesis-results}, access to the MCP server did not consistently alter overall synthesis success on natural language prompts. For Gemini~3.8 Flash, Pass@1 was marginally higher in the absence of MCP (97.62\% vs. 95.24\%), whereas GPT-OSS~120B demonstrated a minor improvement with MCP (73.81\% vs. 71.43\%). Because these differences are minimal, MCP availability is not a primary driver of overall flake synthesis success on standard coursework prompts. Instead, the clear benefit of MCP retrieval appears in package selection and dependency minimization (Table~\ref{tab:model-bloat}): live registry lookups consistently increased package precision (improving to 93.3\% for Gemini~3.8 Flash and 93.5\% for GPT-OSS~120B) and reduced unnecessary dependency over-provisioning across both evaluated models.
 
-\subsection{Codebase-Inferred and Document-Based Flake Synthesis}\label{subsec:codebase-doc-results}
+\subsection{Instructional Course Documents}\label{subsec:doc-results}
 
-To evaluate whether the \texttt{course-flake-generator} skill scales beyond synthetic natural language prompts to real-world educational materials, we evaluated its accuracy across six existing coursework repositories and nine instructional setup documents described in Subsection~\ref{subsec:dataset-curation}. Both Gemini~3.8 Flash and GPT-OSS~120B were evaluated across these modalities using the same agent skill and closed-loop verification conditions. Table~\ref{tab:codebase-results} presents the comparative synthesis performance and execution telemetry on existing coursework repositories (6 tasks, 18 total trials), while Table~\ref{tab:doc-results} reports the corresponding evaluation metrics on instructional setup documents (9 tasks, 27 total trials).
-
-\begin{table}[htbp]
-	\centering
-	\small
-	\caption{Synthesis Performance on Existing Coursework Codebases}
-	\label{tab:codebase-results}
-	\begin{tabular}{lccccc}
-		\toprule
-		\textbf{Model}   & \textbf{Passed ($c/N$)} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Precision} & \textbf{Over-Prov.} \\
-		\midrule
-		Gemini 3.8 Flash & 18/18                   & 100.00\%        & 100.00\%        & 42.2\%             & 3.73$\times$        \\
-		GPT-OSS 120B     & 5/18                    & 27.78\%         & 66.67\%         & 87.1\%             & 1.80$\times$        \\
-		\bottomrule
-	\end{tabular}
-\end{table}
+To evaluate whether the \texttt{course-flake-generator} skill generalizes from concise natural language prompts to unstructured assignment handouts and laboratory guides, we evaluated its performance across the nine instructional setup documents (spanning PDF, DOCX, HTML, and Markdown formats) described in Subsection~\ref{subsec:dataset-curation}. In this modality, the agent invoked the skill's document extraction script (\texttt{extract-document-content.py}) to parse raw document layouts and infer required toolchains before synthesizing \texttt{flake.nix} under the same closed-loop verification conditions. Table~\ref{tab:doc-results} reports the comparative synthesis accuracy, package precision, and over-provisioning metrics across the 9 document tasks (27 total trials per model).
 
 \begin{table}[htbp]
 	\centering
@@ -410,15 +399,39 @@ To evaluate whether the \texttt{course-flake-generator} skill scales beyond synt
 	\end{tabular}
 \end{table}
 
-As shown in Table~\ref{tab:codebase-results} and Table~\ref{tab:doc-results}, Gemini~3.8 Flash achieved a flawless 100.00\% Pass@1 and Pass@3 across all 18 codebase trials and all 27 document trials. In contrast, GPT-OSS~120B attained 27.78\% Pass@1 (5/18) and 66.67\% Pass@3 (4/6 tasks) on existing codebases, and 62.96\% Pass@1 (17/27) and 77.78\% Pass@3 (7/9 tasks) on instructional course documents. A qualitative review of each trial's execution event stream (\texttt{transcript.jsonl}) and trial metadata revealed distinct failure modalities, behavioral patterns, and architectural differences between the two models:
+As shown in Table~\ref{tab:doc-results}, Gemini~3.8 Flash achieved a 100.00\% Pass@1 and Pass@3 across all 27 document-based trials, whereas GPT-OSS~120B attained 62.96\% Pass@1 (17/27 trials) and 77.78\% Pass@3 (7/9 tasks). Both models exhibited comparable over-provisioning ratios on instructional documents ($2.90\times$ for Gemini~3.8 Flash and $2.89\times$ for GPT-OSS~120B), with package precision of 49.6\% and 58.6\%, respectively, as longer setup guides frequently mentioned optional editors, auxiliary database clients, and secondary utilities alongside core compilers. A qualitative review of the document trial transcripts (\texttt{transcript.jsonl}) and metadata identified three recurring failure modalities for GPT-OSS~120B on instructional documents:
+
+\begin{enumerate}
+	\item \textbf{Empty Output Errors:} In several document-grounded trials (such as Task~4 Trial~3 and Task~8 Trial~1), GPT-OSS~120B generated empty conversational responses between background tool calls, triggering harness runtime errors (\textit{"model output error: model output must contain either output text or tool calls"}) and exiting prior to generating \texttt{flake.nix}.
+	\item \textbf{Naming Drift on Deprecated Packages:} On the database setup guide (\texttt{Itec 451 Mcguire1}), all three GPT-OSS~120B trials failed because the model repeatedly declared \texttt{pkgs.mysql}, which has been removed and replaced by \texttt{mariadb} and versioned attributes (\texttt{mysql80}) in Nixpkgs~24.11. Because the model withheld MCP search calls and relied exclusively on parametric weights, it was unable to detect and recover from attribute renaming.
+	\item \textbf{Cross-Ecosystem Naming Conflation:} In the full-stack Elixir task (\texttt{Fullstack Elixir Sqlite Evaluation}, Trial~2), GPT-OSS~120B attempted to declare Node.js via \texttt{nodejs-20\_x}, conflating Nixpkgs attribute naming with external NodeSource repository conventions. Because Nixpkgs defines versioned attributes as \texttt{nodejs\_20} rather than using an \texttt{-x} suffix, Nix could not resolve the attribute within \texttt{with pkgs;}, terminating evaluation with \textit{"error: undefined variable 'nodejs-20\_x'"}.
+\end{enumerate}
+
+\subsection{Existing Coursework Codebases}\label{subsec:codebase-results}\label{subsec:codebase-doc-results}
+
+To assess whether the agent skill can infer environment dependencies directly from unconfigured starter repositories without explicit setup prose, we evaluated both models across the existing coursework codebases described in Subsection~\ref{subsec:dataset-curation}. Rather than reading natural language instructions, the agent relied on the skill's repository scanner (\texttt{detect-project-requirements.py}) and file inspection tools to analyze source files and build manifests before synthesizing and validating \texttt{flake.nix}. Table~\ref{tab:codebase-results} presents the comparative synthesis performance, package precision, and over-provisioning ratio across the 6 evaluated coursework repositories (18 total trials per model).
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Synthesis Performance on Existing Coursework Codebases}
+	\label{tab:codebase-results}
+	\begin{tabular}{lccccc}
+		\toprule
+		\textbf{Model}   & \textbf{Passed ($c/N$)} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Precision} & \textbf{Over-Prov.} \\
+		\midrule
+		Gemini 3.8 Flash & 18/18                   & 100.00\%        & 100.00\%        & 42.2\%             & 3.73$\times$        \\
+		GPT-OSS 120B     & 5/18                    & 27.78\%         & 66.67\%         & 87.1\%             & 1.80$\times$        \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+As shown in Table~\ref{tab:codebase-results}, Gemini~3.8 Flash achieved 100.00\% Pass@1 and Pass@3 across all 18 codebase trials, whereas GPT-OSS~120B dropped to 27.78\% Pass@1 (5/18 trials) and 66.67\% Pass@3 (4/6 tasks). Inspecting the codebase trial transcripts (\texttt{transcript.jsonl}) revealed three primary failure modes that hindered GPT-OSS~120B when inferring requirements from repository structures:
 
 \begin{enumerate}
 	\item \textbf{Multi-Module Incompletion:} On coursework repositories with nested submodules, Gemini~3.8 Flash systematically iterated across every directory or authored module-specific flakes as required. In contrast, GPT-OSS~120B suffered from premature task termination. In \texttt{COSC236\_Labs} (Trial~2), the model authored flakes for \texttt{Lab1} and \texttt{Lab2}, emitted a conversational status message listing ``Next steps'', and concluded execution after only 26.8\,s, omitting Labs~3 through~10. Similarly, in Trial~3 of the same task, it generated flakes for Labs~1 through~9 but skipped \texttt{Lab10}. In \texttt{COSC336-Assignments} (Trial~1), it authored flakes for Assignments~1 through~6 but failed to process Assignments~7 and~8.
 	\item \textbf{Package Hallucination:} When analyzing Python projects without explicit requirements manifests (\texttt{AI-Assignments}, Trial~3), GPT-OSS~120B fell back to treating language-level libraries as top-level Nixpkgs derivations, declaring \texttt{pkgs.pandas} and \texttt{pkgs.matplotlib} in \texttt{packages} rather than constructing an idiomatic \texttt{python3.withPackages} environment. This triggered immediate Nix evaluation failure: \textit{"error: attribute 'pandas' in selection path 'pkgs.pandas' not found. Did you mean pandoc?"}. In contrast, Gemini~3.8 Flash leveraged the skill's reference guides to use Python package sets using \texttt{python3.withPackages (ps: with ps; [ pandas matplotlib ])}.
 	\item \textbf{Indiscriminate Over-Provisioning and Activation Timeouts:} In \texttt{COSC336-Assignments} (Trial~2), GPT-OSS~120B observed LaTeX assignment documentation alongside Java source files and added \texttt{pkgs.texliveFull} to \texttt{nativeBuildInputs}. Because \texttt{texliveFull} is approximately a 7\,GB package, downloading and substituting store paths exceeded the test harness's 60-second activation threshold, triggering an activation timeout failure.
-	\item \textbf{Empty Output Errors:} In several document-grounded trials (such as Task~4 Trial~3 and Task~8 Trial~1), GPT-OSS~120B generated empty conversational responses between background tool calls, triggering harness runtime errors (\textit{"model output error: model output must contain either output text or tool calls"}) and exiting prior to generating \texttt{flake.nix}.
-	\item \textbf{Naming Drift on Deprecated Packages:} On the database setup guide (\texttt{Itec 451 Mcguire1}), all three GPT-OSS~120B trials failed because the model repeatedly declared \texttt{pkgs.mysql}, which has been removed and replaced by \texttt{mariadb} and versioned attributes (\texttt{mysql80}) in Nixpkgs~24.11. Because the model withheld MCP search calls and relied exclusively on parametric weights, it was unable to detect and recover from attribute renaming.
-	\item \textbf{Cross-Ecosystem Naming Conflation:} In the full-stack Elixir task (\texttt{Fullstack Elixir Sqlite Evaluation}, Trial~2), GPT-OSS~120B attempted to declare Node.js via \texttt{nodejs-20\_x}, conflating Nixpkgs attribute naming with external NodeSource repository conventions. Because Nixpkgs defines versioned attributes as \texttt{nodejs\_20} rather than using an \texttt{-x} suffix, Nix could not resolve the attribute within \texttt{with pkgs;}, terminating evaluation with \textit{"error: undefined variable 'nodejs-20\_x'"}.
 \end{enumerate}
 
 Interestingly, on passing trials, GPT-OSS~120B achieved a higher package precision (87.1\% vs. 42.2\%) and a lower over-provisioning ratio (1.80$\times$ vs. 3.73$\times$) than Gemini~3.8 Flash on existing codebases. Transcript inspection explains this apparent paradox: when GPT-OSS~120B succeeded, it generated strictly minimalist flakes containing only the core compilers explicitly tested by the verifier (such as \texttt{openjdk17} or \texttt{pythonEnv}). Conversely, Gemini~3.8 Flash proactively inferred and provisioned comprehensive developer tooling suites detected within project files, including version control (\texttt{git}), build automation tools (\texttt{gradle}, \texttt{just}), and data science libraries (\texttt{torch}, \texttt{torchvision}, \texttt{scikit-learn}, and Jupyter kernels). While these auxiliary packages were penalized as extraneous under the strict CLI assertion baseline, they reflect a more complete, production-ready developer environment for students.
