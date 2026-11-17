@@ -252,6 +252,16 @@ Q.~Wu, S.~Das, M.~Amani, A.~Nag, S.~Lee, K.~P. Gummadi, A.~Ravichander, and
   \url{http://arxiv.org/abs/2605.00737}
 \BIBentrySTDinterwordspacing
 
+\bibitem{schwaighoferVibenixAIAssistant2026}
+\BIBentryALTinterwordspacing
+M.~Schwaighofer, M.~Monis, N.~Saavedra, J.~F. Ferreira, and R.~Mayrhofer,
+  ``Vibenix: {{An AI Assistant}} for {{Software Packaging}} with {{Nix}},'' in
+  \emph{Proceedings 2026 {{Workshop}} on {{LLM Assisted Security}} and {{Trust
+  Exploration}}}.\hskip 1em plus 0.5em minus 0.4em\relax Internet Society.
+  [Online]. Available:
+  \url{https://www.ndss-symposium.org/wp-content/uploads/lastx2026-35.pdf}
+\BIBentrySTDinterwordspacing
+
 \bibitem{NixpkgsManual}
 \BIBentryALTinterwordspacing
 Nixpkgs {{Manual}}. [Online]. Available:
