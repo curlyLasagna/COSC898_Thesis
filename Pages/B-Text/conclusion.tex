@@ -1,70 +1,351 @@
-\chapter{Conclusion}\label{conclusion}
+\chapter{Conclusion}
+\label{conclusion}
 
 \section{Summary of Contributions}
 
-This thesis addressed a persistent educational problem in computer science curricula: students losing valuable coursework time configuring and troubleshooting fragile local development environments rather than working on assignments, and instructors facing acute difficulties supporting heterogeneous student machines across various operating systems and configurations. Although purely functional package management via Nix Flakes offers host-native reproducibility without the mutable state conflicts of imperative package managers or the background Linux virtual machine and memory overhead of container engines on non-Linux hosts, its steep functional language barrier has historically prevented instructors from authoring Nix environments for classroom use. To bridge this gap, we designed, implemented, and evaluated \texttt{course-flake-generator}\footnote{\url{https://github.com/curlyLasagna/Thesis-Flake-Generator}} (Chapter~\ref{RQ} and Chapter~\ref{chap:testing}), a custom agent skill that instructors can load into their own AI agent harness to execute an assignment-to-flake workflow spanning requirement extraction, flake generation, closed-loop compiler validation, instructor approval, and student activation. By equipping an instructor's agent harness with document extraction scripts, repository requirement detectors, \texttt{flake.nix} templates, and closed-loop validation routines, the skill enables the agent to extract software requirements from assignment documents and existing codebases, synthesizing verified, cryptographically locked development environments ready for student activation.
+This thesis addressed a persistent educational problem in computer science curricula:
+students losing valuable coursework time configuring and troubleshooting fragile
+local development environments rather than working on assignments, and instructors
+facing acute difficulties supporting heterogeneous student machines across various
+operating systems and configurations. Although purely functional package
+management via Nix Flakes offers host-native reproducibility without the mutable
+state conflicts of imperative package managers or the background Linux virtual
+machine and memory overhead of container engines on non-Linux hosts, its steep functional
+language barrier has historically prevented instructors from authoring Nix environments
+for classroom use. To bridge this gap, we designed, implemented, and evaluated \texttt{course-flake-generator}\footnote{\url{https://github.com/curlyLasagna/Thesis-Flake-Generator}}
+(Chapter~\ref{RQ} and Chapter~\ref{chap:testing}), a custom agent skill that
+instructors can load into their own AI agent harness to execute an assignment-to-flake
+workflow spanning requirement extraction, flake generation, closed-loop compiler
+validation, instructor approval, and student activation. By equipping an instructor's
+agent harness with document extraction scripts, repository requirement detectors,
+\texttt{flake.nix} templates, and closed-loop validation routines, the skill
+enables the agent to extract software requirements from assignment documents and
+existing codebases, synthesizing verified, cryptographically locked development
+environments ready for student activation.
 
-To evaluate automated requirement extraction, flake generation, and validation (Chapter~\ref{chap:testing} and Chapter~\ref{chap:results}), we constructed a computer science curriculum benchmark spanning synthetic natural language prompts, real-world instructional setup documents, and existing coursework codebases paired with built-in Nix verification routines (\texttt{nix flake check} and \texttt{nix develop}). Ground truth requirements were declared by the author within companion metadata JSON files for every assignment document and existing codebase. Empirical evaluations comparing the agent with and without \texttt{course-flake-generator} (Tables~\ref{tab:model-synthesis-results}--\ref{tab:codebase-results}) demonstrated that equipping the agent with our custom skill substantially improved synthesis reliability, boosting GPT-OSS~120B's Pass@1 from 33.33\% to 73.81\% on natural language prompts, from 11.11\% to 61.11\% on instructional documents, and from 16.67\% to 50.00\% on existing codebases, while enabling Gemini~3.8 Flash to reach 91.67\%--100.00\% Pass@1 and 100.00\% Pass@3 across all three modalities. Furthermore, our MCP ablation study comparing the \texttt{mcp-nixos} server against native Nix CLI discovery (Table~\ref{tab:mcp-ablation} and Table~\ref{tab:mcp-invocation-comparison}) refuted Hypothesis~\textbf{H\textsubscript{1b}}: because \texttt{nix search} and \texttt{nix eval} return the exact same underlying Nixpkgs package metadata as \texttt{mcp-nixos}, withholding the MCP server did not reduce Pass@1 or Pass@3 accuracy once the skill was present, confirming that instructors do not need to install or configure an external MCP server to use the workflow. To evaluate the transition from validation to an instructor-approved environment and subsequent student activation across diverse machines, we created a script to automate tests of validated flakes across fresh, unmounted Linux Docker containers and macOS virtual machines. These tests confirmed high cross-platform reproducibility despite a flaw of the testing environment due to the host-machine pollution, demonstrating how instructors can verify cross-platform portability before distributing environments to students. Finally, evaluating the potential benefits and practical trade-offs of student activation across differing development environments (Tables~\ref{tab:rq3-rust-results}--\ref{tab:rq3-fullstack-results} and Figures~\ref{fig:rq3-onboarding-results}--\ref{fig:rq3-avg-time-delta}) demonstrated that single-command activation via \texttt{nix develop} eliminated the procedural errors common to manual installation guides, where skipping a step or misordering sequential instructions left student machines in an ambiguous intermediate state that stalled assignment progress. At the same time, the study quantified the trade-off between first-run Nix installation and students' desire for diagnostic visibility into the tools being provisioned.
+To evaluate automated requirement extraction, flake generation, and validation (Chapter~\ref{chap:testing}
+and Chapter~\ref{chap:results}), we constructed a computer science curriculum benchmark
+spanning synthetic natural language prompts, real-world instructional setup
+documents, and existing coursework codebases paired with built-in Nix verification
+routines (\texttt{nix flake check} and \texttt{nix develop}). Ground truth
+requirements were declared by the author within companion metadata JSON files
+for every assignment document and existing codebase. Empirical evaluations comparing
+the agent with and without \texttt{course-flake-generator} (Tables~\ref{tab:model-synthesis-results}--\ref{tab:codebase-results})
+demonstrated that equipping the agent with our custom skill substantially improved
+synthesis reliability, boosting GPT-OSS~120B's Pass@1 from 33.33\% to 73.81\% on
+natural language prompts, from 11.11\% to 61.11\% on instructional documents,
+and from 16.67\% to 50.00\% on existing codebases, while enabling Gemini~3.8 Flash
+to reach 91.67\%--100.00\% Pass@1 and 100.00\% Pass@3 across all three modalities.
+Furthermore, our MCP ablation study comparing the \texttt{mcp-nixos} server
+against native Nix CLI discovery (Table~\ref{tab:mcp-ablation} and Table~\ref{tab:mcp-invocation-comparison})
+refuted Hypothesis~\textbf{H\textsubscript{1b}}: because \texttt{nix search} and \texttt{nix
+eval} return the exact same underlying Nixpkgs package metadata as \texttt{mcp-nixos},
+withholding the MCP server did not reduce Pass@1 or Pass@3 accuracy once the
+skill was present, confirming that instructors do not need to install or configure
+an external MCP server to use the workflow. To evaluate the transition from
+validation to an instructor-approved environment and subsequent student
+activation across diverse machines, we created a script to automate tests of validated
+flakes across fresh, unmounted Linux Docker containers and macOS virtual
+machines. These tests confirmed high cross-platform reproducibility despite a flaw
+of the testing environment due to the host-machine pollution, demonstrating how
+instructors can verify cross-platform portability before distributing
+environments to students. Finally, evaluating the potential benefits and
+practical trade-offs of student activation across differing development
+environments (Tables~\ref{tab:rq3-rust-results}--\ref{tab:rq3-fullstack-results}
+and Figures~\ref{fig:rq3-onboarding-results}--\ref{fig:rq3-avg-time-delta})
+demonstrated that single-command activation via \texttt{nix develop} eliminated the
+procedural errors common to manual installation guides, where skipping a step or
+misordering sequential instructions left student machines in an ambiguous
+intermediate state that stalled assignment progress. At the same time, the study
+quantified the trade-off between first-run Nix installation and students' desire for
+diagnostic visibility into the tools being provisioned.
 
 \section{Synthesis of Research Questions and Hypotheses}
 
-The empirical findings of this research provide concrete answers to the three core research questions and their corresponding hypotheses. We summarize our findings across automated environment synthesis, clean-guest reproducibility, and potential student onboarding benefits below:
+The empirical findings of this research provide concrete answers to the three
+core research questions and their corresponding hypotheses. We summarize our findings
+across automated environment synthesis, clean-guest reproducibility, and potential
+student onboarding benefits below:
 
 \begin{itemize}
-	\item \rqonetitle\ AI agents can accurately infer system-level dependencies and synthesize valid \texttt{flake.nix} environments when equipped with a custom agent skill. Supporting Hypothesis~\textbf{H\textsubscript{1a}}, the \texttt{course-flake-generator} skill prevented imperative fallbacks and dramatically improved synthesis accuracy across all three input modalities, raising GPT-OSS~120B's Pass@1 by +40.48 percentage points on natural language prompts (33.33\% to 73.81\%), +50.00 percentage points on instructional documents (11.11\% to 61.11\%), and +33.33 percentage points on existing codebases (16.67\% to 50.00\%), while enabling Gemini~3.8 Flash to achieve 100.00\% Pass@3 across every modality. Conversely, Hypothesis~\textbf{H\textsubscript{1b}} was refuted: in our MCP ablation study, access to the \texttt{mcp-nixos} server did not improve synthesis pass rates (95.24\% w/ MCP vs. 97.62\% w/o MCP for Gemini~3.8 Flash; 73.81\% w/ MCP vs. 71.43\% w/o MCP for GPT-OSS~120B) because the skill's native Nix CLI fallback (\texttt{nix search} and \texttt{nix eval}) queries and returns equivalent Nixpkgs package metadata. While MCP retrieval occasionally bounded CLI troubleshooting steps on complex wrapper packages like RStudio, its redundancy for overall synthesis accuracy confirms that the standalone \texttt{course-flake-generator} skill and standard Nix CLI are fully sufficient on their own.
-	\item \rqtwotitle\ Supporting Hypothesis~\textbf{H\textsubscript{2}}, replaying RQ1-passing flakes and pinned \texttt{flake.lock} files across clean, unmounted Linux containers and macOS virtual machines yielded a high reproduction rate (95.1\% on macOS and 82.9\% on Linux) with zero flake-evaluation, shell-activation, or missing-dependency failures. Evaluating locked flake grammar, development-shell activation, required executable availability, and headless task execution in clean guests isolated the remaining functional failures to headless container sandboxing and display server constraints (for Electron and X11 GUI applications such as Visual Studio Code and MySQL Workbench) and host-state pollution from stateful user-directory toolchain managers (\texttt{\textasciitilde/.rustup}) that host-only validation masked.
-	\item \rqthreetitle\ Partially supporting Hypothesis~\textbf{H\textsubscript{3}}, single-command activation via \texttt{nix develop} prevented procedural errors during student onboarding, where skipping a step or misfollowing manual imperative instructions caused students to lose track of their machine's state and complicated troubleshooting. Although one-time Nix installation and initial binary-cache realization introduced a net setup time overhead across most clean-VM trials (averaging +1:03.30 for Rust, +0:15.96 for Jupyter Notebook, and +2:09.21 for Full Stack), the per-student time delta narrowed from the single-toolchain Rust setup to the multi-component Full Stack environment for two of the three participants (from +1:33.64 to +0:40.27 for Student~A, who also completed the Jupyter setup 1:17.29 faster with Nix, and from +1:46.69 to +1:28.55 for Student~B). Qualitative participant feedback revealed differing opinions: Students~A and~B favored the conventional imperative workflow due to instructional familiarity and fear of opaque ``black-box'' abstraction failures, whereas Student~C favored declarative Nix because it abstracted away low-level system configuration, preventing learners from becoming entangled in host troubleshooting cycles unrelated to coursework objectives.
+    \item \rqonetitle\ AI agents can accurately infer system-level dependencies and
+        synthesize valid \texttt{flake.nix} environments when equipped with a
+        custom agent skill. Supporting Hypothesis~\textbf{H\textsubscript{1a}}, the
+        \texttt{course-flake-generator} skill prevented imperative fallbacks and
+        dramatically improved synthesis accuracy across all three input
+        modalities, raising GPT-OSS~120B's Pass@1 by +40.48 percentage points on
+        natural language prompts (33.33\% to 73.81\%), +50.00 percentage points
+        on instructional documents (11.11\% to 61.11\%), and +33.33 percentage
+        points on existing codebases (16.67\% to 50.00\%), while enabling Gemini~3.8
+        Flash to achieve 100.00\% Pass@3 across every modality. Conversely,
+        Hypothesis~\textbf{H\textsubscript{1b}} was refuted: in our MCP ablation
+        study, access to the \texttt{mcp-nixos} server did not improve synthesis
+        pass rates (95.24\% w/ MCP vs. 97.62\% w/o MCP for Gemini~3.8 Flash;
+        73.81\% w/ MCP vs. 71.43\% w/o MCP for GPT-OSS~120B) because the skill's native
+        Nix CLI fallback (\texttt{nix search} and \texttt{nix eval}) queries and returns
+        equivalent Nixpkgs package metadata. While MCP retrieval occasionally
+        bounded CLI troubleshooting steps on complex wrapper packages like
+        RStudio, its redundancy for overall synthesis accuracy confirms that the standalone
+        \texttt{course-flake-generator} skill and standard Nix CLI are fully
+        sufficient on their own.
+
+    \item \rqtwotitle\ Supporting Hypothesis~\textbf{H\textsubscript{2}}, replaying
+        RQ1-passing flakes and pinned \texttt{flake.lock} files across clean, unmounted
+        Linux containers and macOS virtual machines yielded a high reproduction rate
+        (95.1\% on macOS and 82.9\% on Linux) with zero flake-evaluation, shell-activation,
+        or missing-dependency failures. Evaluating locked flake grammar, development-shell
+        activation, required executable availability, and headless task execution
+        in clean guests isolated the remaining functional failures to headless container
+        sandboxing and display server constraints (for Electron and X11 GUI
+        applications such as Visual Studio Code and MySQL Workbench) and host-state
+        pollution from stateful user-directory toolchain managers (\texttt{\textasciitilde/.rustup})
+        that host-only validation masked.
+
+    \item \rqthreetitle\ Partially supporting Hypothesis~\textbf{H\textsubscript{3}}
+        with respect to procedural error prevention, single-command activation via
+        \texttt{nix develop} eliminated the shell-sourcing, \texttt{PATH}, and step-ordering
+        mistakes observed during manual imperative installation. In terms of raw
+        clean-VM completion times, declarative trials incurred a net time overhead
+        across most runs (averaging +1:03.30 for Rust, +0:15.96 for Jupyter Notebook,
+        and +2:09.21 for Full Stack): while per-student overhead narrowed from Rust
+        to Full Stack for Student~A (+1:33.64 to +0:40.27, with Jupyter finishing
+        1:17.29 faster via Nix) and Student~B (+1:46.69 to +1:28.55), Student~C incurred
+        a larger Full Stack overhead (+4:18.82 vs. -0:10.43 on Rust), showing that
+        aggregate cold-start timings did not monotonically favor Nix as complexity
+        increased. However, because each clean-VM trial bundled one-time Nix installation
+        and initial cold-start \texttt{nix develop} realization under a single
+        timer on an empty \texttt{/nix/store}, these measurements represent a
+        worst-case ceiling rather than recurring usage by students who already
+        have Nix installed and benefit from local reuse of matching store paths
+        across subsequent runs. Qualitative participant feedback was similarly mixed:
+        Students~A and~B favored the conventional imperative workflow due to
+        instructional familiarity and concern over opaque ``black-box''
+        abstraction, whereas Student~C reported comparable cognitive load between
+        both methods and favored declarative Nix for its easy-to-recall single command
+        and reduced low-level host troubleshooting.
 \end{itemize}
 
-\section{Discussion: Operational Constraints and Deployment Limitations}\label{sec:operational-constraints}
+\section{Discussion: Operational Constraints and Deployment Limitations}
+\label{sec:operational-constraints}
 
-Beyond the empirical synthesis, clean-replay, and student onboarding evaluations, deploying Nix Flake environments in live classroom settings introduces theoretical operational constraints and supply-chain considerations documented in prior literature and official Nix specifications. This section examines the upstream availability, package maintenance, binary-caches, and trust-boundary limitations that instructors must account for when adopting Nix flakes.
+Beyond the empirical synthesis, clean-replay, and student onboarding evaluations,
+deploying Nix Flake environments in live classroom settings introduces
+theoretical operational constraints and supply-chain considerations documented
+in prior literature and official Nix specifications. This section examines the upstream
+availability, package maintenance, binary-caches, and trust-boundary limitations
+that instructors must account for when adopting Nix flakes.
 
 \subsection{Adoption of Nix Flakes}
 
-The practical viability of introducing Nix Flakes into computer science curricula depends not only on technical reproducibility, but also on how students and faculty adopt new software tools. Technology adoption in higher education is an inherently cognitive and social process. Straub~\cite{straubUnderstandingTechnologyAdoption2009} synthesizes foundational adoption theories, highlighting the Unified Theory of Acceptance and Use of Technology (UTAUT), which models adoption behavior through four core constructs: \emph{performance expectancy}, \emph{effort expectancy}, \emph{social influence}, and \emph{facilitating conditions}.
+The practical viability of introducing Nix Flakes into computer science curricula
+depends not only on technical reproducibility, but also on how students and
+faculty adopt new software tools. Technology adoption in higher education is an inherently
+cognitive and social process. Straub~\cite{straubUnderstandingTechnologyAdoption2009}
+synthesizes foundational adoption theories, highlighting the Unified Theory of Acceptance
+and Use of Technology (UTAUT), which models adoption behavior through four core
+constructs: \emph{performance expectancy}, \emph{effort expectancy}, \emph{social
+influence}, and \emph{facilitating conditions}.
 
-In the context of computer science education, \emph{performance expectancy}: the degree to which users believe a technology will enhance their productivity, is inherently strong for Nix Flakes. Declarative environments deliver deterministic reproducibility across heterogeneous student laptops, eliminating the instructional time wasted troubleshooting platform-specific dependency drift. Conversely, \emph{effort expectancy}: the perceived ease of use, has historically presented the most formidable barrier to Nix adoption. The steep learning curve of the lazy functional Nix expression language, coupled with unfamiliar store path abstractions, often leads students to perceive the environment as an opaque ``black box,'' as observed in our onboarding user study. By delegating environment inference, specification generation, and closed-loop compiler validation to autonomous coding agents via our \texttt{course-flake-generator} skill, our proposed architecture directly mitigates this effort expectancy barrier for both instructors and learners.
+In the context of computer science education, \emph{performance expectancy}: the degree
+to which users believe a technology will enhance their productivity, is
+inherently strong for Nix Flakes. Declarative environments deliver deterministic reproducibility
+across heterogeneous student laptops, eliminating the instructional time wasted
+troubleshooting platform-specific dependency drift. Conversely, \emph{effort
+expectancy}: the perceived ease of use, has historically presented the most formidable
+barrier to Nix adoption. The steep learning curve of the lazy functional Nix
+expression language, coupled with unfamiliar store path abstractions, often
+leads students to perceive the environment as an opaque ``black box,'' as observed
+in our onboarding user study. By delegating environment inference, specification generation,
+and closed-loop compiler validation to autonomous coding agents via our \texttt{course-flake-generator}
+skill, our proposed architecture directly mitigates this effort expectancy
+barrier for both instructors and learners.
 
-However, the UTAUT framework highlights that tooling adoption cannot succeed through technical utility alone; it requires aligning \emph{social influence} and \emph{facilitating conditions}. When only an isolated instructor or individual course section introduces Nix, students may perceive the tool as an idiosyncratic, one-off requirement rather than a versatile, cross-course software engineering competency, creating friction and reluctance. In contrast, when an academic department adopts declarative environments across multiple courses, normative social influence and peer collaboration reinforce student acceptance.
-Crucially, Nix Flakes offer a gradual, non-disruptive adoption pathway that accommodates varying levels of student readiness. Because a \texttt{flake.nix} specification and companion \texttt{flake.lock} file reside entirely within the repository without altering global system directories or requiring administrative privileges, declarative activation via \texttt{nix develop} can be introduced as an opt-in convenience. Students who prefer conventional imperative workflows or graphical package managers can continue working natively without interference, while students and instructional staff who prefer an isolated, verified environment can activate the development shell with a single command. This modularity allows academic institutions to progressively foster adoption across curriculum sequences without imposing disruptive mandates.
+However, the UTAUT framework highlights that tooling adoption cannot succeed through
+technical utility alone; it requires aligning \emph{social influence} and \emph{facilitating
+conditions}. When only an isolated instructor or individual course section introduces
+Nix, students may perceive the tool as an idiosyncratic, one-off requirement rather
+than a versatile, cross-course software engineering competency, creating friction
+and reluctance. In contrast, when an academic department adopts declarative environments
+across multiple courses, normative social influence and peer collaboration
+reinforce student acceptance. Crucially, Nix Flakes offer a gradual, non-disruptive
+adoption pathway that accommodates varying levels of student readiness. Because
+a \texttt{flake.nix} specification and companion \texttt{flake.lock} file reside
+entirely within the repository without altering global system directories or
+requiring administrative privileges, declarative activation via \texttt{nix
+develop} can be introduced as an opt-in convenience. Students who prefer conventional
+imperative workflows or graphical package managers can continue working natively without
+interference, while students and instructional staff who prefer an isolated, verified
+environment can activate the development shell with a single command. This
+modularity allows academic institutions to progressively foster adoption across
+curriculum sequences without imposing disruptive mandates.
 
-Beyond individual course adoption, the inherent modularity and composability of Nix Flakes provide a scalable foundation for department-wide environment management. An academic department can author and maintain a central baseline flake repository that establishes institutional defaults, including standardized version control tools, formatters, linters, and foundational build utilities. Rather than authoring complete environment specifications from scratch, instructors across different courses can import or fork this departmental baseline and declare only the incremental dependencies required for their specific curriculum. For example, a systems programming instructor can extend the baseline flake with GCC, GDB, and Valgrind, while a data science instructor can layer Python runtimes and scientific computing libraries on top of the same foundation.
+Beyond individual course adoption, the inherent modularity and composability of Nix
+Flakes provide a scalable foundation for department-wide environment management.
+An academic department can author and maintain a central baseline flake
+repository that establishes institutional defaults, including standardized version
+control tools, formatters, linters, and foundational build utilities. Rather than
+authoring complete environment specifications from scratch, instructors across
+different courses can import or fork this departmental baseline and declare only
+the incremental dependencies required for their specific curriculum. For example,
+a systems programming instructor can extend the baseline flake with GCC, GDB,
+and Valgrind, while a data science instructor can layer Python runtimes and scientific
+computing libraries on top of the same foundation.
 
-This modular architecture offers two substantial practical benefits: it minimizes authoring overhead for teaching faculty by delegating common toolchain maintenance to a shared institutional standard, and it drastically optimizes local resource usage for students enrolled in multiple computer science courses. Because Nix relies on a content-addressable store, any shared packages inherited from the departmental baseline are downloaded and cached only once on a student's machine, eliminating duplicate downloads and avoiding disk bloat across concurrent courses.
+This modular architecture offers two substantial practical benefits: it
+minimizes authoring overhead for teaching faculty by delegating common toolchain
+maintenance to a shared institutional standard, and it drastically optimizes local
+resource usage for students enrolled in multiple computer science courses.
+Because Nix relies on a content-addressable store, any shared packages inherited from
+the departmental baseline are downloaded and cached only once on a student's machine,
+eliminating duplicate downloads and avoiding disk bloat across concurrent
+courses.
 
-Furthermore, the declarative structure of Nix Flakes gives instructors substantial flexibility when evaluating whether their existing assignment codebases will continue to work with newer versions of compilers and language runtimes. In traditional imperative environments, testing a starter repository against an upgraded compiler or runtime introduces significant friction, requiring manual uninstallation, external version-switching utilities, or managing conflicting environment variables across courses. With Nix, instructors can simply edit the package attribute declared in a single \texttt{flake.nix} file (such as testing between \texttt{gcc13} and \texttt{gcc14}, or switching from \texttt{python310} to \texttt{python312}) and immediately verify whether their existing assignment codebases still compile and pass tests cleanly. If a newer compiler version introduces breaking changes or deprecation warnings in the starter code, the instructor can easily leave the ephemeral shell and the edit the flake file without leaving orphaned packages or lingering side effects on their host system. This low-friction experimentation empowers teaching faculty to proactively test forward compatibility and modernize curriculum codebases with minimal overhead.
-
+Furthermore, the declarative structure of Nix Flakes gives instructors substantial
+flexibility when evaluating whether their existing assignment codebases will continue
+to work with newer versions of compilers and language runtimes. In traditional
+imperative environments, testing a starter repository against an upgraded compiler
+or runtime introduces significant friction, requiring manual uninstallation, external
+version-switching utilities, or managing conflicting environment variables
+across courses. With Nix, instructors can simply edit the package attribute
+declared in a single \texttt{flake.nix} file (such as testing between \texttt{gcc13}
+and \texttt{gcc14}, or switching from \texttt{python310} to \texttt{python312})
+and immediately verify whether their existing assignment codebases still compile
+and pass tests cleanly. If a newer compiler version introduces breaking changes or
+deprecation warnings in the starter code, the instructor can easily leave the
+ephemeral shell and the edit the flake file without leaving orphaned packages or
+lingering side effects on their host system. This low-friction experimentation empowers
+teaching faculty to proactively test forward compatibility and modernize curriculum
+codebases with minimal overhead.
 
 \subsection{Operational Availability and Maintenance Conditions}
 
-The operational viability of classroom environments depends heavily on upstream binary availability and operating system support lifecycles. During our controlled onboarding evaluations, when attempting to configure development environments on a macOS Sonoma virtual machine (released in 2023), Homebrew package installation exceeded an hour for a single student participant. Because Homebrew deprecates pre-built binary bottles for older operating system releases, the package manager defaulted to compiling complex dependencies from source locally~\cite{FAQFrequentlyAsked}. In contrast, Nix maintains immutable, content-addressed binary artifacts within upstream caches, enabling fast realization across older host systems provided the derivations remain cached.
+The operational viability of classroom environments depends heavily on upstream
+binary availability and operating system support lifecycles. During our controlled
+onboarding evaluations, when attempting to configure development environments on
+a macOS Sonoma virtual machine (released in 2023), Homebrew package installation exceeded
+an hour for a single student participant. Because Homebrew deprecates pre-built
+binary bottles for older operating system releases, the package manager defaulted
+to compiling complex dependencies from source locally~\cite{FAQFrequentlyAsked}.
+In contrast, Nix maintains immutable, content-addressed binary artifacts within
+upstream caches, enabling fast realization across older host systems provided the
+derivations remain cached.
 
-A pinned \texttt{flake.lock} separates ordinary classroom activation from dependency maintenance: students activate a committed lock file rather than invoking \texttt{nix flake update} during a lab. Consequently, classroom readiness within an instructional time budget depends on normal network operation, input-source availability, primary cache availability, and package lifecycle stability.
+A pinned \texttt{flake.lock} separates ordinary classroom activation from
+dependency maintenance: students activate a committed lock file rather than invoking
+\texttt{nix flake update} during a lab. Consequently, classroom readiness within
+an instructional time budget depends on normal network operation, input-source availability,
+primary cache availability, and package lifecycle stability.
 
-Nix Flakes make dependencies explicit, but they do not eliminate dependence on the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly fetched from GitHub. A GitHub outage can therefore prevent an instructor from refreshing a flake input and can prevent a new machine from fetching a locked input that is not already available locally. These are different operational events: a committed lock file protects ordinary coursework from unintended version drift, whereas updating the lock file remains an instructor maintenance activity that depends on upstream availability.
+Nix Flakes make dependencies explicit, but they do not eliminate dependence on
+the services and maintainers that supply those dependencies. Nixpkgs inputs are commonly
+fetched from GitHub. A GitHub outage can therefore prevent an instructor from
+refreshing a flake input and can prevent a new machine from fetching a locked
+input that is not already available locally. These are different operational events:
+a committed lock file protects ordinary coursework from unintended version drift,
+whereas updating the lock file remains an instructor maintenance activity that depends
+on upstream availability.
 
-The breadth of Nixpkgs also creates a maintenance risk. Package definitions may become deprecated, renamed, broken, or removed when upstream software is abandoned or when no contributor continues to maintain its Nix expression \cite{TrackingPackagesBe}. Pinning a course environment provides a stable term-level target, but it does not remove the need to review package availability before the next term or before updating a lock file. Instructors should therefore establish a refresh schedule, retain a tested lock file for the current offering, and identify a supported alternative when a course depends on a narrowly maintained package.
+The breadth of Nixpkgs also creates a maintenance risk. Package definitions may
+become deprecated, renamed, broken, or removed when upstream software is abandoned
+or when no contributor continues to maintain its Nix expression \cite{TrackingPackagesBe}.
+Pinning a course environment provides a stable term-level target, but it does not
+remove the need to review package availability before the next term or before updating
+a lock file. Instructors should therefore establish a refresh schedule, retain a tested
+lock file for the current offering, and identify a supported alternative when a
+course depends on a narrowly maintained package.
 
-Finally, binary-cache misses will require a student's machine to compile from source, turning an availability event into a student-facing time cost. A departmental cache or an approved external substituter can reduce that risk, but it must be governed as part of the course's trusted computing base. Classroom dependability is therefore shaped by a combination of input availability, maintained package definitions, bounded setup time, and an explicit cache-trust policy rather than by the syntactic validity of the \texttt{flake.nix} file alone.
+Finally, binary-cache misses will require a student's machine to compile from source,
+turning an availability event into a student-facing time cost. A departmental cache
+or an approved external substituter can reduce that risk, but it must be
+governed as part of the course's trusted computing base. Classroom dependability is
+therefore shaped by a combination of input availability, maintained package
+definitions, bounded setup time, and an explicit cache-trust policy rather than
+by the syntactic validity of the \texttt{flake.nix} file alone.
 
 \subsection{Security Considerations and Binary Cache Trust Boundaries}
 
-While Nix Flakes provide strong integrity guarantees through cryptographic store hashes, deploying declarative environments at scale introduces subtle software supply-chain and trust-boundary considerations. Nix realizes a required store path by downloading a signed binary substitute from a cache, defaulting to the official upstream cache at \texttt{cache.nixos.org}. When an acceptable pre-built substitute is unavailable, Nix falls back to compiling the derivation and its transitive build inputs locally from source. Although this fallback preserves determinism, local compilation of complex language runtimes or packages can easily exceed the duration of an instructional lab session, transforming cache availability from a simple performance optimization into an operational dependability requirement.
+While Nix Flakes provide strong integrity guarantees through cryptographic store
+hashes, deploying declarative environments at scale introduces subtle software supply-chain
+and trust-boundary considerations. Nix realizes a required store path by
+downloading a signed binary substitute from a cache, defaulting to the official upstream
+cache at \texttt{cache.nixos.org}. When an acceptable pre-built substitute is unavailable,
+Nix falls back to compiling the derivation and its transitive build inputs
+locally from source. Although this fallback preserves determinism, local
+compilation of complex language runtimes or packages can easily exceed the
+duration of an instructional lab session, transforming cache availability from a simple
+performance optimization into an operational dependability requirement.
 
-To accelerate realization, instructors can configure additional binary caches, known as substituters, by modifying nix installations. Nix accepts substitutes from these endpoints only when their cryptographic signature validates against a configured trusted public key. However, as Garnix emphasizes in their analysis of Nix cache security~\cite{GarnixBlogStop}, trusting an external substituter is an expansive supply-chain decision: it authorizes that cache operator to deliver pre-built binaries that execute directly in user space on students' personal machines. If an unauthorized third-party cache is compromised, an attacker possessing the signing key can inject malicious executables into the Nix store. Academic institutions must therefore govern binary caches as part of their trusted computing base, restricting approved substituters to official NixOS infrastructure or institutionally maintained departmental caches, and advising students against trusting arbitrary public caches~\cite{dolstraNixSafePolicyFree}.
+To accelerate realization, instructors can configure additional binary caches, known
+as substituters, by modifying nix installations. Nix accepts substitutes from these
+endpoints only when their cryptographic signature validates against a configured trusted
+public key. However, as Garnix emphasizes in their analysis of Nix cache security~\cite{GarnixBlogStop},
+trusting an external substituter is an expansive supply-chain decision: it authorizes
+that cache operator to deliver pre-built binaries that execute directly in user space
+on students' personal machines. If an unauthorized third-party cache is compromised,
+an attacker possessing the signing key can inject malicious executables into the
+Nix store. Academic institutions must therefore govern binary caches as part of their
+trusted computing base, restricting approved substituters to official NixOS
+infrastructure or institutionally maintained departmental caches, and advising students
+against trusting arbitrary public caches~\cite{dolstraNixSafePolicyFree}.
 
-Beyond cache endpoint trust, educational institutions must also guard against upstream dependency poisoning within the broader open-source ecosystem. High-profile software supply-chain compromises, such as the XZ Utils backdoor~\cite{przymusWolvesRepositorySoftware2025}, demonstrate that malicious code can bypass technical review and infiltrate distribution channels before maintainers detect the intrusion. To address this exposure, Determinate Systems introduced the concept of \emph{Nixpkgs Cooldowns}~\cite{christensenIntroducingNixpkgsCooldowns2026}. As described by Christensen~\cite{christensenIntroducingNixpkgsCooldowns2026}, cooldowns introduce an automated quarantine time delay before newly merged upstream package revisions and binary artifacts are served to downstream environments. This quarantine window affords security researchers and the open-source community time to identify, report, and remediate compromised package revisions before they propagate into downstream developer environments. By combining pinned \texttt{flake.lock} files with institutionally governed binary caches and upstream cooldown buffers, computer science educators can maintain fast, reliable development environment realization while safeguarding student machines against supply-chain vulnerabilities.
+Beyond cache endpoint trust, educational institutions must also guard against
+upstream dependency poisoning within the broader open-source ecosystem. High-profile
+software supply-chain compromises, such as the XZ Utils backdoor~\cite{przymusWolvesRepositorySoftware2025},
+demonstrate that malicious code can bypass technical review and infiltrate distribution
+channels before maintainers detect the intrusion. To address this exposure, Determinate
+Systems introduced the concept of \emph{Nixpkgs Cooldowns}~\cite{christensenIntroducingNixpkgsCooldowns2026}.
+As described by Christensen~\cite{christensenIntroducingNixpkgsCooldowns2026},
+cooldowns introduce an automated quarantine time delay before newly merged
+upstream package revisions and binary artifacts are served to downstream
+environments. This quarantine window affords security researchers and the open-source
+community time to identify, report, and remediate compromised package revisions before
+they propagate into downstream developer environments. By combining pinned
+\texttt{flake.lock} files with institutionally governed binary caches and upstream
+cooldown buffers, computer science educators can maintain fast, reliable development
+environment realization while safeguarding student machines against supply-chain vulnerabilities.
 
 \section{Limitations and Future Work}
 
-While this research demonstrates the efficacy of agentic declarative environment synthesis, several limitations warrant consideration and suggest promising avenues for future inquiry. Addressing these challenges will be essential for expanding automated environment generation across diverse educational institutions.
+While this research demonstrates the efficacy of agentic declarative environment
+synthesis, several limitations warrant consideration and suggest promising avenues
+for future inquiry. Addressing these challenges will be essential for expanding
+automated environment generation across diverse educational institutions.
 
-First, our evaluation benchmark focused primarily on standard computer science coursework requirements across computer science and data science tracks. Because standard curriculum dependencies (such as OpenJDK, Python, and GCC) are heavily represented in model training corpora and public registries, unassisted models were often able to resolve package attributes via native CLI discovery when MCP access was withheld. Future work should evaluate agent synthesis against highly specialized, rapidly evolving, or legacy dependencies where real-time registry retrieval via MCP may exhibit a more pronounced advantage.
+First, our evaluation benchmark focused primarily on standard computer science coursework
+requirements across computer science and data science tracks. Because standard
+curriculum dependencies (such as OpenJDK, Python, and GCC) are heavily
+represented in model training corpora and public registries, unassisted models were
+often able to resolve package attributes via native CLI discovery when MCP access
+was withheld. Future work should evaluate agent synthesis against highly
+specialized, rapidly evolving, or legacy dependencies where real-time registry
+retrieval via MCP may exhibit a more pronounced advantage.
 
-Second, this study evaluated student onboarding through a single-session controlled laboratory setup. While this protocol effectively isolated initial setup latency, procedural error prevention, and potential onboarding benefits, it did not evaluate semester-long development workflows. Extended cohort studies across full semester offerings are necessary to observe long-term lock-file maintenance, toolchain upgrades, and student perceptions as coursework projects scale in complexity.
+Second, our RQ3 student onboarding evaluation should have employed more granular timing
+instrumentation and extended beyond a single-session controlled laboratory setup.
+Because each declarative trial ran on a fresh virtual machine and recorded a
+single end-to-end completion time, the protocol did not separate one-time Nix package
+manager installation latency from \texttt{nix develop} development shell
+realization time, nor did it measure warm-store subsequent invocations where Nix reuses
+matching dependencies already present in \texttt{/nix/store}. Future evaluations should
+instrument distinct timers for Nix installation, cold-start realization, and warm-store
+re-entry, and conduct extended cohort studies across full semester offerings to
+observe long-term lock-file maintenance, cross-course store reuse, toolchain
+upgrades, and evolving student perceptions.
 
-Third, because the Nix store isolates packages outside the conventional Filesystem Hierarchy Standard (FHS), precompiled tools and applications that expect standard system paths and dynamic linker locations, may lose some functionality without compatibility shims like \texttt{nix-ld} or \texttt{buildFHSEnv}. When coursework depends on applications with strict FHS expectations, instructors must either configure these compatibility layers or fall back to conventional container environments.
+Third, because the Nix store isolates packages outside the conventional
+Filesystem Hierarchy Standard (FHS), precompiled tools and applications that expect
+standard system paths and dynamic linker locations, may lose some functionality
+without compatibility shims like \texttt{nix-ld} or \texttt{buildFHSEnv}. When coursework
+depends on applications with strict FHS expectations, instructors must either
+configure these compatibility layers or fall back to conventional container
+environments.
 
-Ultimately, enabling instructors to use their own AI agent harness with a specialized agent skill to generate validated, single-command Nix development shells directly from assignment materials reduces the cross-platform support burden across computer science courses. By distributing a deterministic, locked environment, instructors can be confident that every student has all the tools required to complete their assignments regardless of their personal operating system or prior machine setup. This transition replaces fragile manual installation steps with a reliable workflow, returning student time and attention to mastering core computational concepts and completing coursework.
-
+Ultimately, enabling instructors to use their own AI agent harness with a specialized
+agent skill to generate validated, single-command Nix development shells
+directly from assignment materials reduces the cross-platform support burden
+across computer science courses. By distributing a deterministic, locked
+environment, instructors can be confident that every student has all the tools required
+to complete their assignments regardless of their personal operating system or prior
+machine setup. This transition replaces fragile manual installation steps with a
+reliable workflow, returning student time and attention to mastering core computational
+concepts and completing coursework.

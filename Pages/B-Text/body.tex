@@ -192,10 +192,9 @@ computer science courses:
     \item \textbf{Instructional Course Documents:} A collection of six real-world
         course documents and laboratory setup guides packaged as Microsoft Word
         (\texttt{.docx}), HTML, and Markdown \texttt{README} files. To process these
-        unstructured documents without manual keyword pre-mapping, the skill
-        executes \texttt{extract-document-content.py} to parse layout structures into
-        clean text for agent requirement extraction using the \texttt{docling}
-        Python package.
+        unstructured documents, the skill executes \texttt{extract-document-content.py}
+        to parse layout structures into clean text for agent requirement extraction
+        using the \texttt{docling}\cite{researchDoclingGetYour2024} Python package.
 \end{enumerate}
 
 To establish an objective evaluation standard across all three modalities, each task
@@ -952,12 +951,13 @@ and Figure~\ref{fig:mcp-calls-by-trial} report MCP tool invocation telemetry.
 
 \begin{table}[htbp]
     \centering
+    \small
     \caption{MCP Tool Invocation Comparison in MCP-Enabled Evaluations}
     \label{tab:mcp-invocation-comparison}
-    \begin{tabular}{lccc}
-        \toprule \textbf{Model}   & \textbf{MCP Calls} & \textbf{\% of All Tool Calls} & \textbf{Mean Calls / Trial} \\
-        \midrule Gemini 3.8 Flash & 136                & 8.41\% (136 / 1,617)          & 3.40                        \\
-        GPT-OSS 120B              & 6                  & 1.02\% (6 / 590)              & 0.15                        \\
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule \textbf{Model}   & \textbf{Trials} & \textbf{MCP Calls} & \textbf{\% of Tool Calls} & \textbf{Mean Calls / Trial} \\
+        \midrule Gemini 3.8 Flash & 40 / 42         & 136                & 8.41\% (136 / 1,617)      & 3.40                        \\
+        GPT-OSS 120B              & 41 / 42         & 6                  & 1.02\% (6 / 590)          & 0.15                        \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -972,26 +972,31 @@ and Figure~\ref{fig:mcp-calls-by-trial} report MCP tool invocation telemetry.
 \end{figure}
 
 As shown in Table~\ref{tab:mcp-ablation}, withholding the \texttt{mcp-nixos}
-server did not degrade synthesis accuracy once the agent was equipped with the
-\texttt{course-flake-generator} skill: \texttt{Gemini 3.8 Flash} achieved 95.24\%
-Pass@1 with MCP and 97.62\% without MCP (100.00\% Pass@3 in both conditions), while
-\texttt{GPT-OSS 120B} achieved 73.81\% Pass@1 with MCP and 71.43\% without MCP (reaching
-a higher 85.71\% Pass@3 without MCP). These results refute Hypothesis~\textbf{H\textsubscript{1b}},
-demonstrating that an external MCP server is largely redundant for flake
-synthesis accuracy when Nix CLI search command returned the same information.
+server did not degrade synthesis accuracy: \texttt{Gemini 3.8 Flash} achieved
+95.24\% Pass@1 with MCP and 97.62\% without MCP (100.00\% Pass@3 in both
+conditions), while \texttt{GPT-OSS 120B} achieved 73.81\% Pass@1 with MCP and
+71.43\% without MCP (reaching a higher 85.71\% Pass@3 without MCP). These results
+refute Hypothesis~\textbf{H\textsubscript{1b}}, demonstrating that an external MCP
+server is largely redundant for flake synthesis accuracy when Nix CLI search command
+returned the same information.
 
-Transcript inspection explains why \texttt{mcp-nixos} yields no accuracy advantage
-over native CLI discovery: both interfaces query and return the exact same
-underlying Nixpkgs package metadata. When MCP access was withheld, the skill
-directed the agent to invoke \texttt{nix search} (Listing~\ref{lst:nix-search-output})
-and \texttt{nix eval}, which return the same attributes, version numbers, package
-descriptions, and platform compatibility fields (\texttt{.meta.platforms}) exposed
-by \texttt{mcp-nixos}. Furthermore, as shown in Table~\ref{tab:mcp-invocation-comparison}
-and Figure~\ref{fig:mcp-calls-by-trial}, \texttt{GPT-OSS 120B} invoked \texttt{mcp-nixos}
-only 6 times across 3 of 41 trials (0.15 calls/trial) because it began 58.54\%
-of its trials (24/41) by calling \texttt{list\_resources}, misinterpreted the
-empty static resource list returned by the tool-only MCP server as an absence of
-capabilities, and defaulted to single-turn generation.
+Transcript inspection explains why \texttt{mcp-nixos} yields no accuracy
+advantage over native CLI discovery: both interfaces query and return the exact same
+underlying Nixpkgs package metadata. When MCP access was withheld, the skill directed
+the agent to invoke \texttt{nix search} (Listing~\ref{lst:nix-search-output})
+and \texttt{nix eval}, which return the same attributes, version numbers,
+package descriptions, and platform compatibility fields (\texttt{.meta.platforms})
+exposed by \texttt{mcp-nixos}. Furthermore, as shown in Table~\ref{tab:mcp-invocation-comparison}
+and Figure~\ref{fig:mcp-calls-by-trial}, tool invocation telemetry was extracted
+from all trials with completed execution transcripts (40 of 42 trials for \texttt{Gemini
+3.8 Flash} and 41 of 42 trials for \texttt{GPT-OSS 120B}, with the remaining
+trials reaching the 900-second execution timeout prior to emitting transcript
+logs). Within these analyzed trials, \texttt{Gemini 3.8 Flash} utilized MCP
+lookup consistently, averaging 3.40 calls per trial across all 40 runs. In
+contrast, \texttt{GPT-OSS 120B} invoked \texttt{mcp-nixos} only 6 times across 3 of
+41 analyzed trials (0.15 calls/trial) because it began 58.54\% of its trials (24/41)
+by calling \texttt{list\_resources}, misinterpreted the empty static resource
+list returned by the tool-only MCP server as an absence of capabilities.
 
 \begin{lstlisting}[caption={Example \texttt{nix search} Output for Package Discovery}, label={lst:nix-search-output}]
 nix search nixpkgs ripgrep
@@ -1002,43 +1007,44 @@ nix search nixpkgs ripgrep
   Interactive replacer for ripgrep that makes it easy to find and replace across files on the command line
 \end{lstlisting}
 
-While structured MCP queries occasionally prevented prolonged CLI exploration on
-complex wrapper packages (such as Task~11, \texttt{RStudio}, where withholding
-MCP caused \texttt{Gemini 3.8 Flash} to execute 92 shell commands consuming 508,739
-tokens while inspecting the \texttt{/nix/store}), the refutation of Hypothesis~\textbf{H\textsubscript{1b}}
-carries a practical advantage for classroom deployment. In line with recent
-findings by Forment et~al.~\cite{formentScaffoldingMattersMore2026} that well-structured
-CLI scaffolding often matches or outperforms specialized external tool servers,
-our ablation study confirms that instructors do not need to install, configure,
-or maintain an external MCP server. The standalone \texttt{course-flake-generator}
-skill and standard Nix CLI commands are sufficient on their own to achieve 95\%--100\%
-synthesis accuracy.
+While structured MCP queries occasionally prevented prolonged CLI exploration on complex
+wrapper packages (such as Task~11, \texttt{RStudio}, where withholding MCP caused
+\texttt{Gemini 3.8 Flash} to execute 92 shell commands consuming 508,739 tokens
+while inspecting the \texttt{/nix/store}), the refutation of Hypothesis~\textbf{H\textsubscript{1b}}
+carries a practical advantage for classroom deployment. In line with recent findings
+by Forment et~al.~\cite{formentScaffoldingMattersMore2026} that well-structured
+CLI scaffolding often matches or outperforms specialized external tool servers, our
+ablation study confirms that instructors do not need to install, configure, or maintain
+an external MCP server. The standalone \texttt{course-flake-generator} skill and standard
+Nix CLI commands are sufficient on their own to achieve 95\%--100\% synthesis
+accuracy.
 \section{Base OS Reproducibility Results}
 \label{sec:base-os-results}
 
-The base operating system replay evaluation investigated the cross-platform reproducibility
-of eligible artifacts that passed host-side validation during the RQ1 synthesis benchmark.
-Each passing \texttt{flake.nix} and corresponding lockfile was evaluated across two
-isolated, clean environments: disposable Linux Docker containers running on an unprivileged
-host architecture and clean macOS virtual machines managed via the Tart virtualization
-framework. Replay trials executed an automated four-stage verification pipeline
-matching the guest replay protocol: static flake syntax check (\texttt{flake\_check}),
-development shell realization and hook execution (\texttt{activation}), binary presence
-verification on \texttt{PATH} for every declared dependency (\texttt{missing\_dependency}),
-and headless task command verification (\texttt{task\_<index>}). Replay outcomes
-were systematically classified according to the taxonomy implemented in \texttt{replay\_clean\_docker.py},
+The base operating system replay evaluation investigated the cross-platform
+reproducibility of eligible artifacts that passed host-side validation during
+the RQ1 synthesis benchmark. Each passing \texttt{flake.nix} and corresponding
+lockfile was evaluated across two isolated, clean environments: disposable Linux
+Docker containers running on an unprivileged host architecture and clean macOS
+virtual machines managed via the Tart virtualization framework. Replay trials executed
+an automated four-stage verification pipeline matching the guest replay protocol:
+static flake syntax check (\texttt{flake\_check}), development shell realization
+and hook execution (\texttt{activation}), binary presence verification on
+\texttt{PATH} for every declared dependency (\texttt{missing\_dependency}), and headless
+task command verification (\texttt{task\_<index>}). Replay outcomes were systematically
+classified according to the taxonomy implemented in \texttt{replay\_clean\_docker.py},
 separating packaging errors from runtime functional execution errors.
 
-Figure~\ref{fig:rq2-linux-results} and Figure~\ref{fig:rq2-macos-results}
-present the clean replay outcomes across the Computer Science and Data Science
-curriculum tracks for Linux and macOS, respectively. Across both operating
-systems, the generated flakes demonstrated robust structural isolation: zero
-trials encountered \texttt{flake\_failure}, \texttt{activation\_failure}, or
-\texttt{missing\_dependency}. In every instance, the Nix evaluator built the requested
-development shell derivation, populated the store paths, executed shell hooks without
-fatal exit codes, and placed all required tool binaries on the active \texttt{PATH}.
-Nevertheless, a subset of trials experienced \texttt{functional\_failure}, wherein
-the environment successfully activated with all dependencies present, but task-specific
+Figure~\ref{fig:rq2-linux-results} and Figure~\ref{fig:rq2-macos-results} present
+the clean replay outcomes across the Computer Science and Data Science curriculum
+tracks for Linux and macOS, respectively. Across both operating systems, the
+generated flakes demonstrated robust structural isolation: zero trials encountered
+\texttt{flake\_failure}, \texttt{activation\_failure}, or \texttt{missing\_dependency}.
+In every instance, the Nix evaluator built the requested development shell
+derivation, populated the store paths, executed shell hooks without fatal exit
+codes, and placed all required tool binaries on the active \texttt{PATH}. Nevertheless,
+a subset of trials experienced \texttt{functional\_failure}, wherein the
+environment successfully activated with all dependencies present, but task-specific
 headless test commands exited with non-zero status codes.
 
 \begin{figure}[htbp]
@@ -1059,25 +1065,25 @@ headless test commands exited with non-zero status codes.
     \label{fig:rq2-macos-results}
 \end{figure}
 
-In the Linux container replay (Figure~\ref{fig:rq2-linux-results}), 34 of the 41 eligible
-trials reproduced successfully without manual intervention, achieving an overall
-clean reproduction rate of 82.9\%. Across curriculum tracks, the Computer Science
-track achieved an 83.3\% reproduction rate (25 reproduced, 5 functional failures
-out of 30 trials), while the Data Science track achieved an 81.8\% reproduction rate
-(9 reproduced, 2 functional failures out of 11 trials). In the clean macOS virtual
-machine replay (Figure~\ref{fig:rq2-macos-results}), 39 of the 41 eligible
-trials reproduced successfully, yielding a 95.1\% overall clean reproduction
+In the Linux container replay (Figure~\ref{fig:rq2-linux-results}), 34 of the 41
+eligible trials reproduced successfully without manual intervention, achieving an
+overall clean reproduction rate of 82.9\%. Across curriculum tracks, the
+Computer Science track achieved an 83.3\% reproduction rate (25 reproduced, 5 functional
+failures out of 30 trials), while the Data Science track achieved an 81.8\%
+reproduction rate (9 reproduced, 2 functional failures out of 11 trials). In the
+clean macOS virtual machine replay (Figure~\ref{fig:rq2-macos-results}), 39 of the
+41 eligible trials reproduced successfully, yielding a 95.1\% overall clean reproduction
 rate. Specifically, the Computer Science track attained 93.3\% reproducibility (28
-reproduced, 2 functional failures out of 30 trials), while the Data Science track
-achieved 100.0\% reproducibility (11 reproduced, 0 functional failures out of 11
-trials).
+reproduced, 2 functional failures out of 30 trials), while the Data Science
+track achieved 100.0\% reproducibility (11 reproduced, 0 functional failures out of
+11 trials).
 
-Detailed post-mortem analysis of the trial logs revealed that all seven Linux failures
-and both macOS failures stemmed from three distinct root causes within the \texttt{functional\_failure}
-classification. Crucially, none of these failures reflect a defect in Nix's
-reproducibility model or the syntax of the generated flake files; rather, they
-arise from the runtime behavior of the installed applications and the
-constraints of the headless testing environment:
+Detailed post-mortem analysis of the trial logs revealed that all seven Linux
+failures and both macOS failures stemmed from three distinct root causes within
+the \texttt{functional\_failure} classification. Crucially, none of these failures
+reflect a defect in Nix's reproducibility model or the syntax of the generated flake
+files; rather, they arise from the runtime behavior of the installed applications
+and the constraints of the headless testing environment:
 
 \begin{enumerate}
     \item \textbf{Container Privilege Boundaries and Electron Headless
@@ -1108,55 +1114,54 @@ constraints of the headless testing environment:
         provides proxy shims for \texttt{rustc} and \texttt{cargo} that
         dynamically resolve to toolchains managed under the user's mutable home
         directory (\texttt{\$HOME/.rustup}). On the author's MacBook, \texttt{\textasciitilde/.rustup}
-        already existed, masking the uninitialized state and permitting the shims
-        to execute during local RQ1 validation. When deployed to fresh guest
-        environments where \texttt{\$HOME/.rustup} was empty, calling \texttt{rustc}
-        failed with the diagnostic: \textit{"error: rustup could not choose a
-        version of rustc to run, because one wasn't specified explicitly, and no
-        default is configured."} In contrast, one synthesized trial succeeded on
-        both Linux and macOS because the model included \texttt{rustup default
-        stable} inside the flake's \texttt{shellHook}, which automatically downloads
-        (if missing) and configures the stable versions of \texttt{rustc} and
-        \texttt{cargo} within the clean environment prior to command verification.
+        already existed, prompting the model to exclude \texttt{rustup default
+        stable} within the flake.nix file. When deployed to fresh guest environments
+        where \texttt{\$HOME/.rustup} was empty, calling \texttt{rustc} failed
+        with the diagnostic: \textit{"error: rustup could not choose a version
+        of rustc to run, because one wasn't specified explicitly, and no default
+        is configured."} In contrast, one synthesized trial succeeded on both Linux
+        and macOS because the model included \texttt{rustup default stable}
+        inside the flake's \texttt{shellHook}, which automatically downloads (if missing)
+        and configures the stable versions of \texttt{rustc} and \texttt{cargo}
+        within the clean environment prior to command verification.
 
     \item \textbf{Absence of Display Server for Graphical Applications:} In the
         Data Science track, trials for the database administration environment failed
         during the verification command (\texttt{mysql-workbench --version})
         during Linux container replay. MySQL Workbench is a desktop client application
         compiled against GTK and X11 graphical libraries. When invoked inside
-        the minimal headless Docker container, the binary attempted to initialize
-        a connection to a non-existent graphical display server, terminating
-        with the runtime fault: \textit{"(mysql-workbench-bin): Gtk-WARNING **:
-        cannot open display:"}. On the authoring host machine, macOS provided an
-        active display server. In the macOS virtual machine environment, Darwin
-        application binaries and command wrappers do not depend on an X11
-        display socket, allowing all corresponding trials to execute without failure.
+        the headless Docker container, the binary attempted to initialize a connection
+        to a non-existent graphical display server, terminating with the runtime
+        fault: \textit{"(mysql-workbench-bin): Gtk-WARNING **: cannot open
+        display:"}. In the macOS virtual machine environment, Darwin application
+        binaries and command wrappers do not depend on an X11 display socket, allowing
+        all corresponding trials to execute without failure.
 \end{enumerate}
 
 These findings provide strong empirical validation for Hypothesis~\textbf{H\textsubscript{2}},
-demonstrating that declarative Nix Flakes deliver high cross-platform determinism
-(95.1\% on macOS and 82.9\% on Linux) with zero environment-realization or missing-dependency
-failures. Crucially, the failure taxonomy confirms that every observed failure stemmed
-from application-specific runtime assumptions or test-harness constraints rather than
-broken Nix package realization. Five of the seven observed failures on Linux, specifically
-those involving graphical applications, were artifacts of the headless container
-test harness running under superuser privileges and a display server; because student
-devices operate under unprivileged user accounts with graphical desktop sessions,
-these container-specific constraints do not reflect real world student
-onboarding. Similarly, the failures observed during the Rust toolchain replay
-stemmed from \texttt{rustup}'s design as a stateful, user-directory toolchain
-manager whose uninitialized state was masked on the authoring host's machine by
-an existing \texttt{\textasciitilde/.rustup} cache.
+demonstrating that declarative Nix Flakes deliver high cross-platform
+determinism (95.1\% on macOS and 82.9\% on Linux) with zero environment-realization
+or missing-dependency failures. Crucially, the failure taxonomy confirms that
+every observed failure stemmed from application-specific runtime assumptions or
+test-harness constraints rather than broken Nix package realization. Five of the seven
+observed failures on Linux, specifically those involving graphical applications, were
+artifacts of the headless container test harness running under superuser privileges
+and a display server; because student devices operate under unprivileged user
+accounts with graphical desktop sessions, these container-specific constraints do
+not reflect real world student onboarding. Similarly, the failures observed during
+the Rust toolchain replay stemmed from \texttt{rustup}'s design as a stateful, user-directory
+toolchain manager whose uninitialized state was masked on the authoring host's machine
+by an existing \texttt{\textasciitilde/.rustup} cache.
 \section{Student Onboarding Ergonomics Results}
 \label{sec:rq3-results}
 
-\subsection{Installation of the Rust Compiler}
+\subsection{Rust Compiler}
 
-The first onboarding task evaluated a single-toolchain setup requiring
-participants to install the Rust compiler toolchain (\texttt{rustup}, \texttt{rustc},
-and \texttt{cargo}) and verify its availability in the shell. Table~\ref{tab:rq3-rust-results}
-summarizes the setup completion times and time deltas across participants for
-the Rust installation task.
+The first onboarding task evaluated a single-toolchain setup requiring participants
+to install the Rust compiler toolchain (\texttt{rustup}, \texttt{rustc}, and
+\texttt{cargo}) and verify its availability in the shell. Table~\ref{tab:rq3-rust-results}
+summarizes the setup completion times and time deltas across participants for the
+Rust installation task.
 
 \begin{table}[htbp]
     \centering
@@ -1173,48 +1178,70 @@ the Rust installation task.
 
 \subsubsection{Student A}
 During the imperative installation trial, Student~A completed the setup in 3~minutes
-and 21.22~seconds, but encountered multiple points of procedural friction along the
-way. Most notably, Student~A initially assumed that the leading shell prompt symbol
-(\texttt{\$}) printed in the documentation was a literal part of the command
-string to be executed. Furthermore, Student~A overlooked a critical post-installation
-instruction requiring them to source the Cargo environment script (\texttt{source
-"\$HOME/.cargo/env"}), which caused subsequent verification commands (\texttt{rustc
---version} and \texttt{cargo --version}) to fail with command-not-found errors
-and created confusion regarding whether the compiler had actually been installed.
-This observation highlights a fundamental vulnerability of imperative installation
-guides: because manual procedures consist of stateful, sequential steps,
-inadvertently skipping a single environment-configuration step silently breaks
-downstream verification even when the underlying binaries have been downloaded
-successfully.
+and 21.22~seconds, but encountered multiple points of procedural friction along
+the way. Most notably, Student~A initially assumed that the leading shell prompt
+symbol (\texttt{\$}) printed in the documentation was a literal part of the command
+string to be executed. Furthermore, Student~A overlooked an instruction requiring
+them to source the Cargo environment script (\texttt{source "\$HOME/.cargo/env"}),
+which caused subsequent verification commands (\texttt{rustc --version} and \texttt{cargo
+--version}) to fail with command-not-found errors and created confusion regarding
+whether the compiler had actually been installed. This observation highlights a
+fundamental vulnerability of imperative installation guides: because manual procedures
+consist of stateful, sequential steps, inadvertently skipping a single environment-configuration
+step silently breaks downstream verification even when the underlying binaries have
+been downloaded successfully.
 
-In the declarative Nix Flake trial, Student~A completed the setup in 4~minutes and
-54.86~seconds, representing an additional 1~minute and 33.64~seconds compared to
-the imperative workflow. The majority of the time was spent waiting for the one-time
-installation of Nix itself and the initial realization of the development shell via
-\texttt{nix develop}. Despite the longer total wait time during this initial Rust
-setup, Student~A initially expressed a preference for the declarative Nix Flake
-method, noting that once Nix was installed, activating the environment required
-a single deterministic command.
+In the declarative Nix Flake trial, Student~A completed the setup in 4~minutes
+and 54.86~seconds, representing an additional 1~minute and 33.64~seconds compared
+to the imperative workflow. The majority of the time was spent waiting for the
+one-time installation of Nix itself and the initial realization of the
+development shell via \texttt{nix develop}. Despite the longer total wait time
+during this initial Rust setup, Student~A initially expressed a preference for the
+declarative Nix Flake method, noting that once Nix was installed, activating the environment
+required a single deterministic command.
 
 \subsubsection{Student B}
 During the imperative installation trial, Student~B required 5~minutes and 19.95~seconds
-to complete the Rust setup. Throughout the process, Student~B reported feeling overwhelmed
-by the dense terminal output emitted by the \texttt{rustup} installer and
-consequently skimmed past the post-installation instructions printed to the
-console. As a result, Student~B failed to restart the terminal session or reload
-the shell configuration as instructed by the installer output, and expressed confusion
-when presented with information regarding the \texttt{PATH} environment variable
-and shell profile files.
+to complete the Rust setup. Throughout the process, Student~B reported feeling
+overwhelmed by the dense terminal output emitted by the \texttt{rustup} installer
+and consequently skimmed past the post-installation instructions printed to the console.
+As a result, Student~B failed to restart the terminal session or reload the shell
+configuration as instructed by the installer output, and expressed confusion
+when presented with information regarding the \texttt{PATH} environment variable and
+shell profile files.
 
-In the declarative Nix Flake trial, Student~B completed the environment setup in 7~minutes
-and 6.64~seconds, an increase of 1~minute and 46.69~seconds over the imperative
-trial due to the initial Nix installer and \texttt{devShell} realization overhead.
-Unlike Student~A's initial assessment after the Rust trial, Student~B preferred the
-traditional imperative installation method from the outset, explaining that the
-conventional step-by-step installer instructions felt more familiar and
-conceptually easier to follow than the unfamiliar Nix workflow.
+In the declarative Nix Flake trial, Student~B completed the environment setup in
+7~minutes and 6.64~seconds, an increase of 1~minute and 46.69~seconds over the imperative
+trial due to the initial Nix installer and \texttt{devShell} realization
+overhead. Unlike Student~A's initial assessment after the Rust trial, Student~B
+preferred the traditional imperative installation method from the outset, explaining
+that the conventional step-by-step installer instructions felt more familiar and conceptually
+easier to follow than the unfamiliar Nix workflow.
+
+\subsubsection{Student C}
+During the imperative installation trial, Student~C completed the Rust setup in
+4~minutes and 56.23~seconds without experiencing significant procedural
+roadblocks. While Student~C navigated the sequential instructions and environment
+configuration steps cleanly, they noted that manually following imperative
+documentation across different tools requires ongoing cognitive attention to
+ensure no post-installation actions are omitted.
+
+In the declarative Nix Flake trial, Student~C completed the environment setup in 4~minutes
+and 45.80~seconds, finishing 10.43~seconds faster than the imperative workflow. In
+their qualitative assessment, Student~C reported finding both methods to be
+largely identical in terms of overall cognitive load during execution. However,
+Student~C highlighted a key ergonomic advantage of the declarative approach, pointing
+out that invoking a single, uniform command (\texttt{nix develop}) is substantially
+easier to recall and execute compared to remembering or referencing runtime-specific
+setup commands.
 
 \subsection{Jupyter Notebook}
+
+The second onboarding task evaluated a data science environment requiring
+participants to provision Python~3, Jupyter Notebook, and Git (\texttt{python3}, \texttt{jupyter},
+and \texttt{git}). Table~\ref{tab:rq3-jupyter-results} summarizes the setup
+completion times and time deltas across participants for the Jupyter Notebook
+installation task.
 
 \begin{table}[htbp]
     \centering
@@ -1229,24 +1256,73 @@ conceptually easier to follow than the unfamiliar Nix workflow.
     \end{tabular}
 \end{table}
 
+\subsubsection{Student A}
+During the imperative installation trial, Student~A completed the Jupyter
+Notebook setup in 4~minutes and 59.33~seconds, although they initially skipped the
+\texttt{git} installation step and had to return to install it at the end of the
+process. Following the imperative guide's recommendation, Student~A installed
+Anaconda, which achieved a comparable bundling effect to Nix by provisioning the Python
+runtime alongside the Jupyter Notebook package in a single distribution.
+
+In the declarative Nix Flake trial, Student~A completed the environment setup in
+3~minutes and 42.04~seconds, finishing 1~minute and 17.29~seconds faster than the
+imperative workflow. Unlike the single-toolchain Rust setup, activating the bundled
+declarative environment outperformed the imperative Anaconda installation even with
+initial Nix realization included.
+
+\subsubsection{Student B}
+During the imperative installation trial, Student~B completed the setup in 7~minutes
+and 21.44~seconds, opting to install each required dependency manually rather than
+using the Anaconda distribution. To expedite the installation, Student~B opened two
+separate terminal shells to install \texttt{git} and Python asynchronously in
+parallel.
+
+In the declarative Nix Flake trial, Student~B completed the environment setup in 8~minutes
+and 41.60~seconds, an increase of 1~minute and 20.16~seconds over the imperative
+trial. Despite the longer setup duration, Student~B noted an ergonomic advantage
+of the declarative Nix workflow: students are shielded from having to learn or manage
+host-level package managers such as Homebrew, which can otherwise introduce an
+unnecessary layer of configuration complexity and confusion.
+
+\subsubsection{Student C}
+During the imperative installation trial, Student~C completed the setup in 8~minutes
+and 37.12~seconds but appeared overwhelmed by the volume of setup instructions.
+Rather than reading each step thoroughly, Student~C copied and pasted potential ``commands''
+directly from the webpage without verifying their purpose, including a literal
+leading shell prompt symbol (\texttt{\$}) from the documentation; as a result, Student~C
+became stalled and required intervention from the author to proceed.
+
+In the declarative Nix Flake trial, Student~C completed the environment setup in
+9~minutes and 22.12~seconds, an increase of 45.00~seconds over the imperative workflow.
+The same tendency to skim documentation persisted during the Nix installation
+phase: instead of navigating to the provided link for the Determinate Systems Nix
+installer, Student~C searched online for Nix installation instructions and
+copied in an AI-generated response referencing the official Nix installer script,
+which does not enable Nix Flakes by default. Consequently, the author had to intervene
+and manually edit the Nix configuration file to enable Flakes before the environment
+could be activated. Despite these procedural mishaps, Student~C concluded that the
+declarative Nix workflow was easier overall because it required following substantially
+fewer instructions.
+
 \subsection{Full Stack Environment}
 
-The final onboarding task evaluated a full-stack web development environment combining
-multiple language runtimes, package managers, database tools, and post-installation
-configuration steps. Specifically, the setup guide required initializing the Hex
-package manager for the Elixir language (\texttt{mix local.hex}), the Rebar3
-build tool (\texttt{mix local.rebar}), and the Phoenix application generator
-archive (\texttt{phx\_new}), alongside a Node.js (LTS v20+) and \texttt{npm}
-frontend asset pipeline, the SQLite~3 relational database engine (\texttt{sqlite3}),
-and optionally, (\texttt{sqlitebrowser}) for graphical database inspection.
+The final onboarding task evaluated a full-stack web development environment
+combining multiple language runtimes, package managers, database tools, and post-installation
+configuration steps. Specifically, the setup guide required initializing the Hex package
+manager for the Elixir language (\texttt{mix local.hex}), the Rebar3 build tool (\texttt{mix
+local.rebar}), and the Phoenix application generator archive (\texttt{phx\_new}),
+alongside a Node.js (LTS v20+) and \texttt{npm} frontend asset pipeline, the
+SQLite~3 relational database engine (\texttt{sqlite3}), and optionally, (\texttt{sqlitebrowser})
+for graphical database inspection.
 
-In the imperative workflow, participants had to install brew and each system
-package individually, manually link the pinned Node.js formula (\texttt{brew
-link node@20}), execute the sequential \texttt{mix} bootstrap commands, and verify
-the stack by scaffolding a SQLite-backed Phoenix project (\texttt{mix phx.new}), running
-Ecto database migrations (\texttt{mix ecto.setup}), and launching the local development
-server (\texttt{mix phx.server}). Table~\ref{tab:rq3-fullstack-results} summarizes
-the setup completion times and time deltas for the full-stack environment task.
+In the imperative workflow, participants had to install brew and each system package
+individually, manually link the pinned Node.js formula (\texttt{brew link
+node@20}), execute the sequential \texttt{mix} bootstrap commands, and verify
+the stack by scaffolding a SQLite-backed Phoenix project (\texttt{mix phx.new}),
+running Ecto database migrations (\texttt{mix ecto.setup}), and launching the
+local development server (\texttt{mix phx.server}). Table~\ref{tab:rq3-fullstack-results}
+summarizes the setup completion times and time deltas for the full-stack
+environment task.
 
 \begin{table}[htbp]
     \centering
@@ -1280,22 +1356,39 @@ the setup completion times and time deltas for the full-stack environment task.
 \end{figure}
 
 As illustrated in Figure~\ref{fig:rq3-onboarding-results} and Figure~\ref{fig:rq3-avg-time-delta},
-declarative activation via \texttt{nix develop} incurred a net time overhead
-compared to imperative installation across most trials (averaging +1:03.30 for
-Rust, +0:15.96 for Jupyter Notebook, and +2:09.21 for the Full Stack environment).
-This difference was driven primarily by the one-time installation of the Nix
-package manager and the initial realization of dependency store paths on clean
-virtual machines.
+declarative activation via \texttt{nix develop} incurred a net time overhead compared
+to imperative installation across most clean-VM trials (averaging +1:03.30 for Rust,
++0:15.96 for Jupyter Notebook, and +2:09.21 for the Full Stack environment). Although
+the per-student time overhead narrowed from the single-toolchain Rust setup to the
+multi-component Full Stack environment for Student~A (+1:33.64 to +0:40.27, with Jupyter
+completing 1~minute and 17.29\,s faster via Nix) and Student~B (+1:46.69 to +1:28.55),
+Student~C experienced a markedly higher overhead on the Full Stack task (+4:18.82,
+compared to completing the Rust setup 10.43\,s faster with Nix). Consequently, the
+aggregate clean-VM timings do not establish that declarative activation becomes uniformly
+faster as environment complexity grows.
 
-Nevertheless, comparing the single-toolchain Rust setup against the multi-component
-Jupyter Notebook and Full Stack environments partially supports Hypothesis~\textbf{H\textsubscript{3}}.
-As environment complexity increased from a single compiler to an integrated full-stack
-environment, the declarative time overhead narrowed from +1:33.64 to +0:40.27
-for Student~A and from +1:46.69 to +1:28.55 for Student~B. In addition, Student~C
-completed the Rust trial 10.43\,s faster and Student~A completed the Jupyter
-trial 1~minute and 17.29\,s faster using \texttt{nix develop}, demonstrating
-that single-command activation becomes increasingly more favorable as manual
-installation procedures grow in complexity.
+Two methodological factors explain why these timings represent a worst-case cold-start
+ceiling rather than typical recurring classroom usage. First, the test protocol did
+not start a separate timer for \texttt{nix develop} development shell
+realization independent of the one-time installation of the Nix package manager. Because
+each trial ran on a fresh virtual machine, the Nix bootstrap time was bundled
+into every declarative measurement, whereas students in an active curriculum would
+already have Nix installed prior to subsequent assignments. Second, every clean virtual
+machine began with an empty \texttt{/nix/store}, forcing the first initialization
+of \texttt{nix develop} to fetch and realize the entire list of dependencies
+from scratch. In contrast, because Nix places realized derivations in a shared, immutable
+store indexed by cryptographic input hashes~\cite{dolstraNixOSPurelyFunctional2010},
+subsequent invocations of \texttt{nix develop}, both when activating an existing
+shell and when activating new course flakes that share matching store paths, reuse
+existing dependencies locally without redundant downloads, further reducing the
+time difference relative to manual installation.
+
+Evaluated against its stated scope, Hypothesis~\textbf{H\textsubscript{3}} is
+therefore partially supported primarily through procedural error prevention
+rather than cold-start speed. Single-command activation via \texttt{nix develop}
+eliminated the shell-sourcing, \texttt{PATH}, and step-ordering mistakes observed
+during the imperative trials, whereas subjective cognitive friction and overall
+workflow preference remained mixed across participants.
 
 At the conclusion of the evaluation protocol, after completing all three environment
 tasks, both Student~A and Student~B reported an overall preference for the

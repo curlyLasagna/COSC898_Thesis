@@ -324,6 +324,12 @@ S.~Gooding. Devenv {{Faces Backlash Over AI-Driven Telemetry}} in {{Version}}
   \url{https://memo.d.foundation/topics/devbox/research/nix-is-faster-than-docker-build}
 \BIBentrySTDinterwordspacing
 
+\bibitem{researchDoclingGetYour2024}
+\BIBentryALTinterwordspacing
+{IBM Research}, ``Docling: {{Get}} your documents ready for gen {{AI}}.''
+  [Online]. Available: \url{https://github.com/DS4SD/docling}
+\BIBentrySTDinterwordspacing
+
 \bibitem{straubUnderstandingTechnologyAdoption2009}
 \BIBentryALTinterwordspacing
 E.~T. Straub, ``Understanding {{Technology Adoption}}: {{Theory}} and {{Future
