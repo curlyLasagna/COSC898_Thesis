@@ -4,12 +4,12 @@
 \section{Research Questions and Hypotheses}
 \label{sec:rqs}
 
-Building on the three research questions introduced in Chapter~\ref{chap:intro} and
+Building on the two research questions introduced in Chapter~\ref{chap:intro} and
 the technical foundations established in Chapter~\ref{chap:litreview}, this
 section defines the working hypotheses used to test each question. Specifically,
-we map automated flake synthesis (\textbf{RQ1}), cross-platform clean-environment
-reproducibility (\textbf{RQ2}), and student onboarding ergonomics (\textbf{RQ3}) to
-four testable hypotheses that guide our empirical evaluation:
+we map automated flake synthesis (\textbf{RQ1}) and cross-platform clean-environment
+reproducibility (\textbf{RQ2}) to three testable hypotheses that guide our empirical
+evaluation:
 \begin{itemize}
     \item \textbf{H\textsubscript{1a} (RQ1):} Providing our custom agent skill (\texttt{course-flake-generator})
         and closed-loop evaluation (\texttt{nix flake check}) will enable both
@@ -28,10 +28,6 @@ four testable hypotheses that guide our empirical evaluation:
         reproduce and support coursework execution in clean, unmounted Linux
         containers and macOS virtual machines, with any residual failures isolated
         to platform-specific package availability.
-
-    \item \textbf{H\textsubscript{3} (RQ3):} Single-command activation via
-        \texttt{nix develop} will reduce procedural errors and cognitive friction
-        compared to manual imperative installation.
 \end{itemize}
 
 \section{Proposed Solution: An agent skill for AI-Assisted Nix Flake Synthesis}
@@ -112,7 +108,11 @@ to ensure that only verified configurations progress toward student deployment:
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=\linewidth,
+        keepaspectratio,
+        alt={Architecture flowchart divided into two panels: Specification and Autonomous Synthesis on the left, and Verification and Distribution on the right. On the left, an instructor provides any combination of natural language instructions, an instruction guide, or source code to an agent harness where an LLM invokes the Course Flake Generator skill and queries nixos-mcp for package metadata. On the right, the generated flake.nix is placed in an assignment folder, activated and verified by the instructor, published to a course management system or online repository, and downloaded by students to activate the development shell.}
+    ]{
         Figures/high-level-process.pdf
     }
     \caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis
@@ -125,14 +125,12 @@ to ensure that only verified configurations progress toward student deployment:
 \label{chap:testing}
 
 This chapter details the empirical methodology and experimental design developed to
-evaluate the three primary research questions of this thesis. Section~\ref{sec:rq1-methodology}
+evaluate the two primary research questions of this thesis. Section~\ref{sec:rq1-methodology}
 outlines the agentic flake generation test protocol, including dataset curation,
 and the multi-stage Pass@$k$ validation metric. Section~\ref{sec:rq2-methodology}
 formalizes the clean-environment replay designed to assess host-independent
 reproducibility of the generated flake across Linux containers and macOS virtual
-machines. Section~\ref{sec:rq3-methodology} describes the user study protocol examining
-student setup time delta and cognitive ergonomics when onboarding with \texttt{nix
-develop} versus imperative instructions (RQ3). Finally, Section~\ref{sec:testbed-infrastructure}
+machines. Finally, Section~\ref{sec:testbed-infrastructure}
 consolidates the experimental testbed infrastructure, documenting host hardware specifications
 and guest virtualization environments.
 
@@ -622,57 +620,6 @@ virtualization environments:
         macos-27-base}.
 \end{itemize}
 
-\section{Student Onboarding Ergonomics Protocol}
-\label{sec:rq3-methodology}
-
-RQ3 evaluates the practical ergonomics and setup time delta of Nix Flakes from a student
-perspective compared to traditional manual installation. To assess subjective
-ergonomics and onboarding friction, we conducted a controlled user study involving
-two undergraduate students and a graduate computer science student. Each
-participant was tasked with configuring a course development environment using
-two contrasting methods: traditional imperative instructions from a course document,
-and a \texttt{flake.nix} file that was generated from its respective instruction guide
-using our custom agent skill.
-
-\subsection{Test Setup}
-Each student trial was executed with 2 clones of a vanilla macOS virtual machine (1
-to be ran without nix and one with to have nix installed by the students; Figure~\ref{fig:rq3-vm-list})
-from Cirrus Labs, invoked via \texttt{tart run --dir=host:./ <student-A-dev>}
-where \texttt{--dir} is the current directory of the AI generated flake. In the
-macOS VM, this becomes a shared volume, automatically providing the VM the
-required files (Figure~\ref{fig:rq3-setup}).
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.92\linewidth, keepaspectratio]{
-        Figures/rq3-vm-list.png
-    }
-    \caption{Listing of Two Identical macOS Virtual Machine Clones: One for Imperative
-    Installation and One Strictly with Nix}
-    \label{fig:rq3-vm-list}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.92\linewidth, keepaspectratio]{
-        Figures/RQ3_setup.png
-    }
-    \caption{Tart Running macOS with Files from the Host Machine of a Flake}
-    \label{fig:rq3-setup}
-\end{figure}
-
-We recorded total setup completion time, the time delta between imperative installation
-and declarative shell activation, the student's personal assessment of their
-preferred workflow, and qualitative observations regarding cognitive load.
-
-We evaluated three progressively complex coursework environments to capture how setup
-time and procedural friction scale with dependency complexity. The first task
-required installing a single compiled language toolchain consisting of the Rust
-compiler and Cargo build system. The second task involved provisioning a data science
-environment with a Python runtime and the Jupyter Notebook package. Finally, the third
-task required configuring a multi-component full-stack web development environment
-integrating multiple language runtimes, package managers, and database utilities.
-
 \section{Experimental Testbed and System Infrastructure}
 \label{sec:testbed-infrastructure}
 
@@ -756,7 +703,11 @@ models on natural language specifications.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=\linewidth,
+        keepaspectratio,
+        alt={Side-by-side line charts comparing pass@1 and pass@3 synthesis accuracy on natural language prompts with and without the custom skill. For GPT-OSS 120B on the left, the skill increases pass@1 from 33.3 percent to 73.8 percent (plus 40.5 percentage points) and pass@3 from 64.3 percent to 78.6 percent (plus 14.3 percentage points). For Gemini 3.8 Flash on the right, the skill increases pass@1 from 88.1 percent to 95.2 percent (plus 7.1 percentage points), with both conditions reaching 100.0 percent at pass@3.}
+    ]{
         Figures/natural_lang_pass_k_comparison.pdf
     }
     \caption{Pass@$k$ on Natural Language Specification Prompts }
@@ -765,7 +716,11 @@ models on natural language specifications.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=\linewidth,
+        keepaspectratio,
+        alt={Two stacked line charts comparing per-trial token consumption across 14 natural language tasks (T0 Java 17 through T9 Ruby in the Computer Science Track, and T10 R through T13 Workbench in the Data Science Track). In the top chart for GPT-OSS 120B, mean token usage is 25,974 with the skill (peaking above 52,000 on T10 R) versus 18,116 without the skill. In the bottom chart for Gemini 3.8 Flash, mean token usage is 221,295 with the skill (staying between roughly 205,000 and 262,000 except a dip near 103,000 on T11 RStudio) versus 102,640 without the skill.}
+    ]{
         Figures/natural_lang_tokens_combined.pdf
     }
     \caption{Per-Task Token Consumption on Natural Language Prompts}
@@ -800,7 +755,11 @@ documents.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.85\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=0.85\linewidth,
+        keepaspectratio,
+        alt={Line chart comparing GPT-OSS 120B pass rates on instructional course documents with and without the custom skill. With the custom skill, accuracy increases from 66.67 percent at pass@1 to 85.71 percent at pass@3, compared to the no-skill baseline of 9.52 percent at pass@1 and 28.57 percent at pass@3.}
+    ]{
         Figures/document-gpt-oss-120b-pass-at-k.pdf
     }
     \caption{GPT-OSS~120B Pass@$k$ Comparison on Instructional Course Documents}
@@ -809,7 +768,11 @@ documents.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=\linewidth,
+        keepaspectratio,
+        alt={Line chart comparing Gemini 3.8 Flash total token consumption across instructional document benchmark tasks with and without the skill. With the skill, token usage remains steady between roughly 184,000 and 241,000 tokens across all tasks. Without the skill, token usage fluctuates widely, spiking near 350,000 tokens on the Elixir/SQLite HTML guide and dropping near 112,000 tokens on the MMP 350 Web Dev guide.}
+    ]{
         Figures/document-runs-gemini-tokens-comparison.pdf
     }
     \caption{Gemini~3.8 Flash Per-Document Token Consumption on Instructional
@@ -875,7 +838,11 @@ coursework repositories.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=0.9\linewidth,
+        keepaspectratio,
+        alt={Line chart showing overall pass@k accuracy across existing coursework codebases for both models with and without the skill. Gemini 3.8 Flash without the skill stays at 100.0 percent from pass@1 to pass@3, while with the skill it rises from 91.7 percent at pass@1 to 100.0 percent at pass@3. GPT-OSS 120B with the skill rises from 50.0 percent at pass@1 to 75.0 percent at pass@3, substantially outperforming its no-skill baseline of 16.7 percent at pass@1 and 50.0 percent at pass@3.}
+    ]{
         Figures/codebase-overall-pass-at-k.pdf
     }
     \caption{Overall Pass@$k$ on Existing Coursework Codebases}
@@ -884,7 +851,11 @@ coursework repositories.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=\linewidth,
+        keepaspectratio,
+        alt={Line chart comparing total tokens per trial across eight codebase tasks (T1 AI through T8 Sockets) for Gemini 3.8 Flash and GPT-OSS 120B with and without the skill. Gemini 3.8 Flash with the skill uses the most tokens, ranging from 276.0k on T2 OS and 272.3k on T1 AI down to 93.2k on T8 Sockets, compared to roughly 68k to 230k without the skill. GPT-OSS 120B with the skill ranges from 18.8k to 44.8k tokens, while GPT-OSS 120B without the skill remains lowest at roughly 6k to 14k tokens across all tasks.}
+    ]{
         Figures/codebase-tokens-all.pdf
     }
     \caption{Per-Task Token Usage Across Existing Coursework Codebases}
@@ -964,7 +935,11 @@ and Figure~\ref{fig:mcp-calls-by-trial} report MCP tool invocation telemetry.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=\linewidth,
+        keepaspectratio,
+        alt={Bar chart showing MCP tool invocations per trial across 14 benchmark tasks (42 trials total) for Gemini 3.8 Flash and GPT-OSS 120B. Gemini 3.8 Flash averages 3.40 MCP calls per trial, invoking MCP between 1 and 9 times in nearly every completed trial and peaking at 9 calls on T13 Workbench. GPT-OSS 120B averages 0.15 calls per trial, recording zero calls in most trials and only 6 calls total across three trials: 4 on T4 Clang, 1 on T8 .NET SDK, and 1 on T13 Workbench.}
+    ]{
         Figures/mcp-calls-by-trial.pdf
     }
     \caption{MCP Tool Invocations Across Benchmark Trials}
@@ -985,7 +960,7 @@ advantage over native CLI discovery: both interfaces query and return the exact 
 underlying Nixpkgs package metadata. When MCP access was withheld, the skill directed
 the agent to invoke \texttt{nix search} (Listing~\ref{lst:nix-search-output})
 and \texttt{nix eval}, which return the same attributes, version numbers,
-package descriptions, and platform compatibility fields (\texttt{.meta.platforms})
+package descriptions, and platform copmpatibility fields
 exposed by \texttt{mcp-nixos}. Furthermore, as shown in Table~\ref{tab:mcp-invocation-comparison}
 and Figure~\ref{fig:mcp-calls-by-trial}, tool invocation telemetry was extracted
 from all trials with completed execution transcripts (40 of 42 trials for \texttt{Gemini
@@ -1049,7 +1024,11 @@ headless test commands exited with non-zero status codes.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.92\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=0.92\linewidth,
+        keepaspectratio,
+        alt={Grouped bar chart of Clean Docker Replay evaluation outcomes across 41 eligible trials. Overall, 34 trials reproduced successfully and 7 experienced functional failures. In the Computer Science Track, 25 reproduced and 5 had functional failures; in the Data Science Track, 9 reproduced and 2 had functional failures. All other failure categories (activation failure, flake failure, missing dependency, and infrastructure failure) are zero.}
+    ]{
         Figures/RQ2_Linux.png
     }
     \caption{Linux Container Replay Reproducibility Outcomes}
@@ -1058,7 +1037,11 @@ headless test commands exited with non-zero status codes.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.92\linewidth, keepaspectratio]{
+    \includegraphics[
+        width=0.92\linewidth,
+        keepaspectratio,
+        alt={Grouped bar chart of Clean macOS Replay evaluation outcomes across 41 eligible trials. Overall, 39 trials reproduced successfully and 2 experienced functional failures. In the Computer Science Track, 28 reproduced and 2 had functional failures; in the Data Science Track, all 11 trials reproduced with zero failures. All other failure categories (activation failure, flake failure, missing dependency, and infrastructure failure) are zero.}
+    ]{
         Figures/RQ2_MacOS.png
     }
     \caption{macOS Virtual Machine Replay Reproducibility Outcomes}
@@ -1152,254 +1135,3 @@ not reflect real world student onboarding. Similarly, the failures observed duri
 the Rust toolchain replay stemmed from \texttt{rustup}'s design as a stateful, user-directory
 toolchain manager whose uninitialized state was masked on the authoring host's machine
 by an existing \texttt{\textasciitilde/.rustup} cache.
-\section{Student Onboarding Ergonomics Results}
-\label{sec:rq3-results}
-
-\subsection{Rust Compiler}
-
-The first onboarding task evaluated a single-toolchain setup requiring participants
-to install the Rust compiler toolchain (\texttt{rustup}, \texttt{rustc}, and
-\texttt{cargo}) and verify its availability in the shell. Table~\ref{tab:rq3-rust-results}
-summarizes the setup completion times and time deltas across participants for the
-Rust installation task.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Onboarding Results for Rust Toolchain Setup}
-    \label{tab:rq3-rust-results}
-    \begin{tabular}{lccc}
-        \toprule \textbf{Participant} & \textbf{Imperative Time} & \textbf{Declarative Time} & \textbf{Time Delta} \\
-        \midrule Student A            & 3:21.22                  & 4:54.86                   & +1:33.64            \\
-        Student B                     & 5:19.95                  & 7:06.64                   & +1:46.69            \\
-        Student C                     & 4:56.23                  & 4:45.80                   & -0:10.43            \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\subsubsection{Student A}
-During the imperative installation trial, Student~A completed the setup in 3~minutes
-and 21.22~seconds, but encountered multiple points of procedural friction along
-the way. Most notably, Student~A initially assumed that the leading shell prompt
-symbol (\texttt{\$}) printed in the documentation was a literal part of the command
-string to be executed. Furthermore, Student~A overlooked an instruction requiring
-them to source the Cargo environment script (\texttt{source "\$HOME/.cargo/env"}),
-which caused subsequent verification commands (\texttt{rustc --version} and \texttt{cargo
---version}) to fail with command-not-found errors and created confusion regarding
-whether the compiler had actually been installed. This observation highlights a
-fundamental vulnerability of imperative installation guides: because manual procedures
-consist of stateful, sequential steps, inadvertently skipping a single environment-configuration
-step silently breaks downstream verification even when the underlying binaries have
-been downloaded successfully.
-
-In the declarative Nix Flake trial, Student~A completed the setup in 4~minutes
-and 54.86~seconds, representing an additional 1~minute and 33.64~seconds compared
-to the imperative workflow. The majority of the time was spent waiting for the
-one-time installation of Nix itself and the initial realization of the
-development shell via \texttt{nix develop}. Despite the longer total wait time
-during this initial Rust setup, Student~A initially expressed a preference for the
-declarative Nix Flake method, noting that once Nix was installed, activating the environment
-required a single deterministic command.
-
-\subsubsection{Student B}
-During the imperative installation trial, Student~B required 5~minutes and 19.95~seconds
-to complete the Rust setup. Throughout the process, Student~B reported feeling
-overwhelmed by the dense terminal output emitted by the \texttt{rustup} installer
-and consequently skimmed past the post-installation instructions printed to the console.
-As a result, Student~B failed to restart the terminal session or reload the shell
-configuration as instructed by the installer output, and expressed confusion
-when presented with information regarding the \texttt{PATH} environment variable and
-shell profile files.
-
-In the declarative Nix Flake trial, Student~B completed the environment setup in
-7~minutes and 6.64~seconds, an increase of 1~minute and 46.69~seconds over the imperative
-trial due to the initial Nix installer and \texttt{devShell} realization
-overhead. Unlike Student~A's initial assessment after the Rust trial, Student~B
-preferred the traditional imperative installation method from the outset, explaining
-that the conventional step-by-step installer instructions felt more familiar and conceptually
-easier to follow than the unfamiliar Nix workflow.
-
-\subsubsection{Student C}
-During the imperative installation trial, Student~C completed the Rust setup in
-4~minutes and 56.23~seconds without experiencing significant procedural
-roadblocks. While Student~C navigated the sequential instructions and environment
-configuration steps cleanly, they noted that manually following imperative
-documentation across different tools requires ongoing cognitive attention to
-ensure no post-installation actions are omitted.
-
-In the declarative Nix Flake trial, Student~C completed the environment setup in 4~minutes
-and 45.80~seconds, finishing 10.43~seconds faster than the imperative workflow. In
-their qualitative assessment, Student~C reported finding both methods to be
-largely identical in terms of overall cognitive load during execution. However,
-Student~C highlighted a key ergonomic advantage of the declarative approach, pointing
-out that invoking a single, uniform command (\texttt{nix develop}) is substantially
-easier to recall and execute compared to remembering or referencing runtime-specific
-setup commands.
-
-\subsection{Jupyter Notebook}
-
-The second onboarding task evaluated a data science environment requiring
-participants to provision Python~3, Jupyter Notebook, and Git (\texttt{python3}, \texttt{jupyter},
-and \texttt{git}). Table~\ref{tab:rq3-jupyter-results} summarizes the setup
-completion times and time deltas across participants for the Jupyter Notebook
-installation task.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Onboarding Results for Jupyter Notebook Setup}
-    \label{tab:rq3-jupyter-results}
-    \begin{tabular}{lccc}
-        \toprule \textbf{Participant} & \textbf{Imperative Time} & \textbf{Declarative Time} & \textbf{Time Delta} \\
-        \midrule Student A            & 4:59.33                  & 3:42.04                   & -1:17.29            \\
-        Student B                     & 7:21.44                  & 8:41.60                   & +1:20.16            \\
-        Student C                     & 8:37.12                  & 9:22.12                   & +0:45.00            \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\subsubsection{Student A}
-During the imperative installation trial, Student~A completed the Jupyter
-Notebook setup in 4~minutes and 59.33~seconds, although they initially skipped the
-\texttt{git} installation step and had to return to install it at the end of the
-process. Following the imperative guide's recommendation, Student~A installed
-Anaconda, which achieved a comparable bundling effect to Nix by provisioning the Python
-runtime alongside the Jupyter Notebook package in a single distribution.
-
-In the declarative Nix Flake trial, Student~A completed the environment setup in
-3~minutes and 42.04~seconds, finishing 1~minute and 17.29~seconds faster than the
-imperative workflow. Unlike the single-toolchain Rust setup, activating the bundled
-declarative environment outperformed the imperative Anaconda installation even with
-initial Nix realization included.
-
-\subsubsection{Student B}
-During the imperative installation trial, Student~B completed the setup in 7~minutes
-and 21.44~seconds, opting to install each required dependency manually rather than
-using the Anaconda distribution. To expedite the installation, Student~B opened two
-separate terminal shells to install \texttt{git} and Python asynchronously in
-parallel.
-
-In the declarative Nix Flake trial, Student~B completed the environment setup in 8~minutes
-and 41.60~seconds, an increase of 1~minute and 20.16~seconds over the imperative
-trial. Despite the longer setup duration, Student~B noted an ergonomic advantage
-of the declarative Nix workflow: students are shielded from having to learn or manage
-host-level package managers such as Homebrew, which can otherwise introduce an
-unnecessary layer of configuration complexity and confusion.
-
-\subsubsection{Student C}
-During the imperative installation trial, Student~C completed the setup in 8~minutes
-and 37.12~seconds but appeared overwhelmed by the volume of setup instructions.
-Rather than reading each step thoroughly, Student~C copied and pasted potential ``commands''
-directly from the webpage without verifying their purpose, including a literal
-leading shell prompt symbol (\texttt{\$}) from the documentation; as a result, Student~C
-became stalled and required intervention from the author to proceed.
-
-In the declarative Nix Flake trial, Student~C completed the environment setup in
-9~minutes and 22.12~seconds, an increase of 45.00~seconds over the imperative workflow.
-The same tendency to skim documentation persisted during the Nix installation
-phase: instead of navigating to the provided link for the Determinate Systems Nix
-installer, Student~C searched online for Nix installation instructions and
-copied in an AI-generated response referencing the official Nix installer script,
-which does not enable Nix Flakes by default. Consequently, the author had to intervene
-and manually edit the Nix configuration file to enable Flakes before the environment
-could be activated. Despite these procedural mishaps, Student~C concluded that the
-declarative Nix workflow was easier overall because it required following substantially
-fewer instructions.
-
-\subsection{Full Stack Environment}
-
-The final onboarding task evaluated a full-stack web development environment
-combining multiple language runtimes, package managers, database tools, and post-installation
-configuration steps. Specifically, the setup guide required initializing the Hex package
-manager for the Elixir language (\texttt{mix local.hex}), the Rebar3 build tool (\texttt{mix
-local.rebar}), and the Phoenix application generator archive (\texttt{phx\_new}),
-alongside a Node.js (LTS v20+) and \texttt{npm} frontend asset pipeline, the
-SQLite~3 relational database engine (\texttt{sqlite3}), and optionally, (\texttt{sqlitebrowser})
-for graphical database inspection.
-
-In the imperative workflow, participants had to install brew and each system package
-individually, manually link the pinned Node.js formula (\texttt{brew link
-node@20}), execute the sequential \texttt{mix} bootstrap commands, and verify
-the stack by scaffolding a SQLite-backed Phoenix project (\texttt{mix phx.new}),
-running Ecto database migrations (\texttt{mix ecto.setup}), and launching the
-local development server (\texttt{mix phx.server}). Table~\ref{tab:rq3-fullstack-results}
-summarizes the setup completion times and time deltas for the full-stack
-environment task.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Onboarding Results for Full Stack Environment Setup}
-    \label{tab:rq3-fullstack-results}
-    \begin{tabular}{lccc}
-        \toprule \textbf{Participant} & \textbf{Imperative Time} & \textbf{Declarative Time} & \textbf{Time Delta} \\
-        \midrule Student A            & 11:22.12                 & 12:02.39                  & +0:40.27            \\
-        Student B                     & 8:59.18                  & 10:27.73                  & +1:28.55            \\
-        Student C                     & 11:31.58                 & 15:50.40                  & +4:18.82            \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth, keepaspectratio]{
-        Figures/rq3-onboarding-results.pdf
-    }
-    \caption{Student Onboarding Completion Times Across Coursework Environments}
-    \label{fig:rq3-onboarding-results}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.85\linewidth, keepaspectratio]{
-        Figures/rq3-avg-time-delta.pdf
-    }
-    \caption{Average Onboarding Time Delta by Coursework Environment Task}
-    \label{fig:rq3-avg-time-delta}
-\end{figure}
-
-As illustrated in Figure~\ref{fig:rq3-onboarding-results} and Figure~\ref{fig:rq3-avg-time-delta},
-declarative activation via \texttt{nix develop} incurred a net time overhead compared
-to imperative installation across most clean-VM trials (averaging +1:03.30 for Rust,
-+0:15.96 for Jupyter Notebook, and +2:09.21 for the Full Stack environment). Although
-the per-student time overhead narrowed from the single-toolchain Rust setup to the
-multi-component Full Stack environment for Student~A (+1:33.64 to +0:40.27, with Jupyter
-completing 1~minute and 17.29\,s faster via Nix) and Student~B (+1:46.69 to +1:28.55),
-Student~C experienced a markedly higher overhead on the Full Stack task (+4:18.82,
-compared to completing the Rust setup 10.43\,s faster with Nix). Consequently, the
-aggregate clean-VM timings do not establish that declarative activation becomes uniformly
-faster as environment complexity grows.
-
-Two methodological factors explain why these timings represent a worst-case cold-start
-ceiling rather than typical recurring classroom usage. First, the test protocol did
-not start a separate timer for \texttt{nix develop} development shell
-realization independent of the one-time installation of the Nix package manager. Because
-each trial ran on a fresh virtual machine, the Nix bootstrap time was bundled
-into every declarative measurement, whereas students in an active curriculum would
-already have Nix installed prior to subsequent assignments. Second, every clean virtual
-machine began with an empty \texttt{/nix/store}, forcing the first initialization
-of \texttt{nix develop} to fetch and realize the entire list of dependencies
-from scratch. In contrast, because Nix places realized derivations in a shared, immutable
-store indexed by cryptographic input hashes~\cite{dolstraNixOSPurelyFunctional2010},
-subsequent invocations of \texttt{nix develop}, both when activating an existing
-shell and when activating new course flakes that share matching store paths, reuse
-existing dependencies locally without redundant downloads, further reducing the
-time difference relative to manual installation.
-
-Evaluated against its stated scope, Hypothesis~\textbf{H\textsubscript{3}} is
-therefore partially supported primarily through procedural error prevention
-rather than cold-start speed. Single-command activation via \texttt{nix develop}
-eliminated the shell-sourcing, \texttt{PATH}, and step-ordering mistakes observed
-during the imperative trials, whereas subjective cognitive friction and overall
-workflow preference remained mixed across participants.
-
-At the conclusion of the evaluation protocol, after completing all three environment
-tasks, both Student~A and Student~B reported an overall preference for the
-imperative installation workflow. Although Student~A initially favored the declarative
-workflow after the single-toolchain Rust trial and appreciated the simplicity of a
-single-command deployment, after completing the full suite of tests they noted
-that the automated shell realization felt like an opaque ``black box'' that
-obscured underlying environment state. Student~A reasoned that if an error occurred
-due to the configuration file or with Nix itself, they would lack the diagnostic
-visibility required to isolate the failure and independently remediate the issue.
-In contrast, while Student~C remained largely indifferent between the two
-choices, they favored the declarative Nix approach because it abstracted away low-level
-system configuration procedures, preventing learners from becoming entangled in
-protracted host troubleshooting cycles unrelated to core coursework objectives.
