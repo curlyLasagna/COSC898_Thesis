@@ -11,7 +11,7 @@
   env.GREET = "devenv";
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.nerd-fonts.zed-mono ];
+  packages = with pkgs; [ nerd-fonts.zed-mono tex-fmt];
 
   # https://devenv.sh/languages/
   # languages.rust.enable = true;
