@@ -11,23 +11,23 @@ we map automated flake synthesis (\textbf{RQ1}) and cross-platform clean-environ
 reproducibility (\textbf{RQ2}) to three testable hypotheses that guide our empirical
 evaluation:
 \begin{itemize}
-    \item \textbf{H\textsubscript{1a} (RQ1):} Providing our custom agent skill (\texttt{course-flake-generator})
-        and closed-loop evaluation (\texttt{nix flake check}) will enable both
-        frontier (\texttt{Gemini 3.8 Flash}) and smaller open-weight (\texttt{GPT-OSS
-        120B}) models to reliably synthesize valid \texttt{flake.nix} environments,
-        narrowing the synthesis accuracy gap between model tiers.
+	\item \textbf{H\textsubscript{1a} (RQ1):} Providing our custom agent skill (\texttt{course-flake-generator})
+	      and closed-loop evaluation (\texttt{nix flake check}) will enable both
+	      frontier (\texttt{Gemini 3.8 Flash}) and smaller open-weight (\texttt{GPT-OSS
+		      120B}) models to reliably synthesize valid \texttt{flake.nix} environments,
+	      narrowing the synthesis accuracy gap between model tiers.
 
-    \item \textbf{H\textsubscript{1b} (RQ1):} Augmenting the agent with
-        structured package lookup via the \texttt{mcp-nixos} MCP server will reduce
-        package hallucinations and improve first-attempt synthesis accuracy (Pass@1)
-        and package precision compared to relying on training data knowledge and native
-        Nix CLI commands alone.
+	\item \textbf{H\textsubscript{1b} (RQ1):} Augmenting the agent with
+	      structured package lookup via the \texttt{mcp-nixos} MCP server will reduce
+	      package hallucinations and improve first-attempt synthesis accuracy (Pass@1)
+	      and package precision compared to relying on training data knowledge and native
+	      Nix CLI commands alone.
 
-    \item \textbf{H\textsubscript{2} (RQ2):} Nix Flake environments that pass
-        the host validation pipeline with a pinned \texttt{flake.lock} will deterministically
-        reproduce and support coursework execution in clean, unmounted Linux
-        containers and macOS virtual machines, with any residual failures isolated
-        to platform-specific package availability.
+	\item \textbf{H\textsubscript{2} (RQ2):} Nix Flake environments that pass
+	      the host validation pipeline with a pinned \texttt{flake.lock} will deterministically
+	      reproduce and support coursework execution in clean, unmounted Linux
+	      containers and macOS virtual machines, with any residual failures isolated
+	      to platform-specific package availability.
 \end{itemize}
 
 \section{Proposed Solution: An agent skill for AI-Assisted Nix Flake Synthesis}
@@ -68,57 +68,57 @@ an assignment-to-flake workflow (illustrated at a high level in Figure~\ref{fig:
 across six sequential stages. Each stage enforces explicit validation boundaries
 to ensure that only verified configurations progress toward student deployment:
 \begin{enumerate}
-    \item \textbf{Assignment document:} The instructor supplies existing
-        coursework materials (such as an assignment handout in DOCX, HTML, or Markdown
-        format, natural language instructions, or an unconfigured starter codebase)
-        without needing to manually compose Nix expressions.
+	\item \textbf{Assignment document:} The instructor supplies existing
+	      coursework materials (such as an assignment handout in DOCX, HTML, or Markdown
+	      format, natural language instructions, or an unconfigured starter codebase)
+	      without needing to manually compose Nix expressions.
 
-    \item \textbf{Requirement extraction:} The agent extracts required compilers,
-        language runtimes, build tools, and system libraries from the provided materials.
-        This capability is driven by the custom skill's bundled scripts: a document
-        extraction script to parse unstructured assignment handouts, alongside a
-        project detector that scans codebase files and documentation for the
-        appropriate runtime runtimes and dependencies, similar to how \cite{schwaighoferVibenixAIAssistant2026}
-        analyzes a project.
+	\item \textbf{Requirement extraction:} The agent extracts required compilers,
+	      language runtimes, build tools, and system libraries from the provided materials.
+	      This capability is driven by the custom skill's bundled scripts: a document
+	      extraction script to parse unstructured assignment handouts, alongside a
+	      project detector that scans codebase files and documentation for the
+	      appropriate runtime runtimes and dependencies, similar to how \cite{schwaighoferVibenixAIAssistant2026}
+	      analyzes a project.
 
-    \item \textbf{Flake generation:} Guided by the \texttt{course-flake-generator}
-        skill's multi-architecture templates and reference heuristics, the agent
-        synthesizes a declarative \texttt{flake.nix} specification. To resolve
-        required package attributes deterministically, the skill primarily queries
-        the \texttt{mcp-nixos} server against real-time Nixpkgs search indices, falling
-        back to native Nix CLI inspection commands when the MCP server is not present.
+	\item \textbf{Flake generation:} Guided by the \texttt{course-flake-generator}
+	      skill's multi-architecture templates and reference heuristics, the agent
+	      synthesizes a declarative \texttt{flake.nix} specification. To resolve
+	      required package attributes deterministically, the skill primarily queries
+	      the \texttt{mcp-nixos} server against real-time Nixpkgs search indices, falling
+	      back to native Nix CLI inspection commands when the MCP server is not present.
 
-    \item \textbf{Validation:} The candidate \texttt{flake.nix} is evaluated through
-        closed-loop verification, executing \texttt{nix flake check} and ephemeral
-        shell realization checks to detect syntax errors or missing executables.
-        If failures occur, compiler diagnostics are returned to the agent harness
-        for automated self-correction until validation passes and generates a pinned
-        \texttt{flake.lock}.
+	\item \textbf{Validation:} The candidate \texttt{flake.nix} is evaluated through
+	      closed-loop verification, executing \texttt{nix flake check} and ephemeral
+	      shell realization checks to detect syntax errors or missing executables.
+	      If failures occur, compiler diagnostics are returned to the agent harness
+	      for automated self-correction until validation passes and generates a pinned
+	      \texttt{flake.lock}.
 
-    \item \textbf{Instructor approval:} The instructor reviews the synthesized
-        \texttt{flake.nix} and cryptographically pinned \texttt{flake.lock} file
-        and commits them to the assignment repository, establishing a verified,
-        frozen dependency closure for the course.
+	\item \textbf{Instructor approval:} The instructor reviews the synthesized
+	      \texttt{flake.nix} and cryptographically pinned \texttt{flake.lock} file
+	      and commits them to the assignment repository, establishing a verified,
+	      frozen dependency closure for the course.
 
-    \item \textbf{Student activation:} Students clone the assignment repository
-        onto their personal devices and run \texttt{nix develop} to enter the reproducible
-        development shell, avoiding manual installation troubleshooting and
-        working directly on the assignment.
+	\item \textbf{Student activation:} Students clone the assignment repository
+	      onto their personal devices and run \texttt{nix develop} to enter the reproducible
+	      development shell, avoiding manual installation troubleshooting and
+	      working directly on the assignment.
 \end{enumerate}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=\linewidth,
-        keepaspectratio,
-        alt={Architecture flowchart divided into two panels: Specification and Autonomous Synthesis on the left, and Verification and Distribution on the right. On the left, an instructor provides any combination of natural language instructions, an instruction guide, or source code to an agent harness where an LLM invokes the Course Flake Generator skill and queries nixos-mcp for package metadata. On the right, the generated flake.nix is placed in an assignment folder, activated and verified by the instructor, published to a course management system or online repository, and downloaded by students to activate the development shell.}
-    ]{
-        Figures/high-level-process.pdf
-    }
-    \caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis
-    Pipeline \href{https://www.flaticon.com/free-icons/professor}{Icons created
-    by Magnific - Flaticon} }
-    \label{fig:pipeline-overview}
+	\centering
+	\includegraphics[
+		width=\linewidth,
+		keepaspectratio,
+		alt={Architecture flowchart divided into two panels: Specification and Autonomous Synthesis on the left, and Verification and Distribution on the right. On the left, an instructor provides any combination of natural language instructions, an instruction guide, or source code to an agent harness where an LLM invokes the Course Flake Generator skill and queries nixos-mcp for package metadata. On the right, the generated flake.nix is placed in an assignment folder, activated and verified by the instructor, published to a course management system or online repository, and downloaded by students to activate the development shell.}
+	]{
+		Figures/high-level-process.pdf
+	}
+	\caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis
+		Pipeline \href{https://www.flaticon.com/free-icons/professor}{Icons created
+			by Magnific - Flaticon} }
+	\label{fig:pipeline-overview}
 \end{figure}
 
 \chapter{Experimental Methodology and Test Setup}
@@ -155,44 +155,44 @@ experience in various repositories and instructional handouts collected from uni
 computer science courses:
 
 \begin{enumerate}
-    \item \textbf{Natural Language Specification Prompts:} Artificially created
-        prompts modeled after the author's personal experience across
-        undergraduate and graduate computer science courses, organized into two curriculum
-        tracks:
-        \begin{itemize}
-            \item \emph{Computer Science Track:} Assignments focusing on systems
-                programming, compiler toolchains, mobile and desktop application
-                development, and web engineering. These tasks require native
-                compilers, build systems, and runtime interpreters, including Java
-                (JDK~17, VS~Code), Flutter and Dart, Python (with \texttt{uv}),
-                C/C++ (GCC, Clang, CMake, GNU Make), Node.js, Rust (\texttt{rustup},
-                Cargo, \texttt{rustc}), Go, the .NET SDK, and Ruby (with Bundler).
+	\item \textbf{Natural Language Specification Prompts:} Artificially created
+	      prompts modeled after the author's personal experience across
+	      undergraduate and graduate computer science courses, organized into two curriculum
+	      tracks:
+	      \begin{itemize}
+		      \item \emph{Computer Science Track:} Assignments focusing on systems
+		            programming, compiler toolchains, mobile and desktop application
+		            development, and web engineering. These tasks require native
+		            compilers, build systems, and runtime interpreters, including Java
+		            (JDK~17, VS~Code), Flutter and Dart, Python (with \texttt{uv}),
+		            C/C++ (GCC, Clang, CMake, GNU Make), Node.js, Rust (\texttt{rustup},
+		            Cargo, \texttt{rustc}), Go, the .NET SDK, and Ruby (with Bundler).
 
-            \item \emph{Data Science Track:} Coursework requiring statistical
-                computing environments and relational database management tools, including
-                R statistical environments, RStudio Desktop, MySQL Server, and
-                MySQL Workbench.
-        \end{itemize}
-        The prompt benchmark is serialized as a \texttt{jsonl} file, where each
-        record specifies the curriculum track, the natural language prompt, and
-        the asserted dependency list (Listing~\ref{lst:input-data-format}).
+		      \item \emph{Data Science Track:} Coursework requiring statistical
+		            computing environments and relational database management tools, including
+		            R statistical environments, RStudio Desktop, MySQL Server, and
+		            MySQL Workbench.
+	      \end{itemize}
+	      The prompt benchmark is serialized as a \texttt{jsonl} file, where each
+	      record specifies the curriculum track, the natural language prompt, and
+	      the asserted dependency list (Listing~\ref{lst:input-data-format}).
 
-    \item \textbf{Existing Coursework Codebases:} A collection of real-world
-        assignment codebases from the author's undergraduate computer science
-        courses spanning artificial intelligence, Java, Swift, neural networks,
-        and network programming. For these tasks, the agent cannot rely on
-        explicit textual package lists; instead, the skill instructs the agent
-        to run \texttt{detect-project-requirements.py} to inspect file contents,
-        repository structures, and build manifests (such as \texttt{pom.xml},
-        \texttt{build.gradle}, and \texttt{pyproject.toml}) to infer the
-        necessary runtimes and dependencies.
+	\item \textbf{Existing Coursework Codebases:} A collection of real-world
+	      assignment codebases from the author's undergraduate computer science
+	      courses spanning artificial intelligence, Java, Swift, neural networks,
+	      and network programming. For these tasks, the agent cannot rely on
+	      explicit textual package lists; instead, the skill instructs the agent
+	      to run \texttt{detect-project-requirements.py} to inspect file contents,
+	      repository structures, and build manifests (such as \texttt{pom.xml},
+	      \texttt{build.gradle}, and \texttt{pyproject.toml}) to infer the
+	      necessary runtimes and dependencies.
 
-    \item \textbf{Instructional Course Documents:} A collection of six real-world
-        course documents and laboratory setup guides packaged as Microsoft Word
-        (\texttt{.docx}), HTML, and Markdown \texttt{README} files. To process these
-        unstructured documents, the skill executes \texttt{extract-document-content.py}
-        to parse layout structures into clean text for agent requirement extraction
-        using the \texttt{docling}\cite{researchDoclingGetYour2024} Python package.
+	\item \textbf{Instructional Course Documents:} A collection of six real-world
+	      course documents and laboratory setup guides packaged as Microsoft Word
+	      (\texttt{.docx}), HTML, and Markdown \texttt{README} files. To process these
+	      unstructured documents, the skill executes \texttt{extract-document-content.py}
+	      to parse layout structures into clean text for agent requirement extraction
+	      using the \texttt{docling}\cite{researchDoclingGetYour2024} Python package.
 \end{enumerate}
 
 To establish an objective evaluation standard across all three modalities, each task
@@ -221,7 +221,7 @@ environment.
 In this schema, \texttt{track} classifies the curriculum domain, \texttt{title} and
 \texttt{instruction} provide contextual task descriptions, \texttt{dependency\_list}
 designates the ground-truth executables that must resolve inside the \texttt{nix
-develop} shell across all three modalities, and \texttt{verification\_command} specifies
+	develop} shell across all three modalities, and \texttt{verification\_command} specifies
 the codebase-level shell command used to verify that project source files compile
 or interpret cleanly within the synthesized environment. The automated
 evaluation harness evaluates these human-verified assertions to determine
@@ -232,64 +232,64 @@ setup documents evaluated under this schema alongside their descriptions and
 dependencies.
 
 \begin{table}[htbp]
-    \centering
-    \small
-    \caption{Coursework Codebases, Descriptions, and Dependencies}
-    \label{tab:coursework-codebases}
-    \begin{tabularx}
-        {\textwidth}{@{}l >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}p{3.4cm}@{}}
-        \toprule \textbf{Codebase} & \textbf{Description} & \textbf{Dependencies}
-        \\ \midrule \texttt{AI-Assignments} & AI coursework featuring machine
-        learning models, and optimization algorithms executed in Jupyter notebooks.
-        & \texttt{python3}, \texttt{jupyter}, \texttt{git} \\ \addlinespace \texttt{COSC
-        439 (OS)} & Operating systems assignments in C and Python. & \texttt{gcc},
-        \texttt{make}, \texttt{python3}, \texttt{git} \\ \addlinespace \texttt{COSC236\_Labs}
-        & Programming labs in Java covering basic data structures, and
-        algorithms. & \texttt{java}, \texttt{javac}, \texttt{git} \\
-        \addlinespace \texttt{COSC336-Assignments} & Advanced data structures and
-        algorithm analysis coursework in Java. & \texttt{java}, \texttt{javac},
-        \texttt{git} \\ \addlinespace \texttt{Mobile Assignment} & Native iOS
-        mobile application project developed with Swift and SwiftUI. & \texttt{swift},
-        \texttt{git} \\ \addlinespace \texttt{Neural\_Network\_Course} & Deep learning
-        and neural networks coursework implementing convolutional and recurrent neural
-        networks in Python using \texttt{uv} as the runtime and package manager. &
-        \texttt{python3}, \texttt{jupyter}, \texttt{uv}, \texttt{git} \\
-        \addlinespace \texttt{ProgrammingLang} & Programming languages assignment
-        implementing an abstract syntax tree interpreter, variable environment
-        store, and expression evaluation using Emacs Lisp. & \texttt{emacs} \\ \addlinespace
-        \texttt{Socket Programming} & Multithreaded TCP client-server socket
-        networking project in Java with build automation tasks orchestrated via
-        \texttt{just}. & \texttt{java}, \texttt{javac}, \texttt{just}, \texttt{git}
-        \\ \bottomrule
-    \end{tabularx}
+	\centering
+	\small
+	\caption{Coursework Codebases, Descriptions, and Dependencies}
+	\label{tab:coursework-codebases}
+	\begin{tabularx}
+		{\textwidth}{@{}l >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}p{3.4cm}@{}}
+		\toprule \textbf{Codebase}                                               & \textbf{Description}                                         & \textbf{Dependencies}
+		\\ \midrule \texttt{AI-Assignments} & AI coursework featuring machine
+		learning models, and optimization algorithms executed in Jupyter notebooks.
+		                                                                         & \texttt{python3}, \texttt{jupyter}, \texttt{git}                                     \\ \addlinespace \texttt{COSC
+		439 (OS)}                                                                & Operating systems assignments in C and Python.               & \texttt{gcc},
+		\texttt{make}, \texttt{python3}, \texttt{git}                                                                                                                   \\ \addlinespace \texttt{COSC236\_Labs}
+		                                                                         & Programming labs in Java covering basic data structures, and
+		algorithms.                                                              & \texttt{java}, \texttt{javac}, \texttt{git}                                          \\
+		\addlinespace \texttt{COSC336-Assignments}                               & Advanced data structures and
+		algorithm analysis coursework in Java.                                   & \texttt{java}, \texttt{javac},
+		\texttt{git}                                                                                                                                                    \\ \addlinespace \texttt{Mobile Assignment} & Native iOS
+		mobile application project developed with Swift and SwiftUI.             & \texttt{swift},
+		\texttt{git}                                                                                                                                                    \\ \addlinespace \texttt{Neural\_Network\_Course} & Deep learning
+		and neural networks coursework implementing convolutional and recurrent neural
+		networks in Python using \texttt{uv} as the runtime and package manager. &
+		\texttt{python3}, \texttt{jupyter}, \texttt{uv}, \texttt{git}                                                                                                   \\
+		\addlinespace \texttt{ProgrammingLang}                                   & Programming languages assignment
+		implementing an abstract syntax tree interpreter, variable environment
+		store, and expression evaluation using Emacs Lisp.                       & \texttt{emacs}                                                                       \\ \addlinespace
+		\texttt{Socket Programming}                                              & Multithreaded TCP client-server socket
+		networking project in Java with build automation tasks orchestrated via
+		\texttt{just}.                                                           & \texttt{java}, \texttt{javac}, \texttt{just}, \texttt{git}
+		\\ \bottomrule
+	\end{tabularx}
 \end{table}
 
 \begin{table}[htbp]
-    \centering
-    \small
-    \caption{Instructional Course Documents, Descriptions, and Dependencies}
-    \label{tab:coursework-documents}
-    \begin{tabularx}
-        {\textwidth}{@{}l >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}p{3.4cm}@{}}
-        \toprule \textbf{Document} & \textbf{Description} & \textbf{Dependencies}
-        \\ \midrule \texttt{COSC 175 Lab 0 2024.docx} & Introductory C++ lab and
-        Visual Studio Code. & \texttt{g++}, \texttt{code} \\ \addlinespace
-        \texttt{ITEC 451.md} & Data management and analysis setup guide for relational
-        database administration using MySQL Server and MySQL Workbench. &
-        \texttt{mysql}, \texttt{mysqld}, \texttt{mysql-workbench} \\ \addlinespace
-        \texttt{fullstack-elixir-sqlite-setup.html} & Artificially created full-stack
-        web development setup guide. & \texttt{elixir}, \texttt{erl}, \texttt{sqlite3},
-        \texttt{node}, \texttt{npm}, \texttt{sqlitebrowser} \\ \addlinespace
-        \texttt{jupyter\_install.html} & Setup instructions for provisioning a Python~3
-        data science environment with and Jupyter Notebook. & \texttt{python3},
-        \texttt{jupyter}, \texttt{git} \\ \addlinespace \texttt{rust\_Brown\_University.html}
-        & Rust installation and toolchain setup guide configuring the Rust
-        compiler (\texttt{rustc}), Cargo build system, and \texttt{rustup}. & \texttt{rustc},
-        \texttt{cargo}, \texttt{rustup} \\ \addlinespace \texttt{web\_dev\_cuny\_bmcc.html}
-        & Advanced web design development environment setup guide configuring Git,
-        Node.js, \texttt{npm}, and Visual Studio Code. & \texttt{git}, \texttt{node},
-        \texttt{npm}, \texttt{code} \\ \bottomrule
-    \end{tabularx}
+	\centering
+	\small
+	\caption{Instructional Course Documents, Descriptions, and Dependencies}
+	\label{tab:coursework-documents}
+	\begin{tabularx}
+		{\textwidth}{@{}l >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}p{3.4cm}@{}}
+		\toprule \textbf{Document}                                          & \textbf{Description}                                                     & \textbf{Dependencies}
+		\\ \midrule \texttt{COSC 175 Lab 0 2024.docx} & Introductory C++ lab and
+		Visual Studio Code.                                                 & \texttt{g++}, \texttt{code}                                                                      \\ \addlinespace
+		\texttt{ITEC 451.md}                                                & Data management and analysis setup guide for relational
+		database administration using MySQL Server and MySQL Workbench.     &
+		\texttt{mysql}, \texttt{mysqld}, \texttt{mysql-workbench}                                                                                                              \\ \addlinespace
+		\texttt{fullstack-elixir-sqlite-setup.html}                         & Artificially created full-stack
+		web development setup guide.                                        & \texttt{elixir}, \texttt{erl}, \texttt{sqlite3},
+		\texttt{node}, \texttt{npm}, \texttt{sqlitebrowser}                                                                                                                    \\ \addlinespace
+		\texttt{jupyter\_install.html}                                      & Setup instructions for provisioning a Python~3
+		data science environment with and Jupyter Notebook.                 & \texttt{python3},
+		\texttt{jupyter}, \texttt{git}                                                                                                                                         \\ \addlinespace \texttt{rust\_Brown\_University.html}
+		                                                                    & Rust installation and toolchain setup guide configuring the Rust
+		compiler (\texttt{rustc}), Cargo build system, and \texttt{rustup}. & \texttt{rustc},
+		\texttt{cargo}, \texttt{rustup}                                                                                                                                        \\ \addlinespace \texttt{web\_dev\_cuny\_bmcc.html}
+		                                                                    & Advanced web design development environment setup guide configuring Git,
+		Node.js, \texttt{npm}, and Visual Studio Code.                      & \texttt{git}, \texttt{node},
+		\texttt{npm}, \texttt{code}                                                                                                                                            \\ \bottomrule
+	\end{tabularx}
 \end{table}
 
 \subsection{Agent Harness, Model Configurations, and Tooling Conditions}
@@ -391,17 +391,17 @@ Comparing these configurations isolates whether autonomous agents strictly
 require external registry access or can reliably synthesize environments using
 native command-line tools alone:
 \begin{enumerate}
-    \item \textbf{Live Registry Retrieval via MCP-NixOS:} The agent queries the
-        \texttt{mcp-nixos} server, which communicates directly with the
-        Elasticsearch index powering \texttt{search.nixos.org}. Because Nixpkgs
-        hosts over 139,008 packages across 1,044 package sets, real-time index querying
-        protects against package hallucinations, deprecated attribute paths, and naming
-        drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}.
+	\item \textbf{Live Registry Retrieval via MCP-NixOS:} The agent queries the
+	      \texttt{mcp-nixos} server, which communicates directly with the
+	      Elasticsearch index powering \texttt{search.nixos.org}. Because Nixpkgs
+	      hosts over 139,008 packages across 1,044 package sets, real-time index querying
+	      protects against package hallucinations, deprecated attribute paths, and naming
+	      drift~\cite{borkLanguageServerProtocol2023,ImportingPhantomsMeasuring}.
 
-    \item \textbf{Native Nix CLI Discovery:} In this condition, the MCP server is
-        withheld from the agent, forcing it to rely exclusively on parametric
-        pre-training weights and native Nix command-line inspection tools (such as
-        \texttt{nix search} and \texttt{nix-env -qaP}).
+	\item \textbf{Native Nix CLI Discovery:} In this condition, the MCP server is
+	      withheld from the agent, forcing it to rely exclusively on parametric
+	      pre-training weights and native Nix command-line inspection tools (such as
+	      \texttt{nix search} and \texttt{nix-env -qaP}).
 \end{enumerate}
 
 An automated Python test runner was developed to execute test suites, capture agent
@@ -445,67 +445,67 @@ aggregation, behavioral auditing, and trial verification. These files capture
 telemetry across multiple levels of granularity, enabling post evaluation analysis:
 
 \begin{itemize}
-    \item \texttt{benchmark\_summary.json}: Aggregates Pass@$k$ metrics, execution
-        latency, token consumption, and dependency bloat scores across all trials.
-        It serves as the primary machine-readable dataset for statistical
-        analysis.
+	\item \texttt{benchmark\_summary.json}: Aggregates Pass@$k$ metrics, execution
+	      latency, token consumption, and dependency bloat scores across all trials.
+	      It serves as the primary machine-readable dataset for statistical
+	      analysis.
 
-    \item \texttt{benchmark\_report.md}: Summarizes benchmark results, per-task
-        score tables, and execution parameters in Markdown format. It provides
-        an immediate overview of benchmark outcomes and links to individual
-        agent sessions.
+	\item \texttt{benchmark\_report.md}: Summarizes benchmark results, per-task
+	      score tables, and execution parameters in Markdown format. It provides
+	      an immediate overview of benchmark outcomes and links to individual
+	      agent sessions.
 
-    \item \texttt{tool\_call\_frequency.csv}: Records the overall frequency,
-        trial prevalence, and average invocations of every agent tool call. It
-        quantifies how agent tool usage shifts between different model and
-        grounding conditions.
+	\item \texttt{tool\_call\_frequency.csv}: Records the overall frequency,
+	      trial prevalence, and average invocations of every agent tool call. It
+	      quantifies how agent tool usage shifts between different model and
+	      grounding conditions.
 
-    \item \texttt{tool\_call\_frequency\_by\_task.csv}: Cross-tabulates tool calls
-        across individual coursework assignments, revealing which problem
-        domains introduced heavier tool utilization.
+	\item \texttt{tool\_call\_frequency\_by\_task.csv}: Cross-tabulates tool calls
+	      across individual coursework assignments, revealing which problem
+	      domains introduced heavier tool utilization.
 
-    \item \texttt{tool\_call\_frequency\_by\_trial.csv}: Maps tool invocations at
-        the level of individual trial samples alongside validation success and duration,
-        facilitating fine-grained correlation between tool call patterns and
-        task outcomes.
+	\item \texttt{tool\_call\_frequency\_by\_trial.csv}: Maps tool invocations at
+	      the level of individual trial samples alongside validation success and duration,
+	      facilitating fine-grained correlation between tool call patterns and
+	      task outcomes.
 
-    \item \texttt{run\_command\_frequency.csv} and \texttt{run\_command\_base\_frequency.csv}:
-        Tabulate exact and base shell commands executed through the agent
-        harness. They reveal the CLI inspection patterns and build utilities invoked
-        during synthesis.
+	\item \texttt{run\_command\_frequency.csv} and \texttt{run\_command\_base\_frequency.csv}:
+	      Tabulate exact and base shell commands executed through the agent
+	      harness. They reveal the CLI inspection patterns and build utilities invoked
+	      during synthesis.
 
-    \item \texttt{run\_command\_log.csv}: Logs a complete, timestamped
-        chronological trace of every shell command executed, its working directory,
-        and associated metadata.
+	\item \texttt{run\_command\_log.csv}: Logs a complete, timestamped
+	      chronological trace of every shell command executed, its working directory,
+	      and associated metadata.
 
-    \item \texttt{mcp\_tool\_frequency.csv} and \texttt{mcp\_tool\_log.csv}:
-        Capture all registry search queries, filter arguments, and actions
-        dispatched to the mcp server, if applicable.
+	\item \texttt{mcp\_tool\_frequency.csv} and \texttt{mcp\_tool\_log.csv}:
+	      Capture all registry search queries, filter arguments, and actions
+	      dispatched to the mcp server, if applicable.
 
-    \item \texttt{agent\_response.md}: Preserves the final conversational completion
-        message and instructions returned by the agent. It allows evaluators to
-        verify the clarity and correctness of the agent's onboarding guidance.
+	\item \texttt{agent\_response.md}: Preserves the final conversational completion
+	      message and instructions returned by the agent. It allows evaluators to
+	      verify the clarity and correctness of the agent's onboarding guidance.
 
-    \item \texttt{flake.lock}: Pins exact cryptographic source hashes and input commits
-        generated during local validation. It guarantees reproducible, deterministic
-        evaluation across clean guest environments.
+	\item \texttt{flake.lock}: Pins exact cryptographic source hashes and input commits
+	      generated during local validation. It guarantees reproducible, deterministic
+	      evaluation across clean guest environments.
 
-    \item \texttt{flake.nix}: Defines the declarative \texttt{devShell}
-        environment and package inputs synthesized by the agent. It is the primary
-        artifact tested against the three-stage validation pipeline.
+	\item \texttt{flake.nix}: Defines the declarative \texttt{devShell}
+	      environment and package inputs synthesized by the agent. It is the primary
+	      artifact tested against the three-stage validation pipeline.
 
-    \item \texttt{raw\_output.log}: Captures unbuffered standard output and standard
-        error streams from the agent harness execution. It assists with post-mortem
-        debugging whenever an execution hangs or crashes unexpectedly.
+	\item \texttt{raw\_output.log}: Captures unbuffered standard output and standard
+	      error streams from the agent harness execution. It assists with post-mortem
+	      debugging whenever an execution hangs or crashes unexpectedly.
 
-    \item \texttt{transcript.jsonl}: Stores the comprehensive turn-by-turn event stream,
-        including internal reasoning traces, tool parameters, and raw tool
-        responses. It provides full behavioral provenance for qualitative evaluation.
+	\item \texttt{transcript.jsonl}: Stores the comprehensive turn-by-turn event stream,
+	      including internal reasoning traces, tool parameters, and raw tool
+	      responses. It provides full behavioral provenance for qualitative evaluation.
 
-    \item \texttt{trial\_meta.json}: Records structured trial execution metrics,
-        including pass/fail status, validation stages completed, latency, token usage,
-        and dependency precision. It supplies the ground-truth values used to calculate
-        Pass@$k$ and bloat statistics.
+	\item \texttt{trial\_meta.json}: Records structured trial execution metrics,
+	      including pass/fail status, validation stages completed, latency, token usage,
+	      and dependency precision. It supplies the ground-truth values used to calculate
+	      Pass@$k$ and bloat statistics.
 \end{itemize}
 
 \subsection{Three-Stage Validation Pipeline and Pass@K Formulation}
@@ -517,19 +517,19 @@ guarantee runtime deployability~\cite{zhangDeployabilityCentricInfrastructureasC
 To rigorously verify that generated environments are functional, every candidate
 flake must satisfy a three-stage automated validation pipeline:
 \begin{enumerate}
-    \item \textbf{Syntax and Evaluation Validity:} The command \texttt{nix flake
-        check} evaluates the generated \texttt{flake.nix} with lock-file writes
-        disabled, ensuring that the expression parses cleanly without syntax errors,
-        missing attributes, or invalid type signatures.
+	\item \textbf{Syntax and Evaluation Validity:} The command \texttt{nix flake
+		      check} evaluates the generated \texttt{flake.nix} with lock-file writes
+	      disabled, ensuring that the expression parses cleanly without syntax errors,
+	      missing attributes, or invalid type signatures.
 
-    \item \textbf{Build and Realization Determinism:} The command \texttt{nix
-        develop --command <test-cmd>} successfully enters the ephemeral shell and
-        resolves all declared binaries on the \texttt{PATH}.
+	\item \textbf{Build and Realization Determinism:} The command \texttt{nix
+		      develop --command <test-cmd>} successfully enters the ephemeral shell and
+	      resolves all declared binaries on the \texttt{PATH}.
 
-    \item \textbf{Functional Task Execution:} The assignment source code builds
-        and passes its unit test suite inside the synthesized \texttt{devShell},
-        verifying that compiler toolchains and runtime headers interact
-        correctly with project source files.
+	\item \textbf{Functional Task Execution:} The assignment source code builds
+	      and passes its unit test suite inside the synthesized \texttt{devShell},
+	      verifying that compiler toolchains and runtime headers interact
+	      correctly with project source files.
 \end{enumerate}
 
 To quantify synthesis reliability, we adapted the Pass@$k$ formulation from code
@@ -543,8 +543,8 @@ working environment without having to evaluate every trial sequentially.
 Specifically, we calculate Pass@$k$ using the unbiased estimator introduced by
 Chen et~al.~\cite{chenEvaluatingLargeLanguage2021}:
 \[
-    \mathrm{pass@}k := \underset{\text{Problems}}{\mathrm{E}}\left[ 1 - \frac{\binom{n-c}{k}}{\binom{n}{k}}
-    \right]
+	\mathrm{pass@}k := \underset{\text{Problems}}{\mathrm{E}}\left[ 1 - \frac{\binom{n-c}{k}}{\binom{n}{k}}
+		\right]
 \]
 where $n$ is the total number of generated candidate samples per task and $c$ is
 the number of samples that successfully pass all three validation stages.
@@ -577,21 +577,21 @@ The guest-side verifier executes four sequential stages on each RQ1-passing arti
 These stages mirror the host verification harness while preventing unstated host
 assumptions from masquerading as portable configurations:
 \begin{enumerate}
-    \item \textbf{Locked Flake Evaluation:} \texttt{nix flake check} evaluates the
-        generated flake with lock-file writes disabled.
+	\item \textbf{Locked Flake Evaluation:} \texttt{nix flake check} evaluates the
+	      generated flake with lock-file writes disabled.
 
-    \item \textbf{Development-Shell Activation:} \texttt{nix develop --command
-        true} verifies that the development shell can be activated.
+	\item \textbf{Development-Shell Activation:} \texttt{nix develop --command
+		      true} verifies that the development shell can be activated.
 
-    \item \textbf{Required Tool Availability:} Each executable listed in the
-        original RQ1 dependency assertion is checked with \texttt{command -v} inside
-        the development shell.
+	\item \textbf{Required Tool Availability:} Each executable listed in the
+	      original RQ1 dependency assertion is checked with \texttt{command -v} inside
+	      the development shell.
 
-    \item \textbf{Headless Task Execution:} A curated per-task command set
-        verifies applicable language runtimes, builds, dependency
-        synchronization, or test commands. Graphical editor workflows, interactive
-        credentials, and persistent database-service administration are excluded
-        because they cannot be assessed consistently by a headless guest.
+	\item \textbf{Headless Task Execution:} A curated per-task command set
+	      verifies applicable language runtimes, builds, dependency
+	      synchronization, or test commands. Graphical editor workflows, interactive
+	      credentials, and persistent database-service administration are excluded
+	      because they cannot be assessed consistently by a headless guest.
 \end{enumerate}
 
 The principal metric is the base OS reproduction rate: the proportion of trials that
@@ -607,17 +607,17 @@ To evaluate cross-platform reproducibility across the different platforms used b
 students, the RQ2 replay pipeline executes across two isolated guest
 virtualization environments:
 \begin{itemize}
-    \item \textbf{Linux Replay Containers:} To simulate standard Linux and
-        Windows Subsystem for Linux (WSL) environments, validation stages are replayed
-        inside unmounted Docker containers running official Nix images. Each
-        trial executes in an isolated container lifecycle without shared
-        filesystem volumes or pre-warmed host store paths.
+	\item \textbf{Linux Replay Containers:} To simulate standard Linux and
+	      Windows Subsystem for Linux (WSL) environments, validation stages are replayed
+	      inside unmounted Docker containers running official Nix images. Each
+	      trial executes in an isolated container lifecycle without shared
+	      filesystem volumes or pre-warmed host store paths.
 
-    \item \textbf{macOS Tart Virtual Machines:} To evaluate macOS and Apple
-        Silicon guest environments, we utilize Tart, an open-source
-        virtualization framework optimized for Apple Silicon hypervisors. We obtained
-        a clean image of macOS Golden Bridge via \texttt{ghcr.io/cirruslabs/macos-golden-gate-base:latest
-        macos-27-base}.
+	\item \textbf{macOS Tart Virtual Machines:} To evaluate macOS and Apple
+	      Silicon guest environments, we utilize Tart, an open-source
+	      virtualization framework optimized for Apple Silicon hypervisors. We obtained
+	      a clean image of macOS Golden Bridge via \texttt{ghcr.io/cirruslabs/macos-golden-gate-base:latest
+		      macos-27-base}.
 \end{itemize}
 
 \section{Experimental Testbed and System Infrastructure}
@@ -630,19 +630,19 @@ environment of the primary host machine used for synthesis orchestration and loc
 validation.
 
 \begin{table}[htbp]
-    \centering
-    \caption{Host Machine Hardware and System Environment}
-    \label{tab:host-specifications}
-    \begin{tabular}{ll}
-        \toprule \textbf{Attribute} & \textbf{Specification}                           \\
-        \midrule Host Model         & Apple MacBook Air                                \\
-        Processor                   & Apple M5 (10 cores: 4 Performance, 6 Efficiency) \\
-        Architecture                & \texttt{arm64} (\texttt{aarch64})                \\
-        RAM                         & 24\,GB Unified Memory                            \\
-        Operating System            & macOS 27.0.1                                     \\
-        Nix Version                 & Nix 2.24+ (Flakes enabled)                       \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption{Host Machine Hardware and System Environment}
+	\label{tab:host-specifications}
+	\begin{tabular}{ll}
+		\toprule \textbf{Attribute} & \textbf{Specification}                           \\
+		\midrule Host Model         & Apple MacBook Air                                \\
+		Processor                   & Apple M5 (10 cores: 4 Performance, 6 Efficiency) \\
+		Architecture                & \texttt{arm64} (\texttt{aarch64})                \\
+		RAM                         & 24\,GB Unified Memory                            \\
+		Operating System            & macOS 27.0.1                                     \\
+		Nix Version                 & Nix 2.24+ (Flakes enabled)                       \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \chapter{Empirical Results and Analysis}
@@ -663,7 +663,7 @@ unverified Nix expressions that failed evaluation.
 
 Equipping the agent harness with \texttt{course-flake-generator} substantially
 improved synthesis reliability, particularly for the smaller open-weight \texttt{GPT-OSS
-120B} model, where Pass@1 more than doubled across every input modality. For the
+	120B} model, where Pass@1 more than doubled across every input modality. For the
 frontier \texttt{Gemini 3.8 Flash} model, the skill improved pass@1 accuracy on
 natural language prompts, though at the cost of higher average token consumption due
 to template loading and enforced verification steps. The following subsections
@@ -688,43 +688,43 @@ substantially narrow the synthesis reliability gap between frontier and open-wei
 models on natural language specifications.
 
 \begin{table}[htbp]
-    \centering
-    \caption{Agent flake.nix Generation Performance on Natural Language Prompts}
-    \label{tab:model-synthesis-results}
-    \begin{tabular}{llccc}
-        \toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
-        \midrule Gemini 3.8 Flash & Skill              & 95.24\%         & 100.00\%        & 221,295              \\
-        Gemini 3.8 Flash          & No Skill           & 88.10\%         & 100.00\%        & 102,640              \\
-        \midrule GPT-OSS 120B     & Skill              & 73.81\%         & 78.57\%         & 26,974               \\
-        GPT-OSS 120B              & No Skill           & 33.33\%         & 64.29\%         & 18,116               \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption{Agent flake.nix Generation Performance on Natural Language Prompts}
+	\label{tab:model-synthesis-results}
+	\begin{tabular}{llccc}
+		\toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
+		\midrule Gemini 3.8 Flash & Skill              & 95.24\%         & 100.00\%        & 221,295              \\
+		Gemini 3.8 Flash          & No Skill           & 88.10\%         & 100.00\%        & 102,640              \\
+		\midrule GPT-OSS 120B     & Skill              & 73.81\%         & 78.57\%         & 26,974               \\
+		GPT-OSS 120B              & No Skill           & 33.33\%         & 64.29\%         & 18,116               \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=\linewidth,
-        keepaspectratio,
-        alt={Side-by-side line charts comparing pass@1 and pass@3 synthesis accuracy on natural language prompts with and without the custom skill. For GPT-OSS 120B on the left, the skill increases pass@1 from 33.3 percent to 73.8 percent (plus 40.5 percentage points) and pass@3 from 64.3 percent to 78.6 percent (plus 14.3 percentage points). For Gemini 3.8 Flash on the right, the skill increases pass@1 from 88.1 percent to 95.2 percent (plus 7.1 percentage points), with both conditions reaching 100.0 percent at pass@3.}
-    ]{
-        Figures/natural_lang_pass_k_comparison.pdf
-    }
-    \caption{Pass@$k$ on Natural Language Specification Prompts }
-    \label{fig:nl-pass-k-comparison}
+	\centering
+	\includegraphics[
+		width=\linewidth,
+		keepaspectratio,
+		alt={Side-by-side line charts comparing pass@1 and pass@3 synthesis accuracy on natural language prompts with and without the custom skill. For GPT-OSS 120B on the left, the skill increases pass@1 from 33.3 percent to 73.8 percent (plus 40.5 percentage points) and pass@3 from 64.3 percent to 78.6 percent (plus 14.3 percentage points). For Gemini 3.8 Flash on the right, the skill increases pass@1 from 88.1 percent to 95.2 percent (plus 7.1 percentage points), with both conditions reaching 100.0 percent at pass@3.}
+	]{
+		Figures/natural_lang_pass_k_comparison.pdf
+	}
+	\caption{Pass@$k$ on Natural Language Specification Prompts }
+	\label{fig:nl-pass-k-comparison}
 \end{figure}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=\linewidth,
-        keepaspectratio,
-        alt={Two stacked line charts comparing per-trial token consumption across 14 natural language tasks (T0 Java 17 through T9 Ruby in the Computer Science Track, and T10 R through T13 Workbench in the Data Science Track). In the top chart for GPT-OSS 120B, mean token usage is 25,974 with the skill (peaking above 52,000 on T10 R) versus 18,116 without the skill. In the bottom chart for Gemini 3.8 Flash, mean token usage is 221,295 with the skill (staying between roughly 205,000 and 262,000 except a dip near 103,000 on T11 RStudio) versus 102,640 without the skill.}
-    ]{
-        Figures/natural_lang_tokens_combined.pdf
-    }
-    \caption{Per-Task Token Consumption on Natural Language Prompts}
-    \label{fig:nl-tokens-combined}
+	\centering
+	\includegraphics[
+		width=\linewidth,
+		keepaspectratio,
+		alt={Two stacked line charts comparing per-trial token consumption across 14 natural language tasks (T0 Java 17 through T9 Ruby in the Computer Science Track, and T10 R through T13 Workbench in the Data Science Track). In the top chart for GPT-OSS 120B, mean token usage is 25,974 with the skill (peaking above 52,000 on T10 R) versus 18,116 without the skill. In the bottom chart for Gemini 3.8 Flash, mean token usage is 221,295 with the skill (staying between roughly 205,000 and 262,000 except a dip near 103,000 on T11 RStudio) versus 102,640 without the skill.}
+	]{
+		Figures/natural_lang_tokens_combined.pdf
+	}
+	\caption{Per-Task Token Consumption on Natural Language Prompts}
+	\label{fig:nl-tokens-combined}
 \end{figure}
 
 \subsection{Instructional Course Documents}
@@ -740,44 +740,44 @@ presents the comparative synthesis accuracy and token consumption across the six
 documents.
 
 \begin{table}[htbp]
-    \centering
-    \caption{Agent Performance on Instructional Course Documents}
-    \label{tab:doc-results}
-    \begin{tabular}{llccc}
-        \toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
-        \midrule Gemini 3.8 Flash & Skill              & 100.00\%        & 100.00\%        & 198,945              \\
-        Gemini 3.8 Flash          & No Skill           & 100.00\%        & 100.00\%        & 188,804              \\
-        \midrule GPT-OSS 120B     & Skill              & 61.11\%         & 83.33\%         & 32,761               \\
-        GPT-OSS 120B              & No Skill           & 11.11\%         & 33.33\%         & 27,044               \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption{Agent Performance on Instructional Course Documents}
+	\label{tab:doc-results}
+	\begin{tabular}{llccc}
+		\toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
+		\midrule Gemini 3.8 Flash & Skill              & 100.00\%        & 100.00\%        & 198,945              \\
+		Gemini 3.8 Flash          & No Skill           & 100.00\%        & 100.00\%        & 188,804              \\
+		\midrule GPT-OSS 120B     & Skill              & 61.11\%         & 83.33\%         & 32,761               \\
+		GPT-OSS 120B              & No Skill           & 11.11\%         & 33.33\%         & 27,044               \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=0.85\linewidth,
-        keepaspectratio,
-        alt={Line chart comparing GPT-OSS 120B pass rates on instructional course documents with and without the custom skill. With the custom skill, accuracy increases from 66.67 percent at pass@1 to 85.71 percent at pass@3, compared to the no-skill baseline of 9.52 percent at pass@1 and 28.57 percent at pass@3.}
-    ]{
-        Figures/document-gpt-oss-120b-pass-at-k.pdf
-    }
-    \caption{GPT-OSS~120B Pass@$k$ Comparison on Instructional Course Documents}
-    \label{fig:doc-gpt-oss-pass-at-k}
+	\centering
+	\includegraphics[
+		width=0.85\linewidth,
+		keepaspectratio,
+		alt={Line chart comparing GPT-OSS 120B pass rates on instructional course documents with and without the custom skill. With the custom skill, accuracy increases from 66.67 percent at pass@1 to 85.71 percent at pass@3, compared to the no-skill baseline of 9.52 percent at pass@1 and 28.57 percent at pass@3.}
+	]{
+		Figures/document-gpt-oss-120b-pass-at-k.pdf
+	}
+	\caption{GPT-OSS~120B Pass@$k$ Comparison on Instructional Course Documents}
+	\label{fig:doc-gpt-oss-pass-at-k}
 \end{figure}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=\linewidth,
-        keepaspectratio,
-        alt={Line chart comparing Gemini 3.8 Flash total token consumption across instructional document benchmark tasks with and without the skill. With the skill, token usage remains steady between roughly 184,000 and 241,000 tokens across all tasks. Without the skill, token usage fluctuates widely, spiking near 350,000 tokens on the Elixir/SQLite HTML guide and dropping near 112,000 tokens on the MMP 350 Web Dev guide.}
-    ]{
-        Figures/document-runs-gemini-tokens-comparison.pdf
-    }
-    \caption{Gemini~3.8 Flash Per-Document Token Consumption on Instructional
-    Course Documents}
-    \label{fig:doc-gemini-tokens}
+	\centering
+	\includegraphics[
+		width=\linewidth,
+		keepaspectratio,
+		alt={Line chart comparing Gemini 3.8 Flash total token consumption across instructional document benchmark tasks with and without the skill. With the skill, token usage remains steady between roughly 184,000 and 241,000 tokens across all tasks. Without the skill, token usage fluctuates widely, spiking near 350,000 tokens on the Elixir/SQLite HTML guide and dropping near 112,000 tokens on the MMP 350 Web Dev guide.}
+	]{
+		Figures/document-runs-gemini-tokens-comparison.pdf
+	}
+	\caption{Gemini~3.8 Flash Per-Document Token Consumption on Instructional
+		Course Documents}
+	\label{fig:doc-gemini-tokens}
 \end{figure}
 
 As shown in Table~\ref{tab:doc-results} and Figures~\ref{fig:doc-gpt-oss-pass-at-k}--\ref{fig:doc-gemini-tokens},
@@ -796,19 +796,19 @@ A review of the document trial transcripts identified two recurring failure
 modalities that explains \texttt{GPT-OSS 120B} failures:
 
 \begin{enumerate}
-    \item \textbf{Empty Output Errors:} In several document-grounded trials, GPT-OSS~120B
-        generated empty conversational responses between background tool calls,
-        triggering harness runtime errors (\textit{"model output error: model
-        output must contain either output text or tool calls"}) and exiting prior
-        to generating \texttt{flake.nix}.
+	\item \textbf{Empty Output Errors:} In several document-grounded trials, GPT-OSS~120B
+	      generated empty conversational responses between background tool calls,
+	      triggering harness runtime errors (\textit{"model output error: model
+		      output must contain either output text or tool calls"}) and exiting prior
+	      to generating \texttt{flake.nix}.
 
-    \item \textbf{Deprecated Packages and Skipped Verification:} On the database
-        setup guide, all three GPT-OSS~120B trials failed because the model repeatedly
-        declared \texttt{pkgs.mysql}, which has been removed and replaced by \texttt{mariadb}
-        in Nixpkgs~24.11. Because this smaller model withheld MCP search calls,
-        relied exclusively on training data, and skipped running the skill's closed-loop
-        validation script (\texttt{validate-flake.py}), it failed to detect and recover
-        from the attribute renaming.
+	\item \textbf{Deprecated Packages and Skipped Verification:} On the database
+	      setup guide, all three GPT-OSS~120B trials failed because the model repeatedly
+	      declared \texttt{pkgs.mysql}, which has been removed and replaced by \texttt{mariadb}
+	      in Nixpkgs~24.11. Because this smaller model withheld MCP search calls,
+	      relied exclusively on training data, and skipped running the skill's closed-loop
+	      validation script (\texttt{validate-flake.py}), it failed to detect and recover
+	      from the attribute renaming.
 \end{enumerate}
 
 \subsection{Existing Coursework Codebases}
@@ -823,43 +823,43 @@ reports the comparative synthesis accuracy and mean token usage on existing
 coursework repositories.
 
 \begin{table}[htbp]
-    \centering
-    \caption{Agent Performance on Existing Coursework Codebases}
-    \label{tab:codebase-results}
-    \begin{tabular}{llccc}
-        \toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
-        \midrule Gemini 3.8 Flash & Skill              & 91.67\%         & 100.00\%        & 189,538              \\
-        Gemini 3.8 Flash          & No Skill           & 100.00\%        & 100.00\%        & 112,004              \\
-        \midrule GPT-OSS 120B     & Skill              & 50.00\%         & 75.00\%         & 29,041               \\
-        GPT-OSS 120B              & No Skill           & 16.67\%         & 50.00\%         & 10,982               \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption{Agent Performance on Existing Coursework Codebases}
+	\label{tab:codebase-results}
+	\begin{tabular}{llccc}
+		\toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
+		\midrule Gemini 3.8 Flash & Skill              & 91.67\%         & 100.00\%        & 189,538              \\
+		Gemini 3.8 Flash          & No Skill           & 100.00\%        & 100.00\%        & 112,004              \\
+		\midrule GPT-OSS 120B     & Skill              & 50.00\%         & 75.00\%         & 29,041               \\
+		GPT-OSS 120B              & No Skill           & 16.67\%         & 50.00\%         & 10,982               \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=0.9\linewidth,
-        keepaspectratio,
-        alt={Line chart showing overall pass@k accuracy across existing coursework codebases for both models with and without the skill. Gemini 3.8 Flash without the skill stays at 100.0 percent from pass@1 to pass@3, while with the skill it rises from 91.7 percent at pass@1 to 100.0 percent at pass@3. GPT-OSS 120B with the skill rises from 50.0 percent at pass@1 to 75.0 percent at pass@3, substantially outperforming its no-skill baseline of 16.7 percent at pass@1 and 50.0 percent at pass@3.}
-    ]{
-        Figures/codebase-overall-pass-at-k.pdf
-    }
-    \caption{Overall Pass@$k$ on Existing Coursework Codebases}
-    \label{fig:codebase-overall-pass-at-k}
+	\centering
+	\includegraphics[
+		width=0.9\linewidth,
+		keepaspectratio,
+		alt={Line chart showing overall pass@k accuracy across existing coursework codebases for both models with and without the skill. Gemini 3.8 Flash without the skill stays at 100.0 percent from pass@1 to pass@3, while with the skill it rises from 91.7 percent at pass@1 to 100.0 percent at pass@3. GPT-OSS 120B with the skill rises from 50.0 percent at pass@1 to 75.0 percent at pass@3, substantially outperforming its no-skill baseline of 16.7 percent at pass@1 and 50.0 percent at pass@3.}
+	]{
+		Figures/codebase-overall-pass-at-k.pdf
+	}
+	\caption{Overall Pass@$k$ on Existing Coursework Codebases}
+	\label{fig:codebase-overall-pass-at-k}
 \end{figure}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=\linewidth,
-        keepaspectratio,
-        alt={Line chart comparing total tokens per trial across eight codebase tasks (T1 AI through T8 Sockets) for Gemini 3.8 Flash and GPT-OSS 120B with and without the skill. Gemini 3.8 Flash with the skill uses the most tokens, ranging from 276.0k on T2 OS and 272.3k on T1 AI down to 93.2k on T8 Sockets, compared to roughly 68k to 230k without the skill. GPT-OSS 120B with the skill ranges from 18.8k to 44.8k tokens, while GPT-OSS 120B without the skill remains lowest at roughly 6k to 14k tokens across all tasks.}
-    ]{
-        Figures/codebase-tokens-all.pdf
-    }
-    \caption{Per-Task Token Usage Across Existing Coursework Codebases}
-    \label{fig:codebase-tokens-all}
+	\centering
+	\includegraphics[
+		width=\linewidth,
+		keepaspectratio,
+		alt={Line chart comparing total tokens per trial across eight codebase tasks (T1 AI through T8 Sockets) for Gemini 3.8 Flash and GPT-OSS 120B with and without the skill. Gemini 3.8 Flash with the skill uses the most tokens, ranging from 276.0k on T2 OS and 272.3k on T1 AI down to 93.2k on T8 Sockets, compared to roughly 68k to 230k without the skill. GPT-OSS 120B with the skill ranges from 18.8k to 44.8k tokens, while GPT-OSS 120B without the skill remains lowest at roughly 6k to 14k tokens across all tasks.}
+	]{
+		Figures/codebase-tokens-all.pdf
+	}
+	\caption{Per-Task Token Usage Across Existing Coursework Codebases}
+	\label{fig:codebase-tokens-all}
 \end{figure}
 
 As shown in Table~\ref{tab:codebase-results} and Figures~\ref{fig:codebase-overall-pass-at-k}--\ref{fig:codebase-tokens-all},
@@ -873,26 +873,26 @@ validation. Inspecting trial transcripts revealed two primary failure modes that
 \texttt{GPT-OSS 120B} when inferring requirements from repository structures:
 
 \begin{enumerate}
-    \item \textbf{Inability to traverse nested directories:} On coursework
-        repositories with nested directories, Gemini~3.8 Flash was able to iterate
-        across every directory. In contrast, GPT-OSS~120B suffered from premature
-        task termination. In \texttt{COSC236\_Labs}, the flakes for \texttt{Lab1}
-        and \texttt{Lab2}, concluded execution after only 26.8\,s, omitting Labs~3
-        through~10. Similarly, in Trial~3 of the same task, it generated flakes
-        for Labs~1 through~9 but skipped \texttt{Lab10}. In \texttt{COSC336-Assignments}
-        (Trial~1), it authored flakes for Assignments~1 through~6 but failed to
-        process Assignments~7 and~8.
+	\item \textbf{Inability to traverse nested directories:} On coursework
+	      repositories with nested directories, Gemini~3.8 Flash was able to iterate
+	      across every directory. In contrast, GPT-OSS~120B suffered from premature
+	      task termination. In \texttt{COSC236\_Labs}, the flakes for \texttt{Lab1}
+	      and \texttt{Lab2}, concluded execution after only 26.8\,s, omitting Labs~3
+	      through~10. Similarly, in Trial~3 of the same task, it generated flakes
+	      for Labs~1 through~9 but skipped \texttt{Lab10}. In \texttt{COSC336-Assignments}
+	      (Trial~1), it authored flakes for Assignments~1 through~6 but failed to
+	      process Assignments~7 and~8.
 
-    \item \textbf{Package Hallucination:} When analyzing Python projects without
-        explicit requirements manifests (\texttt{AI-Assignments}, Trial~3), GPT-OSS~120B
-        fell back to treating language-level libraries as top-level Nixpkgs derivations,
-        declaring \texttt{pkgs.pandas} and \texttt{pkgs.matplotlib} in \texttt{packages}
-        rather than constructing an idiomatic \texttt{python3.withPackages}
-        environment. This triggered immediate Nix evaluation failure: \textit{"error:
-        attribute 'pandas' in selection path 'pkgs.pandas' not found. Did you mean
-        pandoc?"}. In contrast, Gemini~3.8 Flash leveraged the skill's reference guides
-        to use Python package sets using \texttt{python3.withPackages (ps: with
-        ps; [ pandas matplotlib ])}.
+	\item \textbf{Package Hallucination:} When analyzing Python projects without
+	      explicit requirements manifests (\texttt{AI-Assignments}, Trial~3), GPT-OSS~120B
+	      fell back to treating language-level libraries as top-level Nixpkgs derivations,
+	      declaring \texttt{pkgs.pandas} and \texttt{pkgs.matplotlib} in \texttt{packages}
+	      rather than constructing an idiomatic \texttt{python3.withPackages}
+	      environment. This triggered immediate Nix evaluation failure: \textit{"error:
+		      attribute 'pandas' in selection path 'pkgs.pandas' not found. Did you mean
+		      pandoc?"}. In contrast, Gemini~3.8 Flash leveraged the skill's reference guides
+	      to use Python package sets using \texttt{python3.withPackages (ps: with
+	      ps; [ pandas matplotlib ])}.
 \end{enumerate}
 
 \section{Ablation Study: MCP Registry Retrieval versus Native Nix CLI Discovery}
@@ -907,43 +907,43 @@ token consumption across both MCP conditions, while Table~\ref{tab:mcp-invocatio
 and Figure~\ref{fig:mcp-calls-by-trial} report MCP tool invocation telemetry.
 
 \begin{table}[htbp]
-    \centering
-    \caption{MCP Ablation Study on Natural Language Prompts}
-    \label{tab:mcp-ablation}\label{tab:model-telemetry}\label{tab:model-bloat}
-    \begin{tabular}{llccc}
-        \toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
-        \midrule Gemini 3.8 Flash & w/ MCP             & 95.24\%         & 100.00\%        & 221,295              \\
-        Gemini 3.8 Flash          & w/o MCP            & 97.62\%         & 100.00\%        & 235,596              \\
-        \midrule GPT-OSS 120B     & w/ MCP             & 73.81\%         & 78.57\%         & 26,974               \\
-        GPT-OSS 120B              & w/o MCP            & 71.43\%         & 85.71\%         & 38,225               \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption{MCP Ablation Study on Natural Language Prompts}
+	\label{tab:mcp-ablation}\label{tab:model-telemetry}\label{tab:model-bloat}
+	\begin{tabular}{llccc}
+		\toprule \textbf{Model}   & \textbf{Condition} & \textbf{Pass@1} & \textbf{Pass@3} & \textbf{Mean Tokens} \\
+		\midrule Gemini 3.8 Flash & w/ MCP             & 95.24\%         & 100.00\%        & 221,295              \\
+		Gemini 3.8 Flash          & w/o MCP            & 97.62\%         & 100.00\%        & 235,596              \\
+		\midrule GPT-OSS 120B     & w/ MCP             & 73.81\%         & 78.57\%         & 26,974               \\
+		GPT-OSS 120B              & w/o MCP            & 71.43\%         & 85.71\%         & 38,225               \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{table}[htbp]
-    \centering
-    \small
-    \caption{MCP Tool Invocation Comparison in MCP-Enabled Evaluations}
-    \label{tab:mcp-invocation-comparison}
-    \begin{tabular}{@{}lcccc@{}}
-        \toprule \textbf{Model}   & \textbf{Trials} & \textbf{MCP Calls} & \textbf{\% of Tool Calls} & \textbf{Mean Calls / Trial} \\
-        \midrule Gemini 3.8 Flash & 40 / 42         & 136                & 8.41\% (136 / 1,617)      & 3.40                        \\
-        GPT-OSS 120B              & 41 / 42         & 6                  & 1.02\% (6 / 590)          & 0.15                        \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\small
+	\caption{MCP Tool Invocation Comparison in MCP-Enabled Evaluations}
+	\label{tab:mcp-invocation-comparison}
+	\begin{tabular}{@{}lcccc@{}}
+		\toprule \textbf{Model}   & \textbf{Trials} & \textbf{MCP Calls} & \textbf{\% of Tool Calls} & \textbf{Mean Calls / Trial} \\
+		\midrule Gemini 3.8 Flash & 40 / 42         & 136                & 8.41\% (136 / 1,617)      & 3.40                        \\
+		GPT-OSS 120B              & 41 / 42         & 6                  & 1.02\% (6 / 590)          & 0.15                        \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=\linewidth,
-        keepaspectratio,
-        alt={Bar chart showing MCP tool invocations per trial across 14 benchmark tasks (42 trials total) for Gemini 3.8 Flash and GPT-OSS 120B. Gemini 3.8 Flash averages 3.40 MCP calls per trial, invoking MCP between 1 and 9 times in nearly every completed trial and peaking at 9 calls on T13 Workbench. GPT-OSS 120B averages 0.15 calls per trial, recording zero calls in most trials and only 6 calls total across three trials: 4 on T4 Clang, 1 on T8 .NET SDK, and 1 on T13 Workbench.}
-    ]{
-        Figures/mcp-calls-by-trial.pdf
-    }
-    \caption{MCP Tool Invocations Across Benchmark Trials}
-    \label{fig:mcp-calls-by-trial}
+	\centering
+	\includegraphics[
+		width=\linewidth,
+		keepaspectratio,
+		alt={Bar chart showing MCP tool invocations per trial across 14 benchmark tasks (42 trials total) for Gemini 3.8 Flash and GPT-OSS 120B. Gemini 3.8 Flash averages 3.40 MCP calls per trial, invoking MCP between 1 and 9 times in nearly every completed trial and peaking at 9 calls on T13 Workbench. GPT-OSS 120B averages 0.15 calls per trial, recording zero calls in most trials and only 6 calls total across three trials: 4 on T4 Clang, 1 on T8 .NET SDK, and 1 on T13 Workbench.}
+	]{
+		Figures/mcp-calls-by-trial.pdf
+	}
+	\caption{MCP Tool Invocations Across Benchmark Trials}
+	\label{fig:mcp-calls-by-trial}
 \end{figure}
 
 As shown in Table~\ref{tab:mcp-ablation}, withholding the \texttt{mcp-nixos}
@@ -964,7 +964,7 @@ package descriptions, and platform copmpatibility fields
 exposed by \texttt{mcp-nixos}. Furthermore, as shown in Table~\ref{tab:mcp-invocation-comparison}
 and Figure~\ref{fig:mcp-calls-by-trial}, tool invocation telemetry was extracted
 from all trials with completed execution transcripts (40 of 42 trials for \texttt{Gemini
-3.8 Flash} and 41 of 42 trials for \texttt{GPT-OSS 120B}, with the remaining
+	3.8 Flash} and 41 of 42 trials for \texttt{GPT-OSS 120B}, with the remaining
 trials reaching the 900-second execution timeout prior to emitting transcript
 logs). Within these analyzed trials, \texttt{Gemini 3.8 Flash} utilized MCP
 lookup consistently, averaging 3.40 calls per trial across all 40 runs. In
@@ -1023,29 +1023,29 @@ environment successfully activated with all dependencies present, but task-speci
 headless test commands exited with non-zero status codes.
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=0.92\linewidth,
-        keepaspectratio,
-        alt={Grouped bar chart of Clean Docker Replay evaluation outcomes across 41 eligible trials. Overall, 34 trials reproduced successfully and 7 experienced functional failures. In the Computer Science Track, 25 reproduced and 5 had functional failures; in the Data Science Track, 9 reproduced and 2 had functional failures. All other failure categories (activation failure, flake failure, missing dependency, and infrastructure failure) are zero.}
-    ]{
-        Figures/RQ2_Linux.png
-    }
-    \caption{Linux Container Replay Reproducibility Outcomes}
-    \label{fig:rq2-linux-results}
+	\centering
+	\includegraphics[
+		width=0.92\linewidth,
+		keepaspectratio,
+		alt={Grouped bar chart of Clean Docker Replay evaluation outcomes across 41 eligible trials. Overall, 34 trials reproduced successfully and 7 experienced functional failures. In the Computer Science Track, 25 reproduced and 5 had functional failures; in the Data Science Track, 9 reproduced and 2 had functional failures. All other failure categories (activation failure, flake failure, missing dependency, and infrastructure failure) are zero.}
+	]{
+		Figures/RQ2_Linux.png
+	}
+	\caption{Linux Container Replay Reproducibility Outcomes}
+	\label{fig:rq2-linux-results}
 \end{figure}
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[
-        width=0.92\linewidth,
-        keepaspectratio,
-        alt={Grouped bar chart of Clean macOS Replay evaluation outcomes across 41 eligible trials. Overall, 39 trials reproduced successfully and 2 experienced functional failures. In the Computer Science Track, 28 reproduced and 2 had functional failures; in the Data Science Track, all 11 trials reproduced with zero failures. All other failure categories (activation failure, flake failure, missing dependency, and infrastructure failure) are zero.}
-    ]{
-        Figures/RQ2_MacOS.png
-    }
-    \caption{macOS Virtual Machine Replay Reproducibility Outcomes}
-    \label{fig:rq2-macos-results}
+	\centering
+	\includegraphics[
+		width=0.92\linewidth,
+		keepaspectratio,
+		alt={Grouped bar chart of Clean macOS Replay evaluation outcomes across 41 eligible trials. Overall, 39 trials reproduced successfully and 2 experienced functional failures. In the Computer Science Track, 28 reproduced and 2 had functional failures; in the Data Science Track, all 11 trials reproduced with zero failures. All other failure categories (activation failure, flake failure, missing dependency, and infrastructure failure) are zero.}
+	]{
+		Figures/RQ2_MacOS.png
+	}
+	\caption{macOS Virtual Machine Replay Reproducibility Outcomes}
+	\label{fig:rq2-macos-results}
 \end{figure}
 
 In the Linux container replay (Figure~\ref{fig:rq2-linux-results}), 34 of the 41
@@ -1069,56 +1069,56 @@ files; rather, they arise from the runtime behavior of the installed application
 and the constraints of the headless testing environment:
 
 \begin{enumerate}
-    \item \textbf{Container Privilege Boundaries and Electron Headless
-        Sandboxing:} In the Linux Docker replay environment, all trials for the code
-        editor environment failed during the headless verification of Visual Studio
-        Code (\texttt{code --version}). The containerized replay harness executed
-        inside disposable, headless Docker containers operating under the
-        superuser (\texttt{root}) account. Visual Studio Code, built on the Electron
-        framework, enforces a strict sandboxing policy that rejects execution
-        under root privileges in headless Linux environments without explicit
-        runtime flags, terminating immediately with the diagnostic: \textit{"You are
-        trying to start Visual Studio Code as a super user which isn't recommended.
-        If this was intended, please add the argument --no-sandbox and specify an
-        alternate user data directory using the --user-data-dir argument."} In contrast,
-        local host verification executed under a standard unprivileged user
-        account, allowing \texttt{code --version} to exit cleanly. Similarly, on
-        the clean macOS Tart virtual machines, the evaluation runner operated under
-        the unprivileged \texttt{admin} user, where Darwin application bundles do
-        not enforce Linux-specific container sandbox restrictions; as a result, all
-        corresponding trials reproduced cleanly on macOS.
+	\item \textbf{Container Privilege Boundaries and Electron Headless
+		      Sandboxing:} In the Linux Docker replay environment, all trials for the code
+	      editor environment failed during the headless verification of Visual Studio
+	      Code (\texttt{code --version}). The containerized replay harness executed
+	      inside disposable, headless Docker containers operating under the
+	      superuser (\texttt{root}) account. Visual Studio Code, built on the Electron
+	      framework, enforces a strict sandboxing policy that rejects execution
+	      under root privileges in headless Linux environments without explicit
+	      runtime flags, terminating immediately with the diagnostic: \textit{"You are
+		      trying to start Visual Studio Code as a super user which isn't recommended.
+		      If this was intended, please add the argument --no-sandbox and specify an
+		      alternate user data directory using the --user-data-dir argument."} In contrast,
+	      local host verification executed under a standard unprivileged user
+	      account, allowing \texttt{code --version} to exit cleanly. Similarly, on
+	      the clean macOS Tart virtual machines, the evaluation runner operated under
+	      the unprivileged \texttt{admin} user, where Darwin application bundles do
+	      not enforce Linux-specific container sandbox restrictions; as a result, all
+	      corresponding trials reproduced cleanly on macOS.
 
-    \item \textbf{Host Machine Pollution During Verification:} Across both Linux
-        and macOS, multiple trials failed during the compiler verification command
-        (\texttt{rustc --version \&\& cargo --version}) for the Rust toolchain
-        environment. When synthesizing the development environment from prompt instructions
-        requiring \texttt{rustup}, the agent declared the Nixpkgs derivation \texttt{pkgs.rustup}
-        in \texttt{buildInputs}. In Nixpkgs, the \texttt{rustup} package
-        provides proxy shims for \texttt{rustc} and \texttt{cargo} that
-        dynamically resolve to toolchains managed under the user's mutable home
-        directory (\texttt{\$HOME/.rustup}). On the author's MacBook, \texttt{\textasciitilde/.rustup}
-        already existed, prompting the model to exclude \texttt{rustup default
-        stable} within the flake.nix file. When deployed to fresh guest environments
-        where \texttt{\$HOME/.rustup} was empty, calling \texttt{rustc} failed
-        with the diagnostic: \textit{"error: rustup could not choose a version
-        of rustc to run, because one wasn't specified explicitly, and no default
-        is configured."} In contrast, one synthesized trial succeeded on both Linux
-        and macOS because the model included \texttt{rustup default stable}
-        inside the flake's \texttt{shellHook}, which automatically downloads (if missing)
-        and configures the stable versions of \texttt{rustc} and \texttt{cargo}
-        within the clean environment prior to command verification.
+	\item \textbf{Host Machine Pollution During Verification:} Across both Linux
+	      and macOS, multiple trials failed during the compiler verification command
+	      (\texttt{rustc --version \&\& cargo --version}) for the Rust toolchain
+	      environment. When synthesizing the development environment from prompt instructions
+	      requiring \texttt{rustup}, the agent declared the Nixpkgs derivation \texttt{pkgs.rustup}
+	      in \texttt{buildInputs}. In Nixpkgs, the \texttt{rustup} package
+	      provides proxy shims for \texttt{rustc} and \texttt{cargo} that
+	      dynamically resolve to toolchains managed under the user's mutable home
+	      directory (\texttt{\$HOME/.rustup}). On the author's MacBook, \texttt{\textasciitilde/.rustup}
+	      already existed, prompting the model to exclude \texttt{rustup default
+		      stable} within the flake.nix file. When deployed to fresh guest environments
+	      where \texttt{\$HOME/.rustup} was empty, calling \texttt{rustc} failed
+	      with the diagnostic: \textit{"error: rustup could not choose a version
+		      of rustc to run, because one wasn't specified explicitly, and no default
+		      is configured."} In contrast, one synthesized trial succeeded on both Linux
+	      and macOS because the model included \texttt{rustup default stable}
+	      inside the flake's \texttt{shellHook}, which automatically downloads (if missing)
+	      and configures the stable versions of \texttt{rustc} and \texttt{cargo}
+	      within the clean environment prior to command verification.
 
-    \item \textbf{Absence of Display Server for Graphical Applications:} In the
-        Data Science track, trials for the database administration environment failed
-        during the verification command (\texttt{mysql-workbench --version})
-        during Linux container replay. MySQL Workbench is a desktop client application
-        compiled against GTK and X11 graphical libraries. When invoked inside
-        the headless Docker container, the binary attempted to initialize a connection
-        to a non-existent graphical display server, terminating with the runtime
-        fault: \textit{"(mysql-workbench-bin): Gtk-WARNING **: cannot open
-        display:"}. In the macOS virtual machine environment, Darwin application
-        binaries and command wrappers do not depend on an X11 display socket, allowing
-        all corresponding trials to execute without failure.
+	\item \textbf{Absence of Display Server for Graphical Applications:} In the
+	      Data Science track, trials for the database administration environment failed
+	      during the verification command (\texttt{mysql-workbench --version})
+	      during Linux container replay. MySQL Workbench is a desktop client application
+	      compiled against GTK and X11 graphical libraries. When invoked inside
+	      the headless Docker container, the binary attempted to initialize a connection
+	      to a non-existent graphical display server, terminating with the runtime
+	      fault: \textit{"(mysql-workbench-bin): Gtk-WARNING **: cannot open
+		      display:"}. In the macOS virtual machine environment, Darwin application
+	      binaries and command wrappers do not depend on an X11 display socket, allowing
+	      all corresponding trials to execute without failure.
 \end{enumerate}
 
 These findings provide strong empirical validation for Hypothesis~\textbf{H\textsubscript{2}},
