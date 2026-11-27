@@ -30,7 +30,7 @@ evaluation:
 	      to platform-specific package availability.
 \end{itemize}
 
-\section{Proposed Solution: An agent skill for AI-Assisted Nix Flake Synthesis}
+\section{Proposed Solution: An Agent Skill for AI-Assisted Nix Flake Synthesis}
 \label{chap:solution}
 
 To bridge the gap between complex declarative configurations and educational
@@ -115,7 +115,7 @@ to ensure that only verified configurations progress toward student deployment:
 	]{
 		Figures/high-level-process.pdf
 	}
-	\caption{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis
+	\caption[End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis Pipeline]{End-to-End Architecture of the Autonomous \texttt{flake.nix} Synthesis
 		Pipeline \href{https://www.flaticon.com/free-icons/professor}{Icons created
 			by Magnific - Flaticon} }
 	\label{fig:pipeline-overview}
@@ -175,7 +175,9 @@ computer science courses:
 	      \end{itemize}
 	      The prompt benchmark is serialized as a \texttt{jsonl} file, where each
 	      record specifies the curriculum track, the natural language prompt, and
-	      the asserted dependency list (Listing~\ref{lst:input-data-format}).
+	      the asserted dependency list (Listing~\ref{lst:input-data-format}; the
+	      complete prompt suite is provided in Appendix~\ref{apd:a},
+	      Listing~\ref{lst:nl-instruction-inputs}).
 
 	\item \textbf{Existing Coursework Codebases:} A collection of real-world
 	      assignment codebases from the author's undergraduate computer science
@@ -408,7 +410,7 @@ An automated Python test runner was developed to execute test suites, capture ag
 tool call telemetry, stream shell outputs, and record execution success metrics.
 The runner logs detailed traces for every trials to perform detailed analysis.
 
-Each benchmark invocation creates a timestamped run directory (yyyy-) storing evaluation
+Each benchmark invocation creates a timestamped run directory (\texttt{YYYYMMDD\_HHMMSS}) storing evaluation
 metrics, aggregated telemetry, and isolated workspace artifacts for every evaluated
 task and candidate sample. The resulting directory structure is organized as
 shown in Listing~\ref{lst:benchmark-results-directory-structure}.
@@ -983,9 +985,7 @@ nix search nixpkgs ripgrep
 \end{lstlisting}
 
 While structured MCP queries occasionally prevented prolonged CLI exploration on complex
-wrapper packages (such as Task~11, \texttt{RStudio}, where withholding MCP caused
-\texttt{Gemini 3.8 Flash} to execute 92 shell commands consuming 508,739 tokens
-while inspecting the \texttt{/nix/store}), the refutation of Hypothesis~\textbf{H\textsubscript{1b}}
+wrapper packages, the refutation of Hypothesis~\textbf{H\textsubscript{1b}}
 carries a practical advantage for classroom deployment. In line with recent findings
 by Forment et~al.~\cite{formentScaffoldingMattersMore2026} that well-structured
 CLI scaffolding often matches or outperforms specialized external tool servers, our
